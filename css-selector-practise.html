@@ -59,8 +59,8 @@
     </div>
 
     <style>
-      div.a>ul li:nth-of-type(n+4){color: red;}
-      div.a>ul li:nth-of-type(n+8){color: black;}
+      div.a>ul li:nth-of-type(n+4):nth-of-type(-n+7){color: red;}
+
     </style>
     <div class="a">
       <p>让下面的4567元素为红色</p>
@@ -82,9 +82,8 @@
 
 
     <style>
-      div.b>ul>li{color:red}
-      div.b>ul>li:nth-of-type(n+35){color: blue;}
-      div.b>ul>li:nth-of-type(n+51){color: black;}
+      div.b>ul>li:nth-of-type(-n+25){color:red}
+      div.b>ul>li:nth-of-type(n+35):nth-of-type(-n+50){color: blue;}
       div.b>ul>li:nth-of-type(n+65){color: green;}
     </style>
     <div class="b">
@@ -198,12 +197,12 @@
     <hr>
 
     <style>
-      div.prime>ul>li:nth-of-type(2n+1){color:blue}
+      div.prime>ul>li:first-child{color:yellow}
       div.prime>ul>li:nth-of-type(7n){color:red}
       div.prime>ul>li:nth-of-type(5n){color:red}
       div.prime>ul>li:nth-of-type(3n){color:red}
       div.prime>ul>li:nth-of-type(2n){color: red;}
-      div.prime>ul>li:nth-child(2){color: blue;}
+      div.prime>ul>li:nth-child(2){color: black;}
     </style>
     <div class="prime">
       <p>让所有的质/素数(prime)（2，3，5，7，11，13……）跟合数（4，6，8，9，10……）为不同的颜色</p>

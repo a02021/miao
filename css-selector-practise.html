@@ -197,11 +197,13 @@
     <hr>
 
     <style>
+
+      .prime li:not(:nth-child(1)):not(:nth-child(2n + 4)):not(:nth-child(3n + 6)):not(:nth-child(5n + 10)):not(:nth-child(7n + 14)){color: red;}
       div.prime ul>li:first-child{color:yellow}
-      div.prime ul>li:nth-of-type(7n+14){color:red}
+      /*div.prime ul>li:nth-of-type(7n+14){color:red}
       div.prime ul>li:nth-of-type(5n+10){color:red}
       div.prime ul>li:nth-of-type(3n+6){color:red}
-      div.prime ul>li:nth-of-type(2n+4){color: red;}
+      div.prime ul>li:nth-of-type(2n+4){color: red;}*/
     </style>
     <div class="prime">
       <p>让所有的质/素数(prime)（2，3，5，7，11，13……）跟合数（4，6，8，9，10……）为不同的颜色</p>

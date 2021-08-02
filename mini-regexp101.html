@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      margin: 25px;
+      width: auto;
+      /* font: 2em sans-serif; */
+      background-color:antiquewhite;
+    }
+    input[type="checkbox"] {
+      height: 20px;
+      width: 25px;
+    }
+    input[type="text"] {
+      height: 35px
+    }
+    input,textarea {
+      width: 500px;
+    }
+    textarea {
+      height: 250px;
+    }
+    #cb {
+      width: 25px;
+    }
+    #checkb{
+      font-size: smaller;
+      margin: 10px;
+    }
+    /* #result {
+      font-size: smaller;
+      border: 1px solid ivory ;
+      
+    } */
+    em {
+      font-style:normal;
+      background-color:teal;
+    }
+    em:nth-of-type(even) {
+      background-color: steelblue;
+    }
+    section {
+      width: 500px;
+      position:relative;
+    }
+    pre {
+      width: 500px;
+      color: black;
+      position: absolute;
+      background-color: white;
+      top: 0;
+    }
+    textarea, pre {
+      height: 100%;
+      padding: 0px;
+      margin: 0px;
+      border: 2px solid;
+      font-size: 16px;
+      white-space: pre-wrap;
+    }
+    textarea {
+      position:relative;
+      z-index: 8;
+      background-color: transparent;
+    }
+  </style>
+   
+</head>
+<body>
+    <br> 输入正则表达式<br>
+    <div id="checkb">
+    <label> <input type="checkbox" onclick="run();console.log('wooo')" id="ignoreCase">  i<br></label>
+    <label> <input type="checkbox" checked onclick="run()" id="global"> g<br></label>
+    <label> <input type="checkbox" onclick="run()" id="multiline"> m<br></label>
+    </div>
+    <input type="text" id="reg" value="foo" onkeyup="run()"> <br>
+    输入内容 <br>
+
+    <section>
+    <textarea  id="strInput" onkeyup="run()" cols="60 " rows="30">foob
+      foo
+      foo
+   safa
+        effoo
+      sarbaz aaa</textarea>
+    <pre id="result">
+         匹配结果
+    </pre>
+  </section>
+
+    <script>
+      console.log(global.checked)
+      run()
+      function run() {
+        if (!reg.value) return result.innerHTML = strInput.value
+        var regSource = reg.value
+        var flags = getFlags()
+        var re = new RegExp(regSource,flags)
+        console.log(re)
+        var str = strInput.value
+        var match 
+        if(re.global) {
+          var resultHTML = ''
+          var lastIndex = re.lastIndex
+          while (match = re.exec(str)){
+            resultHTML += str.slice(lastIndex,match.index)
+            resultHTML += '<em>' + match[0] + '</em>'
+            lastIndex = re.lastIndex
+          }
+          resultHTML += str.slice(lastIndex)
+          result.innerHTML = resultHTML
+        } else {
+          var resultHTML = ''
+          match = re.exec(str)  
+          resultHTML += str.slice(0,match.index)
+          resultHTML += '<em>' + match[0] + '</em>'
+          resultHTML += str.slice(re.lastIndex)
+          result.innerHTML = resultHTML
+        }
+      }
+
+      function getFlags() {
+        var flags = ''
+        if (ignoreCase.checked) {
+          flags += 'i'
+        }
+        if (global.checked) {
+          flags += 'g'
+        }
+        if (multiline.checked) {
+          flags += 'm'
+        }
+        return flags
+      }
+    </script>
+  </body>
+</html>

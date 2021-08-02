@@ -50,7 +50,7 @@
     }
     pre {
       width: 500px;
-      color: black;
+      color: transparent;
       position: absolute;
       background-color: white;
       top: 0;
@@ -117,9 +117,10 @@
         } else {
           var resultHTML = ''
           match = re.exec(str)  
+          console.log(match.index)
           resultHTML += str.slice(0,match.index)
           resultHTML += '<em>' + match[0] + '</em>'
-          resultHTML += str.slice(re.lastIndex)
+          resultHTML += str.slice(match.index + match[0].length)
           result.innerHTML = resultHTML
         }
       }

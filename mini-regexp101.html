@@ -44,6 +44,11 @@
     em:nth-of-type(even) {
       background-color: steelblue;
     }
+  /*  匹配为空时 显示提示颜色 */
+  em:empty {
+    border-right: 1px dotted red;
+    background-color: transparent;
+  }
     section {
       width: 500px;
       position:relative;
@@ -68,6 +73,10 @@
       z-index: 8;
       background-color: transparent;
     }
+    #regError {
+      font-size: 10px;
+      color: red;
+    }
   </style>
    
 </head>
@@ -79,8 +88,9 @@
     <label> <input type="checkbox" onclick="run()" id="multiline"> m<br></label>
     </div>
     <input type="text" id="reg" value="foo" onkeyup="run()"> <br>
+<!-- 显示错误内容 -->
+    <p id="regError"></p>
     输入内容 <br>
-
     <section>
     <textarea  id="strInput" onkeyup="run()" cols="60 " rows="30">foob
       foo
@@ -100,7 +110,17 @@
         if (!reg.value) return result.innerHTML = strInput.value
         var regSource = reg.value
         var flags = getFlags()
-        var re = new RegExp(regSource,flags)
+
+        //吸收错误 如单个括号(  
+          //并放入html显示
+        try {
+          var re = new RegExp(regSource,flags)
+        } catch(e) {
+          result.innerHTML = ''
+          regError.innerHTML = e.message
+          return 
+        }
+
         console.log(re)
         var str = strInput.value
         var match 
@@ -111,6 +131,8 @@
             resultHTML += str.slice(lastIndex,match.index)
             resultHTML += '<em>' + match[0] + '</em>'
             lastIndex = re.lastIndex
+            //防止匹配空循环 如 :^ 
+            if (match[0] == '') re.lastIndex ++
           }
           resultHTML += str.slice(lastIndex)
           result.innerHTML = resultHTML

@@ -30,14 +30,14 @@ var a02021 = function() {
 
   //Creates an array of array values not included in the other given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
   function difference(array, ...arrs) {
-    console.log(typeof arrs)
-    if(arrs.length == 0) return array
+    var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
+    if(newArrs.length == 0) return array //参数为空返回原数组
+    newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
     var rel = []
-    var newArrs = arrs.filter(it => it instanceof Array).reduce(
-      (a,b) => a.concat(b))
-    array.map(i => {if(newArrs.includes(i)) rel.push(i)})
-  return rel
+    array.map(i => {if(!newArrs.includes(i)) rel.push(i)})
+    return rel
   }
+
   function differenceby(array){
     return array
   }

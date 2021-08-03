@@ -17,6 +17,7 @@ var a02021 = function() {
     }
     return rel
   }
+
   //Creates an array with all falsey values removed. The values false, null, 0, "", undefined, and NaN are falsey.
   function compact(array) {
     if(!array) return []
@@ -26,8 +27,9 @@ var a02021 = function() {
       }
       return rel
   }
+
   //Creates an array of array values not included in the other given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
-  function unique(array, ...arrs) {
+  function difference(array, ...arrs) {
     console.log(typeof arrs)
     if(arrs.length == 0) return array
     var rel = []
@@ -36,16 +38,17 @@ var a02021 = function() {
     array.map(i => {if(newArrs.includes(i)) rel.push(i)})
   return rel
   }
+  
   return {
     chunk:chunk,
     compact:compact,
-    unique:unique,
+    difference:difference,
   }
 } ();
 
 
 
-//     unique调试
+//     difference 调试
 // function difference(array, ...arrs) {
 //   var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
 //   if(newArrs.length == 0) return array //参数为空返回原数组

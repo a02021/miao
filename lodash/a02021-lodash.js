@@ -27,12 +27,33 @@ var a02021 = function() {
       return rel
   }
   //Creates an array of array values not included in the other given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
-  function difference(array, [values]) {
-  
+  function difference(array, ...arrs) {
+    console.log(typeof arrs)
+    if(arrs.length == 0) return array
+    var rel = []
+    var newArrs = arrs.filter(it => it instanceof Array).reduce(
+      (a,b) => a.concat(b))
+    array.map(i => {if(newArrs.indexOf(i) == -1) rel.push(i)})
+  return rel
   }
-
   return {
     chunk:chunk,
     compact:compact,
+    difference:difference,
   }
 } ();
+
+// function dsd(...arr){
+//   console.log(arr)
+// }
+
+// function difference(array, ...arrs) {
+//   console.log(typeof arrs)
+//   if(arrs.length == 0) return array
+//   var rel = []
+//   var newArrs = arrs.filter(it => it instanceof Array).reduce(
+//     (a,b) => a.concat(b))
+//   array.map(i => {if(newArrs.indexOf(i) == -1) rel.push(i)})
+// return rel
+// }
+// console.log(difference([1,2,3],[2],1,['k'],[3]))

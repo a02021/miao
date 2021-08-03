@@ -17,7 +17,8 @@
       width: 25px;
     }
     input[type="text"] {
-      height: 35px
+      height: 35px;
+      border-radius: 5px;
     }
     input,textarea {
       width: 500px;
@@ -55,24 +56,32 @@
       width: 500px;
       position:relative;
     }
-    pre {
-      /*overflow-y 给文本增加滚动条,以便和textarea同步 */
-      overflow-y:auto;
-      width: 500px;
-      color: transparent;
-      position: absolute;
-      background-color: white;
-      top: 0;
-    }
+
     textarea, pre {
       /* resize禁止调整大小 */
-      resize:none;
+      letter-spacing:1px;  
+      line-height:20px;  
+    word-wrap:break-word;  
+    word-break:break-all; 
+      overflow-y:scroll;
+      overflow-x: hidden;
+      border-radius: 5px;
+      resizxe:none;
       height: 300px;
       padding: 1px;
       margin: 1px;
       border: 2px solid;
       font-size: 16px;
       white-space: pre-wrap;
+    }
+    pre {
+      /*overflow-y 给文本增加滚动条,以便和textarea同步 */
+      letter-spacing:1px;
+      width: 500px;
+      color: transparent;
+      position: absolute;
+      background-color: white;
+      top: 0;
     }
     textarea {
       position:relative;

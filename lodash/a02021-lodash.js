@@ -38,11 +38,14 @@ var a02021 = function() {
     array.map(i => {if(newArrs.includes(i)) rel.push(i)})
   return rel
   }
-  
+  function differenceby(array){
+    return array
+  }
   return {
     chunk:chunk,
     compact:compact,
     difference:difference,
+    differenceby:differenceby,
   }
 } ();
 

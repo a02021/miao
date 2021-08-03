@@ -75,16 +75,17 @@ var a02021 = function() {
 // }
 // console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 
-function forEach1(obj,f){
-  //限制循环条件参数为 数组/对象/字符串 
-   if (obj instanceof Object || typeof(obj) =='string'){
-    for(let i in obj){
-      f(obj[i], i )
-    }
-  }
-  //函数返回值为原参数
-  return obj
-}
-forEach1({'a':1,'b':2}, (value,key) =>console.log(';',value))
-forEach1(123, (value,key) =>console.log(';',value))
-forEach1('gkj', (value,key) =>console.log(';',value))
+// forEach调试
+// function forEach1(obj,f){
+//   //限制循环条件参数为 数组/对象/字符串 
+//    if (obj instanceof Object || typeof(obj) =='string'){
+//     for(let i in obj){
+//       f(obj[i], i )
+//     }
+//   }
+//   //函数返回值为原参数
+//   return obj
+// }
+// forEach1({'a':1,'b':2}, (value,key) =>console.log(';',value))
+// forEach1(123, (value,key) =>console.log(';',value))
+// forEach1('gkj', (value,key) =>console.log(';',value))

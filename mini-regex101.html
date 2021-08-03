@@ -22,7 +22,7 @@
     input,textarea {
       width: 500px;
     }
-    textarea {
+    textarea,pre {
       height: 250px;
     }
     #cb {
@@ -56,6 +56,8 @@
       position:relative;
     }
     pre {
+      /*overflow-y 给文本增加滚动条,以便和textarea同步 */
+      overflow-y:auto;
       width: 500px;
       color: transparent;
       position: absolute;
@@ -63,7 +65,9 @@
       top: 0;
     }
     textarea, pre {
-      height: 100%;
+      /* resize禁止调整大小 */
+      resize:none;
+      height: 300px;
       padding: 1px;
       margin: 1px;
       border: 2px solid;
@@ -97,11 +101,37 @@
     <p id="regError"></p>
     输入内容 <br>
     <section>
-    <textarea  id="strInput" onkeyup="run()" cols="60 " rows="30">foob
+      <!-- //spellcheck关闭拼写检查 -->
+    <textarea  spellcheck="false" id="strInput" onscroll="setScroll()" onkeyup="run()" cols="60 " rows="30">foob
       foo
       foo
    safa
         effoo
+      sarbaz aaa
+foob
+      foo
+      foo
+   safa
+        effoo
+      sarbaz aaa
+foob
+      foo
+      foo
+   safa
+        effoo
+      sarbaz aaa
+foob
+      foo
+      foo
+   safa
+        effoo
+      sarbaz aaa
+foob
+      foo
+      foo
+   safa
+        effoo
+      sarbaz aaa
       sarbaz aaa</textarea>
     <pre id="result">
          匹配结果
@@ -109,6 +139,10 @@
   </section>
 
     <script>
+      function setScroll(){
+        var v = strInput.scrollTop
+        result.scrollTop = v
+      }
       console.log(global.checked)
       run()
       function run() {

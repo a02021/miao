@@ -156,6 +156,21 @@ var a02021 = function() {
     return result
     }
   }
+  function get(object, path, defaultValue = undefined) {
+    if (defaultValue !== undefined) return defaultValue
+    let arr = []
+    if(typeof path == 'string') {
+      for (let i of path) {
+        if(i !== '[' && i !== ']' && i !== '.') arr.push(i)
+      }
+    }
+    if(path instanceof Array) arr = path
+    let result = object
+    console.log(arr)
+    arr.forEach(it => result = result? result[it]:undefined)
+    if (result == undefined) return defaultValue
+    return result
+  }
 
   return {
     chunk:chunk,
@@ -167,6 +182,7 @@ var a02021 = function() {
     drop:drop,
     dropRight:dropRight,
     dropRightWhile:dropRightWhile,
+    get:get,
   }
 } ();
 
@@ -268,7 +284,26 @@ var a02021 = function() {
 //   return rel
 // }
 // console.log(differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }],[{ 'x': 1, 'y': 2 }],(a,b) =>  a == b))
-
-var sfs = []
+var sfs = { 'a': [{ 'b': { 'c': 3 } }] }
+var b = 'a'
 var tte = {}
-console.log(tte instanceof Array)
+console.log(sfs[b] )
+
+function get1(object, path, defaultValue = undefined) {
+  if (defaultValue !== undefined) return defaultValue
+  let arr = []
+  if(typeof path == 'string') {
+    for (let i of path) {
+      if(i !== '[' && i !== ']' && i !== '.') arr.push(i)
+    }
+  }
+  if(path instanceof Array) arr = path
+  let result = object
+  console.log(arr)
+  arr.forEach(it => result = result? result[it]:undefined)
+  if (result == undefined) return defaultValue
+  return result
+}
+var object = { 'a': [{ 'b': { 'c': 3 } }] };
+console.log(get1(object, 'a','defaul8'))
+

@@ -38,8 +38,30 @@ var a02021 = function() {
     return rel
   }
 
-  function differenceby(array){
-    return array
+  function differenceBy(a,b,f){
+    if(!a) return []
+    if(arguments.length !== 3) return a
+  
+    var rel = []
+    if (typeof f == 'function') {
+  
+    }
+    if (typeof f == 'string') {
+      for (let i of a) {
+        var t = false
+        if(i instanceof Object) {
+          for (let j of b){
+            if(j instanceof Object) {
+              if(i[f] == j[f] ) t = true
+            }
+          }
+          if(!t) rel.push(i)
+        }
+      }
+      if(!b[0][f] || b.length>1)
+      rel = rel.filter(n => n instanceof Object)
+      return rel
+    } 
   }
 
   function forEach(obj,f){
@@ -57,11 +79,10 @@ var a02021 = function() {
     chunk:chunk,
     compact:compact,
     difference:difference,
-    differenceby:differenceby,
+    differenceBy:differenceBy,
     forEach:forEach,
   }
 } ();
-
 
 
 //     difference 调试
@@ -89,3 +110,37 @@ var a02021 = function() {
 // forEach1({'a':1,'b':2}, (value,key) =>console.log(';',value))
 // forEach1(123, (value,key) =>console.log(';',value))
 // forEach1('gkj', (value,key) =>console.log(';',value))
+
+//要求: f为string时,匹配array内的对象的key=string的value
+// i[f]没有匹配到 返回该数
+// b数组内只有一个元素且 key=string 返回所有不匹配
+// b的元素key!=string 返回不匹配 的key=string
+// b.length >1 返回不匹配 的key=string
+
+function differenceBy1(a,b,f){
+  if(!a) return []
+  if(arguments.length !== 3) return a
+
+  var rel = []
+  if (typeof f == 'function') {
+
+  }
+  if (typeof f == 'string') {
+    for (let i of a) {
+      var t = false
+      if(i instanceof Object) {
+        for (let j of b){
+          if(j instanceof Object) {
+            if(i[f] == j[f] ) t = true
+          }
+        }
+        if(!t) rel.push(i)
+      }
+    }
+    if(!b[0][f] || b.length>1)
+    rel = rel.filter(n => n instanceof Object)
+    return rel
+  } 
+}
+
+console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],'x') )

@@ -38,6 +38,7 @@ var a02021 = function() {
     return rel
   }
 
+  //This method is like _.difference except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The order and references of result values are determined by the first array. The iteratee is invoked with one argument:
   function differenceBy(a,...args){
     if(!a) return []
     var f = args[args.length -1]
@@ -45,7 +46,13 @@ var a02021 = function() {
   
     var rel = []
     if (typeof f == 'function') {
-  
+      var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
+      if(newArrs.length == 0) return array //参数为空返回原数组
+      newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+      newArrs = newArrs.map(i => f(i))
+      var rel = []
+      a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
+      return rel
     }
     if (typeof f == 'string') {
       for (let i of a) {
@@ -65,7 +72,7 @@ var a02021 = function() {
     } 
     return difference(a,...args)
   }
-  
+
   function forEach(obj,f){
     //限制循环条件参数为 数组/对象/字符串 
      if (obj instanceof Object || typeof(obj) =='string'){
@@ -128,7 +135,13 @@ function differenceBy1(a,...args){
 
   var rel = []
   if (typeof f == 'function') {
-
+    var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
+    if(newArrs.length == 0) return array //参数为空返回原数组
+    newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+    newArrs = newArrs.map(i => f(i))
+    var rel = []
+    a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
+    return rel
   }
   if (typeof f == 'string') {
     for (let i of a) {
@@ -148,5 +161,7 @@ function differenceBy1(a,...args){
   } 
   return difference(a,...args)
 }
+
+console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor))
 console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor,[{'j':6}],[6]))
 console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],[{'y':3}],'x') )

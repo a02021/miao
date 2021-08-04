@@ -38,9 +38,10 @@ var a02021 = function() {
     return rel
   }
 
-  function differenceBy(a,b,f){
+  function differenceBy(a,...args){
     if(!a) return []
-    if(arguments.length !== 3) return a
+    var f = args[args.length -1]
+    var b = args.slice(0,args.length -1)
   
     var rel = []
     if (typeof f == 'function') {
@@ -62,8 +63,9 @@ var a02021 = function() {
       rel = rel.filter(n => n instanceof Object)
       return rel
     } 
+    return difference(a,...args)
   }
-
+  
   function forEach(obj,f){
     //限制循环条件参数为 数组/对象/字符串 
      if (obj instanceof Object || typeof(obj) =='string'){
@@ -86,15 +88,15 @@ var a02021 = function() {
 
 
 //     difference 调试
-// function difference(array, ...arrs) {
-//   var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
-//   if(newArrs.length == 0) return array //参数为空返回原数组
-//   newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
-//   var rel = []
-//   array.map(i => {if(!newArrs.includes(i)) rel.push(i)})
-//   return rel
-// }
-// console.log(difference([1,2,3,'k','l'],1,[2,'k']))
+function difference(array, ...arrs) {
+  var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
+  if(newArrs.length == 0) return array //参数为空返回原数组
+  newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+  var rel = []
+  array.map(i => {if(!newArrs.includes(i)) rel.push(i)})
+  return rel
+}
+console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 
 // forEach调试
 // function forEach1(obj,f){
@@ -117,9 +119,12 @@ var a02021 = function() {
 // b的元素key!=string 返回不匹配 的key=string
 // b.length >1 返回不匹配 的key=string
 
-function differenceBy1(a,b,f){
+// f 为 函数时 
+// 过滤 obj,只对数值匹配
+function differenceBy1(a,...args){
   if(!a) return []
-  if(arguments.length !== 3) return a
+  var f = args[args.length -1]
+  var b = args.slice(0,args.length -1)
 
   var rel = []
   if (typeof f == 'function') {
@@ -141,6 +146,7 @@ function differenceBy1(a,b,f){
     rel = rel.filter(n => n instanceof Object)
     return rel
   } 
+  return difference(a,...args)
 }
-
-console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],'x') )
+console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor,[{'j':6}],[6]))
+console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],[{'y':3}],'x') )

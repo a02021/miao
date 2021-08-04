@@ -131,38 +131,51 @@ var a02021 = function() {
   }
  //Creates a slice of array excluding elements dropped from the end. Elements are dropped until predicate returns falsey. The predicate is invoked with three arguments: (value, index, array).
 //条件 : 函数/对象/数组/字符串
- function dropRightWhile(array,f) {
-   let result = []
-    if (typeof f == 'function') {
-      for (let i of array) {
-        if (!f(i)) result.push(i)
-      }
-    }
-    if (f instanceof Object) {
-      if(f instanceof Array) {
-        for (let i of array) {
-          if (i[f[0]] !== f[1]) result.push(i)
-        }
-      } else {
-        for (let i of array) {
-          if (i[0] !== f[0] || i[1] !== f[1]) result.push(i)
-        }
-      }
-    }
-    if (typeof f == 'string') {
-      for (let i of array) {
-        if (i.hasOwnProperty(f)) result.push(i)
-      }
-    return result
-    }
-  }
+function dropRightWhile(array,f) {
+  let result = []
+   if (typeof f == 'function') {
+     for (let i of array) {
+       if (!f(i)) result.push(i)
+     }
+   }
+   if (f instanceof Object) {
+     if(f instanceof Array) {
+       for (let i of array) {
+         if (i[f[0]] !== f[1]) result.push(i)
+       }
+     } else {
+       for (let i of array) {
+         let k = Object.keys(f)
+// 用Object.keys()获取下标
+         if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) result.push(i)
+       }
+     }
+   }
+   if (typeof f == 'string') {
+     for (let i of array) {
+       if (i.hasOwnProperty(f)) result.push(i)
+     }
+   }
+   return result
+ }
+
+  //Gets the value at path of object. If the resolved value is undefined, the defaultValue is returned in its place.
   function get(object, path, defaultValue = undefined) {
     if (defaultValue !== undefined) return defaultValue
     let arr = []
     if(typeof path == 'string') {
+      var cas = ''
       for (let i of path) {
-        if(i !== '[' && i !== ']' && i !== '.') arr.push(i)
+        if(i !== '[' && i !== ']' && i !== '.') {
+          cas += i
+        } else {
+          if (cas) {
+          arr.push(cas)
+          cas = ''
+          }
+        }
       }
+      if (cas) arr.push(cas)
     }
     if(path instanceof Array) arr = path
     let result = object
@@ -284,26 +297,84 @@ var a02021 = function() {
 //   return rel
 // }
 // console.log(differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }],[{ 'x': 1, 'y': 2 }],(a,b) =>  a == b))
-var sfs = { 'a': [{ 'b': { 'c': 3 } }] }
-var b = 'a'
-var tte = {}
-console.log(sfs[b] )
+// var sfs = { 'a': [{ 'b': { 'c': 3 } }] }
+// var b = 'a'
+// var tte = {}
+// console.log(sfs[b] )
 
-function get1(object, path, defaultValue = undefined) {
-  if (defaultValue !== undefined) return defaultValue
-  let arr = []
-  if(typeof path == 'string') {
-    for (let i of path) {
-      if(i !== '[' && i !== ']' && i !== '.') arr.push(i)
-    }
-  }
-  if(path instanceof Array) arr = path
-  let result = object
-  console.log(arr)
-  arr.forEach(it => result = result? result[it]:undefined)
-  if (result == undefined) return defaultValue
-  return result
-}
-var object = { 'a': [{ 'b': { 'c': 3 } }] };
-console.log(get1(object, 'a','defaul8'))
+// function get1(object, path, defaultValue = undefined) {
+//   if (defaultValue !== undefined) return defaultValue
+//   let arr = []
+//   if(typeof path == 'string') {
+//     for (let i of path) {
+//       if(i !== '[' && i !== ']' && i !== '.') arr.push(i)
+//     }
+//   }
+//   if(path instanceof Array) arr = path
+//   let result = object
+//   console.log(arr)
+//   arr.forEach(it => result = result? result[it]:undefined)
+//   if (result == undefined) return defaultValue
+//   return result
+// }
+// var object = { 'a': [{ 'b': { 'c': 3 } }] };
+// console.log(get1(object, 'a','defaul8'))
 
+// function get(object, path, defaultValue = undefined) {
+//   if (defaultValue !== undefined) return defaultValue
+//   let arr = []
+//   if(typeof path == 'string') {
+//     var cas = ''
+//     for (let i of path) {
+//       if(i !== '[' && i !== ']' && i !== '.') {
+//         cas += i
+//       } else {
+//         if (cas) {
+//         arr.push(cas)
+//         cas = ''
+//         }
+//       }
+//     }
+//     if (cas) arr.push(cas)
+//   }
+//   if(path instanceof Array) arr = path
+//   let result = object
+//   console.log(arr)
+//   arr.forEach(it => result = result? result[it]:undefined)
+//   if (result == undefined) return defaultValue
+//   return result
+// }
+
+// console.log(get({"a":{"b":[1,2,[3,4,[{"foo":42},6]]]}},"a.b[2][2][0].foo"))
+
+// function dropRightWhile(array,f) {
+//   let result = []
+//    if (typeof f == 'function') {
+//      for (let i of array) {
+//        if (!f(i)) result.push(i)
+//      }
+//    }
+//    if (f instanceof Object) {
+//      if(f instanceof Array) {
+//        for (let i of array) {
+//          if (i[f[0]] !== f[1]) result.push(i)
+//        }
+//      } else {
+//        for (let i of array) {
+//          let k = Object.keys(f)
+// // 用Object.keys()获取下标
+//          if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) result.push(i)
+//        }
+//      }
+//    }
+//    if (typeof f == 'string') {
+//      for (let i of array) {
+//        if (i.hasOwnProperty(f)) result.push(i)
+//      }
+//    }
+//    return result
+//  }
+//  console.log(dropRightWhile([{"user":"barney","active":true},{"user":"fred","active":false},{"user":"pebbles","active":false}],["active",false]))
+
+//  var objj = {"x":5}
+//  console.log(objj[0])

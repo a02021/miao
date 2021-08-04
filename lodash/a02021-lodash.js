@@ -44,7 +44,7 @@ var a02021 = function() {
     var f = args[args.length -1]
     var b = args.slice(0,args.length -1)
     var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
-    if(newArrs.length == 0) return array //参数为空返回原数组
+    if(newArrs.length == 0) return a //参数为空返回原数组
     newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
     var rel = []
     if (typeof f == 'function') {
@@ -131,7 +131,7 @@ console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 //   var f = args[args.length -1]
 //   var b = args.slice(0,args.length -1)
 //   var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
-//   if(newArrs.length == 0) return array //参数为空返回原数组
+//   if(newArrs.length == 0) return a //参数为空返回原数组
 //   newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
 //   var rel = []
 //   if (typeof f == 'function') {

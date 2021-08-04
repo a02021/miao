@@ -49,7 +49,7 @@ var a02021 = function() {
     if(newArrs.length == 0) return a //参数为空返回原数组
     newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
     var rel = []
-    if (Object.prototype.toString.call(f) == '[object Object]') {
+    if (typeof f  == 'function') {
       newArrs = newArrs.map(i => f(i))
       a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
       return rel
@@ -219,7 +219,16 @@ function dropRightWhile(array,f) {
       func(args)
     }, wait);
   }
-  
+
+  //Creates an array of the own enumerable property names of object.
+  function keys(object) {
+    let keyArr = []
+    for (let i in object) {
+      keyArr.push(i)
+    }
+    return keyArr
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -233,6 +242,7 @@ function dropRightWhile(array,f) {
     dropWhile:dropWhile,
     get:get,
     delay:delay,
+    keys:keys,
   }
 } ();
 

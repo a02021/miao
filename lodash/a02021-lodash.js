@@ -213,6 +213,13 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  //Invokes func after wait milliseconds. Any additional arguments are provided to func when it's invoked.
+  function delay(func, wait, args) {
+    setTimeout(() => {
+      func(args)
+    }, wait);
+  }
+  
   return {
     chunk:chunk,
     compact:compact,
@@ -225,6 +232,7 @@ function dropRightWhile(array,f) {
     dropRightWhile:dropRightWhile,
     dropWhile:dropWhile,
     get:get,
+    delay:delay,
   }
 } ();
 

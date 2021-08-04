@@ -102,12 +102,21 @@ var a02021 = function() {
     if (n == 0) return array
     if (n >= array.length) return []
     let result = []
-    for (let i = n;i < array.length; i++) {
+    for (let i = n; i < array.length; i++) {
       result.push(array[i])
     }
     return result
   }
-
+//Creates a slice of array with n elements dropped from the end.
+  function dropRight(array, n = 1) {
+    if (n == 0) return array
+    if (n >= array.length) return []
+    let result = []
+    for (let i = 0; i < array.length - n; i++) {
+      result.push(array[i])
+    }
+    return result
+  }
 
   function forEach(obj,f){
     //限制循环条件参数为 数组/对象/字符串 
@@ -128,6 +137,7 @@ var a02021 = function() {
     forEach:forEach,
     differenceWith:differenceWith,
     drop:drop,
+    dropRight:dropRight,
   }
 } ();
 

@@ -67,6 +67,7 @@ var a02021 = function() {
       rel = rel.filter(n => n instanceof Object)
       return rel
     } else { 
+      if (args.length == 1) return difference(a,args)
       return difference(a,...args)
     }
   }
@@ -128,6 +129,33 @@ var a02021 = function() {
     //函数返回值为原参数
     return obj
   }
+ //Creates a slice of array excluding elements dropped from the end. Elements are dropped until predicate returns falsey. The predicate is invoked with three arguments: (value, index, array).
+//条件 : 函数/对象/数组/字符串
+ function dropRightWhile(array,f) {
+   let result = []
+    if (typeof f == 'function') {
+      for (let i of array) {
+        if (!f(i)) result.push(i)
+      }
+    }
+    if (f instanceof Object) {
+      if(f instanceof Array) {
+        for (let i of array) {
+          if (i[f[0]] !== f[1]) result.push(i)
+        }
+      } else {
+        for (let i of array) {
+          if (i[0] !== f[0] || i[1] !== f[1]) result.push(i)
+        }
+      }
+    }
+    if (typeof f == 'string') {
+      for (let i of array) {
+        if (i.hasOwnProperty(f)) result.push(i)
+      }
+    return result
+    }
+  }
 
   return {
     chunk:chunk,
@@ -138,6 +166,7 @@ var a02021 = function() {
     differenceWith:differenceWith,
     drop:drop,
     dropRight:dropRight,
+    dropRightWhile:dropRightWhile,
   }
 } ();
 
@@ -240,3 +269,6 @@ var a02021 = function() {
 // }
 // console.log(differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }],[{ 'x': 1, 'y': 2 }],(a,b) =>  a == b))
 
+var sfs = []
+var tte = {}
+console.log(tte instanceof Array)

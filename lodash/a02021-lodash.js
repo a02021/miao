@@ -43,22 +43,19 @@ var a02021 = function() {
     if(!a) return []
     var f = args[args.length -1]
     var b = args.slice(0,args.length -1)
-  
+    var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
+    if(newArrs.length == 0) return array //参数为空返回原数组
+    newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
     var rel = []
     if (typeof f == 'function') {
-      var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
-      if(newArrs.length == 0) return array //参数为空返回原数组
-      newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
       newArrs = newArrs.map(i => f(i))
-      var rel = []
       a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
       return rel
-    }
-    if (typeof f == 'string') {
+    } else if (typeof f == 'string') {
       for (let i of a) {
         var t = false
         if(i instanceof Object) {
-          for (let j of b){
+          for (let j of newArrs){
             if(j instanceof Object) {
               if(i[f] == j[f] ) t = true
             }
@@ -69,8 +66,10 @@ var a02021 = function() {
       if(!b[0][f] || b.length>1)
       rel = rel.filter(n => n instanceof Object)
       return rel
-    } 
-    return difference(a,...args)
+    } else { 
+      a.map(i => {if(!newArrs.includes(i)) rel.push(i)})
+      return rel
+    }
   }
 
   function forEach(obj,f){
@@ -125,43 +124,43 @@ console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 // b数组内只有一个元素且 key=string 返回所有不匹配
 // b的元素key!=string 返回不匹配 的key=string
 // b.length >1 返回不匹配 的key=string
-
 // f 为 函数时 
 // 过滤 obj,只对数值匹配
-function differenceBy1(a,...args){
-  if(!a) return []
-  var f = args[args.length -1]
-  var b = args.slice(0,args.length -1)
+// function differenceBy1(a,...args){
+//   if(!a) return []
+//   var f = args[args.length -1]
+//   var b = args.slice(0,args.length -1)
+//   var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
+//   if(newArrs.length == 0) return array //参数为空返回原数组
+//   newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+//   var rel = []
+//   if (typeof f == 'function') {
+//     newArrs = newArrs.map(i => f(i))
+//     a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
+//     return rel
+//   } else if (typeof f == 'string') {
+//     for (let i of a) {
+//       var t = false
+//       if(i instanceof Object) {
+//         for (let j of newArrs){
+//           if(j instanceof Object) {
+//             if(i[f] == j[f] ) t = true
+//           }
+//         }
+//         if(!t) rel.push(i)
+//       }
+//     }
+//     if(!b[0][f] || b.length>1)
+//     rel = rel.filter(n => n instanceof Object)
+//     return rel
+//   } else { 
+//     a.map(i => {if(!newArrs.includes(i)) rel.push(i)})
+//     return rel
+//   }
+// }
 
-  var rel = []
-  if (typeof f == 'function') {
-    var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
-    if(newArrs.length == 0) return array //参数为空返回原数组
-    newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
-    newArrs = newArrs.map(i => f(i))
-    var rel = []
-    a.map(i => {if(!newArrs.includes(f(i))) rel.push(i)})
-    return rel
-  }
-  if (typeof f == 'string') {
-    for (let i of a) {
-      var t = false
-      if(i instanceof Object) {
-        for (let j of b){
-          if(j instanceof Object) {
-            if(i[f] == j[f] ) t = true
-          }
-        }
-        if(!t) rel.push(i)
-      }
-    }
-    if(!b[0][f] || b.length>1)
-    rel = rel.filter(n => n instanceof Object)
-    return rel
-  } 
-  return difference(a,...args)
-}
+// console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor))
+// console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor,[{'j':6}],[6]))
+// console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],[{'y':3}],'x') )
 
-console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor))
-console.log(differenceBy1([2.1,1.2,6],[2.3,3.4],'k','5',Math.floor,[{'j':6}],[6]))
-console.log(differenceBy1([4,3,{ 'x': 1 },{'x':5,'y':6}], [{ 'x':4 }],[{'y':3}],'x') )
+// console.log(differenceBy1([1,2,3,4,5,6,7,8],[1,3],[4,8],[6],it => it))

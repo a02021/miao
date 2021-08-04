@@ -255,6 +255,14 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  //Fills elements of array with value from start up to, but not including, end.
+  function fill(array, val, start=0, end = array.length) {
+    for ( let i = start; i < end; i++) {
+      array[i] = val
+    }
+    return array
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -270,6 +278,7 @@ function dropRightWhile(array,f) {
     delay:delay,
     keys:keys,
     map:map,
+    fill,fill,
   }
 } ();
 

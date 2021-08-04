@@ -160,6 +160,34 @@ function dropRightWhile(array,f) {
    return result
  }
 
+ function dropWhile(array,f) {
+  let result = []
+   if (typeof f == 'function') {
+     for (let i of array) {
+       if (!f(i)) result.push(i)
+     }
+   }
+   if (f instanceof Object) {
+     if(f instanceof Array) {
+       for (let i of array) {
+         if (i[f[0]] !== f[1]) result.push(i)
+       }
+     } else {
+       for (let i of array) {
+         let k = Object.keys(f)
+// 用Object.keys()获取下标
+         if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) result.push(i)
+       }
+     }
+   }
+   if (typeof f == 'string') {
+     for (let i of array) {
+       if (i.hasOwnProperty(f)) result.push(i)
+     }
+   }
+   return result
+ }
+
   //Gets the value at path of object. If the resolved value is undefined, the defaultValue is returned in its place.
   function get(object, path, defaultValue = undefined) {
     if (defaultValue !== undefined) return defaultValue
@@ -180,7 +208,6 @@ function dropRightWhile(array,f) {
     }
     if(path instanceof Array) arr = path
     let result = object
-    console.log(arr)
     arr.forEach(it => result = result? result[it]:undefined)
     if (result == undefined) return defaultValue
     return result
@@ -196,6 +223,7 @@ function dropRightWhile(array,f) {
     drop:drop,
     dropRight:dropRight,
     dropRightWhile:dropRightWhile,
+    dropWhile:dropWhile,
     get:get,
   }
 } ();

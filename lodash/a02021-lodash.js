@@ -70,7 +70,7 @@ var a02021 = function() {
       return difference(a,...args)
     }
   }
-  
+
   //This method is like _.difference except that it accepts comparator which is invoked to compare elements of array to values. The order and references of result values are determined by the first array. The comparator is invoked with two arguments: (arrVal, othVal).
   function differenceWith(array, ...args) {
     var f = args[args.length -1]
@@ -96,6 +96,18 @@ var a02021 = function() {
     }
     return rel
   }
+  
+  //Creates a slice of array with n elements dropped from the beginning.
+  function drop(array, n = 1) {
+    if (n == 0) return array
+    if (n >= array.length) return []
+    let result = []
+    for (let i = n;i < array.length; i++) {
+      result.push(array[i])
+    }
+    return result
+  }
+
 
   function forEach(obj,f){
     //限制循环条件参数为 数组/对象/字符串 
@@ -115,20 +127,21 @@ var a02021 = function() {
     differenceBy:differenceBy,
     forEach:forEach,
     differenceWith:differenceWith,
+    drop:drop,
   }
 } ();
 
 
 //     difference 调试
-function difference(array, ...arrs) {
-  var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
-  if(newArrs.length == 0) return array //参数为空返回原数组
-  newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
-  var rel = []
-  array.map(i => {if(!newArrs.includes(i)) rel.push(i)})
-  return rel
-}
-console.log(difference([1,2,3,'k','l'],1,[2,'k']))
+// function difference(array, ...arrs) {
+//   var newArrs = arrs.filter(it => it instanceof Array) //删除非数组参数
+//   if(newArrs.length == 0) return array //参数为空返回原数组
+//   newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+//   var rel = []
+//   array.map(i => {if(!newArrs.includes(i)) rel.push(i)})
+//   return rel
+// }
+// console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 
 // forEach调试
 // function forEach1(obj,f){
@@ -191,28 +204,29 @@ console.log(difference([1,2,3,'k','l'],1,[2,'k']))
 
 // console.log(differenceBy1([1,2,3,4,5,6,7,8],[1,3],[4,8],[6],it => it))
 
-function differenceWith(array, ...args) {
-  var f = args[args.length -1]
-  var b = args.slice(0,args.length -1)
+// function differenceWith(array, ...args) {
+//   var f = args[args.length -1]
+//   var b = args.slice(0,args.length -1)
 
-  var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
-  if(newArrs.length == 0) return array //参数为空返回原数组
-  newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
-  var rel = []
+//   var newArrs = b.filter(it => it instanceof Array) //删除非数组参数
+//   if(newArrs.length == 0) return array //参数为空返回原数组
+//   newArrs = newArrs.reduce((a,b) => a.concat(b)) // 参数合并一个数组便于调用.includes
+//   var rel = []
 
-  if (typeof f == 'function') {
-      for (let i of array) {
-      var t = false
-      if(i instanceof Object) {
-        for (let j of newArrs){
-          if(j instanceof Object) {
-            if(f(i,j) ) t = true
-          }
-        }
-        if(!t) rel.push(i)
-      }
-    }
-  }
-  return rel
-}
-console.log(differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }],[{ 'x': 1, 'y': 2 }],(a,b) =>  a == b))
+//   if (typeof f == 'function') {
+//       for (let i of array) {
+//       var t = false
+//       if(i instanceof Object) {
+//         for (let j of newArrs){
+//           if(j instanceof Object) {
+//             if(f(i,j) ) t = true
+//           }
+//         }
+//         if(!t) rel.push(i)
+//       }
+//     }
+//   }
+//   return rel
+// }
+// console.log(differenceWith([{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }],[{ 'x': 1, 'y': 2 }],(a,b) =>  a == b))
+

@@ -67,10 +67,11 @@ var a02021 = function() {
       rel = rel.filter(n => n instanceof Object)
       return rel
     } else { 
-      a.map(i => {if(!newArrs.includes(i)) rel.push(i)})
-      return rel
+      return difference(a,...args)
     }
   }
+  
+  //This method is like _.difference except that it accepts comparator which is invoked to compare elements of array to values. The order and references of result values are determined by the first array. The comparator is invoked with two arguments: (arrVal, othVal).
   function differenceWith(array, ...args) {
     var f = args[args.length -1]
     var b = args.slice(0,args.length -1)

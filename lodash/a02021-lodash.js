@@ -229,6 +229,32 @@ function dropRightWhile(array,f) {
     return keyArr
   }
 
+  //Creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with three arguments:
+  function map(arg, f){
+    let result = []
+    if (typeof f == 'function') {
+      for (let i of arg) {
+        result.push(f(i))
+      }
+    } else if (typeof f == 'string') {
+      let arr = []
+      let cas = []
+      for(let i of f){
+        if(i !== '[' && i !== ']' && i !== '.') {
+          cas += i
+        } else if (cas) {
+          arr.push(cas)
+          cas = ''
+        }
+      }
+      if (cas) arr.push(cas)
+      arg.map(k => {arr.forEach(it => k = k? k[it]:undefined)
+        result.push(k)
+      })
+    }
+    return result
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -243,6 +269,7 @@ function dropRightWhile(array,f) {
     get:get,
     delay:delay,
     keys:keys,
+    map:map,
   }
 } ();
 

@@ -295,6 +295,24 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  // Checks if object conforms to source by invoking the predicate properties of source with the corresponding property values of object.
+  // 只有0-1个参数 返回true
+  // obj不是数组/对象 返回 false
+  // f第一个key的value为function 返回f(obj[key1)的值
+  function conformsTo(obj, f) {
+    if(!obj || !f) return true
+    if (typeof obj == 'object') {
+      let i = Object.keys(f)[0]
+      if(obj.hasOwnProperty(i)){
+          return f[i](obj[i])
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -314,6 +332,7 @@ function dropRightWhile(array,f) {
     values:values,
     valuesIn:valuesIn,
     flatten:flatten,
+    conformsTo:conformsTo,
   }
 } ();
 

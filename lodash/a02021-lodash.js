@@ -266,8 +266,18 @@ function dropRightWhile(array,f) {
   // Creates an array of the own enumerable string keyed property values of object.
   function values(obj) {
     let result = []
-    for (let val of obj) {
-      result.push(val)
+    //获取可枚举key 不包括原型链上的
+    for (let k of Object.keys(obj)) {
+      result.push(obj[k])
+    }
+    return result
+  }
+  // Creates an array of the own and inherited enumerable string keyed property values of object.
+  function valuesIn(obj) {
+    let result = []
+    //返回所有可遍历枚举的属性,包括原型上
+    for (let k in obj) {
+      result.push(obj[k])
     }
     return result
   }
@@ -289,6 +299,7 @@ function dropRightWhile(array,f) {
     map:map,
     fill,fill,
     values:values,
+    valuesIn:valuesIn,
   }
 } ();
 

@@ -263,6 +263,15 @@ function dropRightWhile(array,f) {
     return array
   }
 
+  // Creates an array of the own enumerable string keyed property values of object.
+  function values(obj) {
+    let result = []
+    for (let val of obj) {
+      result.push(val)
+    }
+    return result
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -279,6 +288,7 @@ function dropRightWhile(array,f) {
     keys:keys,
     map:map,
     fill,fill,
+    values:values,
   }
 } ();
 

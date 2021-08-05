@@ -335,6 +335,13 @@ function dropRightWhile(array,f) {
         }
         return true
       }
+      if (typeof predicate == 'string') {
+        for(let i in collection) {
+          if(!collection[i].hasOwnProperty(predicate))return false
+          if(!collection[i][predicate]) return false
+        }
+        return true
+      }
       let keys = Object.keys(predicate)
       for(let i in collection) {
         for(let k of keys) {
@@ -349,6 +356,50 @@ function dropRightWhile(array,f) {
     }
     return true
   }
+  //Checks if predicate returns truthy for any element of collection. Iteration is stopped once predicate returns truthy. The predicate is invoked with three arguments: (value, index|key, collection).
+  // 和every 区分 只需满足一次
+  function some(collection,predicate) {
+    if(typeof predicate == 'function') {
+      for(let i in collection) {
+        if (predicate(collection[i])) return true
+      }
+      return false
+    }
+    if(predicate){
+      let ite = {}
+      if(Object.prototype.toString.call(predicate) == '[object Array]'){
+        let k = predicate[0]
+        let p = predicate[1]
+        for(let i in collection) {
+          if(collection[i][k] == p) return true
+        }
+        return false
+      }
+      if (typeof predicate == 'string') {
+        for(let i in collection) {
+          if(collection[i].hasOwnProperty(predicate)){
+           if(collection[i][predicate]) return true
+          }
+        }
+        return false
+      }
+      let keys = Object.keys(predicate)
+      for(let i in collection) {
+        let bol = true
+        for(let k of keys) {
+          if(collection[i][k] !== predicate[k]) bol = false
+        }
+        if(bol) return true
+      }
+      return  false
+    } else {
+      for(let i in collection) {
+        if(collection[i]) return true
+      }
+    }
+    return false
+  }
+
 
   return {
     chunk:chunk,
@@ -371,6 +422,7 @@ function dropRightWhile(array,f) {
     flatten:flatten,
     conformsTo:conformsTo,
     every:every,
+    some:some,
   }
 } ();
 

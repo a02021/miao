@@ -313,6 +313,43 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Checks if predicate returns truthy for all elements of collection. Iteration is stopped once predicate returns falsey. The predicate is invoked with three arguments: (value, index|key, collection).
+  // 对collection每个元素 比较 predicate 每个key和value
+  // predicate 为数组,key = [0] value = [1]
+  // predicate 为函数 直接传递每个元素
+  // predicate 空 true
+  function every(collection,predicate) {
+    if(typeof predicate == 'function') {
+      for(let i in collection) {
+        if (!predicate(collection[i])) return false
+      }
+      return true
+    }
+    if(predicate){
+      let ite = {}
+      if(Object.prototype.toString.call(predicate) == '[object Array]'){
+        let k = predicate[0]
+        let p = predicate[1]
+        for(let i in collection) {
+          if(collection[i][k] !== p) return false
+        }
+        return true
+      }
+      let keys = Object.keys(predicate)
+      for(let i in collection) {
+        for(let k of keys) {
+          if(collection[i][k] !== predicate[k]) return false
+        }
+      }
+      return  true
+    } else {
+      for(let i in collection) {
+        if(!collection[i]) return false
+      }
+    }
+    return true
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -333,6 +370,7 @@ function dropRightWhile(array,f) {
     valuesIn:valuesIn,
     flatten:flatten,
     conformsTo:conformsTo,
+    every:every,
   }
 } ();
 

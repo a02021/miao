@@ -302,7 +302,7 @@ function dropRightWhile(array,f) {
     let result = []
     for (let i of array) {
       if(typeof i == 'object') {
-          result.push(...flatten(i))
+          result.push(...flattenDeep(i))
       } else {
         result.push(i)
       }
@@ -318,7 +318,7 @@ function dropRightWhile(array,f) {
       console.log('---',i,array,depth)
       if(typeof i == 'object' && depth>0) {
           depth--
-          result.push(...flatten(i,depth))
+          result.push(...flattenDepth(i,depth))
           console.log(i,depth)
       } else {
         result.push(i)

@@ -432,6 +432,23 @@ function dropRightWhile(array,f) {
     return false
   }
 
+//Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+// 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
+function keyBy(obj, f) {
+  let k = Object.keys(obj)
+  let result = {}
+  if (typeof f == 'string') {
+    for (let i of k) {
+      result[obj[i][f]] = obj[i]
+    }
+  }
+  if (typeof f == 'function') {
+    for (let i of k) {
+      result[f(obj[i])] = obj[i]
+    }
+  return result
+  }
+}
 
   return {
     chunk:chunk,
@@ -457,6 +474,7 @@ function dropRightWhile(array,f) {
     conformsTo:conformsTo,
     every:every,
     some:some,
+    keyBy:keyBy,
   }
 } ();
 

@@ -350,109 +350,71 @@ function dropRightWhile(array,f) {
   // predicate 为数组,key = [0] value = [1]
   // predicate 为函数 直接传递每个元素
   // predicate 空 true
+  //已经改成 封装迭代器 的写法:
   function every(collection,predicate) {
-    if(typeof predicate == 'function') {
-      for(let i in collection) {
-        if (!predicate(collection[i])) return false
-      }
-      return true
-    }
-    if(predicate){
-      let ite = {}
-      if(Object.prototype.toString.call(predicate) == '[object Array]'){
-        let k = predicate[0]
-        let p = predicate[1]
-        for(let i in collection) {
-          if(collection[i][k] !== p) return false
-        }
-        return true
-      }
-      if (typeof predicate == 'string') {
-        for(let i in collection) {
-          if(!collection[i].hasOwnProperty(predicate))return false
-          if(!collection[i][predicate]) return false
-        }
-        return true
-      }
-      let keys = Object.keys(predicate)
-      for(let i in collection) {
-        for(let k of keys) {
-          if(collection[i][k] !== predicate[k]) return false
-        }
-      }
-      return  true
-    } else {
-      for(let i in collection) {
-        if(!collection[i]) return false
-      }
+    if(!predicate)  return true
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = []
+    for(let i of k) {
+      if (!p(collection[i])) return false
     }
     return true
+  
+    function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
+        }
+      }
+    }
   }
   //Checks if predicate returns truthy for any element of collection. Iteration is stopped once predicate returns truthy. The predicate is invoked with three arguments: (value, index|key, collection).
   // 和every 区分 只需满足一次
+  //已经改成 封装迭代器 的写法:
   function some(collection,predicate) {
-    if(typeof predicate == 'function') {
-      for(let i in collection) {
-        if (predicate(collection[i])) return true
+    if(!predicate)  return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = []
+      for(let i of k) {
+        if (p(collection[i])) return true
       }
       return false
-    }
-    if(predicate){
-      let ite = {}
-      if(Object.prototype.toString.call(predicate) == '[object Array]'){
-        let k = predicate[0]
-        let p = predicate[1]
-        for(let i in collection) {
-          if(collection[i][k] == p) return true
-        }
-        return false
+  
+    function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
       }
-      if (typeof predicate == 'string') {
-        for(let i in collection) {
-          if(collection[i].hasOwnProperty(predicate)){
-           if(collection[i][predicate]) return true
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
           }
+          if(bol) return true
         }
-        return false
-      }
-      let keys = Object.keys(predicate)
-      for(let i in collection) {
-        let bol = true
-        for(let k of keys) {
-          if(collection[i][k] !== predicate[k]) bol = false
-        }
-        if(bol) return true
-      }
-      return  false
-    } else {
-      for(let i in collection) {
-        if(collection[i]) return true
       }
     }
-    return false
   }
-
-//Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
-// 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
-function keyBy(obj, f) {
-  let k = Object.keys(obj)
-  let result = {}
-  if (typeof f == 'string') {
-    for (let i of k) {
-      result[obj[i][f]] = obj[i]
-    }
-  }
-  if (typeof f == 'function') {
-    for (let i of k) {
-      result[f(obj[i])] = obj[i]
-    }
-  return result
-  }
-}
 
 //Iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
 // 筛选符合条件的结果输出对象 方法类似every/some
 // 已经改成 封装迭代器 的写法:
+//every, some, filter (已经改成 封装迭代器 的写法 ,仅返回值不同)
 function filter(collection,predicate) {
   if(!predicate)  return collection
   let k = Object.keys(collection)
@@ -482,6 +444,40 @@ function filter(collection,predicate) {
   }
 }
 
+//Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+// 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
+function keyBy(obj, f) {
+  let k = Object.keys(obj)
+  let result = {}
+  if (typeof f == 'string') {
+    for (let i of k) {
+      result[obj[i][f]] = obj[i]
+    }
+  }
+  if (typeof f == 'function') {
+    for (let i of k) {
+      result[f(obj[i])] = obj[i]
+    }
+  return result
+  }
+}
+
+//Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
+// (accumulator, value, index|key, collection).
+// 迭代对象每个值和前一次的结果
+function reduce(obj,f,init) {
+  let k = Object.keys(obj)
+  let result = init
+  let start = 0
+  if (!init) {
+    result = obj[k[0]]
+    start = 1
+  }
+  for (let i = start ;i< k.length;i++) {
+      result = f(result,obj[k[i]],i)
+  }
+  return result
+}
 
   return {
     chunk:chunk,
@@ -507,8 +503,10 @@ function filter(collection,predicate) {
     conformsTo:conformsTo,
     every:every,
     some:some,
-    keyBy:keyBy,
     filter:filter,
+    keyBy:keyBy,
+    reduce:reduce,
+
   }
 } ();
 

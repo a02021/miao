@@ -282,6 +282,19 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  function flatten(array) {
+    if(!array) return []
+    let result = []
+    for (let i of array) {
+      if(typeof i == 'object') {
+          result.push(...i)
+      } else {
+        result.push(i)
+      }
+    }
+    return result
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -300,6 +313,7 @@ function dropRightWhile(array,f) {
     fill,fill,
     values:values,
     valuesIn:valuesIn,
+    flatten:flatten,
   }
 } ();
 

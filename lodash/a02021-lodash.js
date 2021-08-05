@@ -281,13 +281,45 @@ function dropRightWhile(array,f) {
     }
     return result
   }
-
+  // Flattens array a single level deep.
+  // 取出每个数组元素内的元素(第一层)
   function flatten(array) {
     if(!array) return []
     let result = []
     for (let i of array) {
       if(typeof i == 'object') {
           result.push(...i)
+      } else {
+        result.push(i)
+      }
+    }
+    return result
+  }
+  // Recursively flattens array.
+  // 取出每个数组元素内的元素(递归到每一层)
+  function flattenDeep(array) {
+    if(!array) return []
+    let result = []
+    for (let i of array) {
+      if(typeof i == 'object') {
+          result.push(...flatten(i))
+      } else {
+        result.push(i)
+      }
+    }
+    return result
+  }
+  //Recursively flatten array up to depth times.
+  //取出每个数组元素内的元素(自定义递归层数)
+  function flattenDepth(array,depth = 1) {
+    if(!array) return []
+    let result = []
+    for (let i of array) {
+      console.log('---',i,array,depth)
+      if(typeof i == 'object' && depth>0) {
+          depth--
+          result.push(...flatten(i,depth))
+          console.log(i,depth)
       } else {
         result.push(i)
       }
@@ -420,6 +452,8 @@ function dropRightWhile(array,f) {
     values:values,
     valuesIn:valuesIn,
     flatten:flatten,
+    flattenDeep:flattenDeep,
+    flattenDepth:flattenDepth,
     conformsTo:conformsTo,
     every:every,
     some:some,

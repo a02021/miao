@@ -450,6 +450,39 @@ function keyBy(obj, f) {
   }
 }
 
+//Iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
+// 筛选符合条件的结果输出对象 方法类似every/some
+// 已经改成 封装迭代器 的写法:
+function filter(collection,predicate) {
+  if(!predicate)  return collection
+  let k = Object.keys(collection)
+  let p = f(predicate)
+  let result = []
+    for(let i of k) {
+      if (p(collection[i])) result.push(collection[i])
+    }
+    return result
+
+  function f(p){
+    if(typeof p == 'function') return p
+    if(typeof p == 'string') return n => n[p]
+    if(Object.prototype.toString.call(p) == '[object Array]') {
+      return n => n[p[0]] == p[1]
+    }
+    if(Object.prototype.toString.call(p) == '[object Object]') {
+      return n => {
+        let kp = Object.keys(p)
+        let bol = true
+        for(let key of kp) {
+          if(n[key] !== p[key]) bol = false
+        }
+        if(bol) return true
+      }
+    }
+  }
+}
+
+
   return {
     chunk:chunk,
     compact:compact,
@@ -475,6 +508,7 @@ function keyBy(obj, f) {
     every:every,
     some:some,
     keyBy:keyBy,
+    filter:filter,
   }
 } ();
 

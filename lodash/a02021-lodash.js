@@ -585,6 +585,17 @@ function dropRightWhile(array,f) {
     return false
   }
 
+  function reverse(arr) {
+    function swap(arr, a,b) {
+      let c = arr[a]
+      a = b 
+      b = c
+    }
+    for (let i = 0; i < arr.length/2; i++) {
+      swap(arr,i,arr.length - i)
+    }
+    return arr
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -609,12 +620,15 @@ function dropRightWhile(array,f) {
     conformsTo:conformsTo,
     every:every,
     some:some,
+    findLastIndex:findLastIndex,
+    findIndex:findIndex,
     filter:filter,
     keyBy:keyBy,
     reduce:reduce,
     zip:zip,
     unzip:unzip,
     isEqual:isEqual,
+    reverse:reverse,
   }
 } ();
 

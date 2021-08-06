@@ -215,7 +215,7 @@ function dropRightWhile(array,f) {
 
   //Invokes func after wait milliseconds. Any additional arguments are provided to func when it's invoked.
   function delay(func, wait, args) {
-    setTimeout(() => {
+    return setTimeout(() => {
       func(args)
     }, wait);
   }

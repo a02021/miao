@@ -504,23 +504,6 @@ function dropRightWhile(array,f) {
     }
   }
 
-  //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
-  // 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
-  function keyBy(obj, f) {
-    let k = Object.keys(obj)
-    let result = {}
-    if (typeof f == 'string') {
-      for (let i of k) {
-        result[obj[i][f]] = obj[i]
-      }
-    }
-    if (typeof f == 'function') {
-      for (let i of k) {
-        result[f(obj[i])] = obj[i]
-      }
-    return result
-    }
-  }
 
   //Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
   // (accumulator, value, index|key, collection).
@@ -619,6 +602,24 @@ function dropRightWhile(array,f) {
     }
   }
 
+    //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+  // 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
+  // 重写 和 countBy 类似 仅返回值不同
+  function keyBy(collection, predicate) {
+    if (!predicate) return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = {}
+    for (let i of k) {
+        result[p(collection[i])] = collection[i]
+    }
+    return result
+  
+    function f(p) {
+        if (typeof p == 'function') return p
+        if (typeof p == 'string') return n => n[p]
+    }
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -646,13 +647,13 @@ function dropRightWhile(array,f) {
     findLastIndex:findLastIndex,
     findIndex:findIndex,
     filter:filter,
-    keyBy:keyBy,
     reduce:reduce,
     zip:zip,
     unzip:unzip,
     isEqual:isEqual,
     reverse:reverse,
     countBy:countBy,
+    keyBy:keyBy,
   }
 } ();
 

@@ -443,6 +443,66 @@ function dropRightWhile(array,f) {
       }
     }
   }
+  
+  //This method is like _.find except that it returns the index of the first element predicate returns truthy for instead of the element itself.
+  //和some 仅输出不同 true输出索引 flase输出-1 
+  function findIndex(collection,predicate) {
+    if(!predicate)  return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+      for(let i of k) {
+        if (p(collection[i])) return i
+      }
+      return -1
+  
+    function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
+        }
+      }
+    }
+  }
+  //This method is like _.findIndex except that it iterates over elements of collection from right to left.
+  //和findIndex一样 仅将索引反转
+  function findLastIndex(collection,predicate) {
+    if(!predicate)  return collection
+    let k = Object.keys(collection)
+    k = k.reverse()
+    let p = f(predicate)
+      for(let i of k) {
+        if (p(collection[i])) return i
+      }
+      return -1
+
+    function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
+        }
+      }
+    }
+  }
 
   //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
   // 对数组/对象,通过 函数/key 迭代生成带新key 的 对象

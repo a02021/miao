@@ -596,6 +596,29 @@ function dropRightWhile(array,f) {
     }
     return arr
   }
+
+  //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the number of times the key was returned by iteratee. The iteratee is invoked with one argument: (value).
+  // 和every类似 仅返回值不同
+  function countBy(collection, predicate) {
+    if (!predicate) return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = {}
+    for (let i of k) {
+      if(!result[p(collection[i])]) {
+        result[p(collection[i])]= 1
+      }else{
+        result[p(collection[i])]++
+      }
+    }
+    return result
+  
+    function f(p) {
+        if (typeof p == 'function') return p
+        if (typeof p == 'string') return n => n[p]
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -629,6 +652,7 @@ function dropRightWhile(array,f) {
     unzip:unzip,
     isEqual:isEqual,
     reverse:reverse,
+    countBy:countBy,
   }
 } ();
 

@@ -160,31 +160,30 @@ function dropRightWhile(array,f) {
    return result
  }
 
- function dropWhile(array,f) {
-  let result = []
-   if (typeof f == 'function') {
-     for (let i of array) {
-       if (!f(i)) return array.slice(i)
-     }
-   }
-   if (f instanceof Object) {
-     if(f instanceof Array) {
-       for (let i of array) {
-         if (i[f[0]] !== f[1]) return array.slice(i)
-       }
-     } else {
-       for (let i of array) {
-         let k = Object.keys(f)
-// 用Object.keys()获取下标
-         if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) return array.slice(i)
-       }
-     }
-   }
-   if (typeof f == 'string') {
-     for (let i of array) {
-       if (!i[f]) return array.slice(i)
-     }
-   }
+  // 已改写: 和every类似 仅输出不同
+  function dropWhile(array,ite) {
+  let p = f(ite)
+  for (let i in array) {
+    if (!p(array[i])) return array.slice(i)
+  }
+  return []
+    function f(p){
+    if(typeof p == 'function') return p
+    if(typeof p == 'string') return n => n[p]
+    if(Object.prototype.toString.call(p) == '[object Array]') {
+      return n => n[p[0]] == p[1]
+    }
+    if(Object.prototype.toString.call(p) == '[object Object]') {
+      return n => {
+        let kp = Object.keys(p)
+        let bol = true
+        for(let key of kp) {
+          if(n[key] !== p[key]) bol = false
+        }
+        if(bol) return true
+      }
+    }
+  }
  }
 
   //Gets the value at path of object. If the resolved value is undefined, the defaultValue is returned in its place.
@@ -643,6 +642,21 @@ function dropRightWhile(array,f) {
         if (typeof p == 'string') return n => n[p]
     }
   }
+
+  //Creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
+  //Fisher–Yates shuffle 算法
+  // 每次取随机数 k 作为索引,取出数组[k],放到新数组的尾部
+  function shuffle(arr) {
+    let result = []
+    let cas = arr
+    for (let i = arr.length - 1; i>=0; i--) {
+      let k = Math.floor(Math.random()*(i+1))
+      result.unshift(cas[k])
+      cas = cas.slice(0,k).concat(cas.slice(k+1))
+    }
+    return result
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -678,6 +692,7 @@ function dropRightWhile(array,f) {
     countBy:countBy,
     keyBy:keyBy,
     reduceRight:reduceRight,
+    shuffle:shuffle,
   }
 } ();
 

@@ -451,7 +451,7 @@ function dropRightWhile(array,f) {
     let k = Object.keys(collection)
     let p = f(predicate)
       for(let i of k) {
-        if (p(collection[i])) return i
+        if (p(collection[i])) return Number(i)
       }
       return -1
   
@@ -481,7 +481,7 @@ function dropRightWhile(array,f) {
     k = k.reverse()
     let p = f(predicate)
       for(let i of k) {
-        if (p(collection[i])) return i
+        if (p(collection[i])) return Number(i)
       }
       return -1
 

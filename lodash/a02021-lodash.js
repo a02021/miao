@@ -411,73 +411,97 @@ function dropRightWhile(array,f) {
     }
   }
 
-//Iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
-// 筛选符合条件的结果输出对象 方法类似every/some
-// 已经改成 封装迭代器 的写法:
-//every, some, filter (已经改成 封装迭代器 的写法 ,仅返回值不同)
-function filter(collection,predicate) {
-  if(!predicate)  return collection
-  let k = Object.keys(collection)
-  let p = f(predicate)
-  let result = []
-    for(let i of k) {
-      if (p(collection[i])) result.push(collection[i])
-    }
-    return result
-
-  function f(p){
-    if(typeof p == 'function') return p
-    if(typeof p == 'string') return n => n[p]
-    if(Object.prototype.toString.call(p) == '[object Array]') {
-      return n => n[p[0]] == p[1]
-    }
-    if(Object.prototype.toString.call(p) == '[object Object]') {
-      return n => {
-        let kp = Object.keys(p)
-        let bol = true
-        for(let key of kp) {
-          if(n[key] !== p[key]) bol = false
+  //Iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
+  // 筛选符合条件的结果输出对象 方法类似every/some
+  // 已经改成 封装迭代器 的写法:
+  //every, some, filter (已经改成 封装迭代器 的写法 ,仅返回值不同)
+  function filter(collection,predicate) {
+    if(!predicate)  return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = []
+      for(let i of k) {
+        if (p(collection[i])) result.push(collection[i])
+      }
+      return result
+  
+    function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
         }
-        if(bol) return true
       }
     }
   }
-}
 
-//Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
-// 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
-function keyBy(obj, f) {
-  let k = Object.keys(obj)
-  let result = {}
-  if (typeof f == 'string') {
-    for (let i of k) {
-      result[obj[i][f]] = obj[i]
+  //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+  // 对数组/对象,通过 函数/key 迭代生成带新key 的 对象
+  function keyBy(obj, f) {
+    let k = Object.keys(obj)
+    let result = {}
+    if (typeof f == 'string') {
+      for (let i of k) {
+        result[obj[i][f]] = obj[i]
+      }
+    }
+    if (typeof f == 'function') {
+      for (let i of k) {
+        result[f(obj[i])] = obj[i]
+      }
+    return result
     }
   }
-  if (typeof f == 'function') {
-    for (let i of k) {
-      result[f(obj[i])] = obj[i]
-    }
-  return result
-  }
-}
 
-//Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
-// (accumulator, value, index|key, collection).
-// 迭代对象每个值和前一次的结果
-function reduce(obj,f,init) {
-  let k = Object.keys(obj)
-  let result = init
-  let start = 0
-  if (!init) {
-    result = obj[k[0]]
-    start = 1
+  //Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
+  // (accumulator, value, index|key, collection).
+  // 迭代对象每个值和前一次的结果
+  function reduce(obj,f,init) {
+    let k = Object.keys(obj)
+    let result = init
+    let start = 0
+    if (!init) {
+      result = obj[k[0]]
+      start = 1
+    }
+    for (let i = start ;i< k.length;i++) {
+        result = f(result,obj[k[i]],i)
+    }
+    return result
   }
-  for (let i = start ;i< k.length;i++) {
-      result = f(result,obj[k[i]],i)
+
+  //Creates an array of grouped elements, the first of which contains the first elements of the given arrays, the second of which contains the second elements of the given arrays, and so on.
+  // 对多个数组按下标重新分组 
+  function zip(...arrays) {
+    let result = []
+    let maxLength = mx(arrays)
+    for(let it of arrays) {
+      for (let i = 0;i < maxLength; i++) {
+        if(! result[i]) {
+          result[i] = [it[i]]
+        } else {
+          result[i].push(it[i])
+        }
+      }
+    }
+    return result
+    function mx(arr) {
+      let r = 0
+      for(let it of arr) {
+        if (it.length > r) r = it.length
+      }
+      return r
+    }
   }
-  return result
-}
 
   return {
     chunk:chunk,
@@ -506,7 +530,7 @@ function reduce(obj,f,init) {
     filter:filter,
     keyBy:keyBy,
     reduce:reduce,
-
+    zip:zip,
   }
 } ();
 

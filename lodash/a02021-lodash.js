@@ -230,29 +230,36 @@ function dropRightWhile(array,f) {
   }
 
   //Creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with three arguments:
-  function map(arg, f){
+  function map(arg, ite){
     let result = []
-    if (typeof f == 'function') {
-      for (let i of arg) {
-        result.push(f(i))
-      }
-    } else if (typeof f == 'string') {
-      let arr = []
-      let cas = []
-      for(let i of f){
-        if(i !== '[' && i !== ']' && i !== '.') {
-          cas += i
-        } else if (cas) {
-          arr.push(cas)
-          cas = ''
+    let p = f(ite)
+    for (let i = 0;i < arg.length; i++) {
+      result.push(p(arg[i],i,arg))
+    } 
+    return result
+    function f(n) {
+      if (typeof n == 'function')  return n
+      if (typeof n == 'string') {
+        let arr = []
+        let cas = []
+        for (let i of n) {
+          if (i !== '[' && i !== ']' && i !== '.') {
+              cas += i
+          } else if (cas) {
+              arr.push(cas)
+              cas = ''
+          }
+        }
+        if (cas) arr.push(cas)
+        return m => {
+          for (let i of arr) {
+            if (!m[i]) return undefined
+            m = m[i]
+          }
+          return m
         }
       }
-      if (cas) arr.push(cas)
-      arg.map(k => {arr.forEach(it => k = k? k[it]:undefined)
-        result.push(k)
-      })
     }
-    return result
   }
 
   //Fills elements of array with value from start up to, but not including, end.

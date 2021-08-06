@@ -164,28 +164,27 @@ function dropRightWhile(array,f) {
   let result = []
    if (typeof f == 'function') {
      for (let i of array) {
-       if (!f(i)) result.push(i)
+       if (!f(i)) return array.slice(i)
      }
    }
    if (f instanceof Object) {
      if(f instanceof Array) {
        for (let i of array) {
-         if (i[f[0]] !== f[1]) result.push(i)
+         if (i[f[0]] !== f[1]) return array.slice(i)
        }
      } else {
        for (let i of array) {
          let k = Object.keys(f)
 // 用Object.keys()获取下标
-         if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) result.push(i)
+         if (i[k[0]] !== f[k[0]] || i[k[1]] !== f[k[1]]) return array.slice(i)
        }
      }
    }
    if (typeof f == 'string') {
      for (let i of array) {
-       if (i.hasOwnProperty(f)) result.push(i)
+       if (!i[f]) return array.slice(i)
      }
    }
-   return result
  }
 
   //Gets the value at path of object. If the resolved value is undefined, the defaultValue is returned in its place.
@@ -529,6 +528,22 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  //This method is like _.reduce except that it iterates over elements of collection from right to left.
+  //从右边开始 (对索引取反)
+  function reduceRight(obj,f,init) {
+    let k = Object.keys(obj)
+    k.reverse()
+    let result = init
+    let start = 0
+    if (!init) {
+      result = obj[k[0]]
+      start = 1
+    }
+      for (let i = start ;i< k.length;i++) {
+        result = f(result,obj[k[i]],i)
+      }
+      return result
+    }
   //Creates an array of grouped elements, the first of which contains the first elements of the given arrays, the second of which contains the second elements of the given arrays, and so on.
   // 对多个数组按下标重新分组 
   function zip(...arrays) {
@@ -662,6 +677,7 @@ function dropRightWhile(array,f) {
     reverse:reverse,
     countBy:countBy,
     keyBy:keyBy,
+    reduceRight:reduceRight,
   }
 } ();
 

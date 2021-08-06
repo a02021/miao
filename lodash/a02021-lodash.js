@@ -502,6 +502,12 @@ function dropRightWhile(array,f) {
       return r
     }
   }
+  
+  //This method is like _.zip except that it accepts an array of grouped elements and creates an array regrouping the elements to their pre-zip configuration.
+  //把数组内的数组传递给zip
+  function unzip(arr) {
+    return zip(...arr)
+  }
 
   return {
     chunk:chunk,
@@ -531,6 +537,7 @@ function dropRightWhile(array,f) {
     keyBy:keyBy,
     reduce:reduce,
     zip:zip,
+    unzip:unzip,
   }
 } ();
 

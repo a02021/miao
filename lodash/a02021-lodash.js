@@ -508,16 +508,16 @@ function dropRightWhile(array,f) {
   //Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
   // (accumulator, value, index|key, collection).
   // 迭代对象每个值和前一次的结果
-  function reduce(obj,f,init) {
+  function reduce(obj, f, init) {
     let k = Object.keys(obj)
     let result = init
     let start = 0
     if (!init) {
-      result = obj[k[0]]
-      start = 1
+        result = obj[k[0]]
+        start = 1
     }
-    for (let i = start ;i< k.length;i++) {
-        result = f(result,obj[k[i]],i)
+    for (let i = start; i < k.length; i++) {
+        result = f(result, obj[k[i]], k[i])
     }
     return result
   }
@@ -554,16 +554,17 @@ function dropRightWhile(array,f) {
   
   //Performs a deep comparison between two values to determine if they are equivalent.
   //深层比较2个参数的值是否相同
-  function isEqual(a,b) {
+  function isEqual(a, b) {
     if (a === b) return true
+    if (typeof a == 'number' || typeof a == 'string') return false
     if (Object.prototype.toString.call(a) == Object.prototype.toString.call(b)) {
-      let ka = Object.keys(a)
-      let kb = Object.keys(b)
-      if (ka.length !== kb.length) return false
-      for (let i of ka) {
-        if (!isEqual(a[i],b[i])) return false
-      }
-      return true
+        let ka = Object.keys(a)
+        let kb = Object.keys(b)
+        if (ka.length !== kb.length) return false
+        for (let i of ka) {
+            if (!isEqual(a[i], b[i])) return false
+        }
+        return true
     }
     return false
   }

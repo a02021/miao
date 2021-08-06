@@ -508,6 +508,22 @@ function dropRightWhile(array,f) {
   function unzip(arr) {
     return zip(...arr)
   }
+  
+  //Performs a deep comparison between two values to determine if they are equivalent.
+  //深层比较2个参数的值是否相同
+  function isEqual(a,b) {
+    if (a === b) return true
+    if (Object.prototype.toString.call(a) == Object.prototype.toString.call(b)) {
+      let ka = Object.keys(a)
+      let kb = Object.keys(b)
+      if (ka.length !== kb.length) return false
+      for (let i of ka) {
+        if (!isEqual(a[i],b[i])) return false
+      }
+      return true
+    }
+    return false
+  }
 
   return {
     chunk:chunk,
@@ -538,6 +554,7 @@ function dropRightWhile(array,f) {
     reduce:reduce,
     zip:zip,
     unzip:unzip,
+    isEqual:isEqual,
   }
 } ();
 

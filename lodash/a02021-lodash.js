@@ -231,7 +231,8 @@ function dropRightWhile(array,f) {
   function map(arg, ite){
     let result = []
     let p = f(ite)
-    for (let i = 0;i < arg.length; i++) {
+    let k = Object.keys(arg)
+    for (let i of k) {
       result.push(p(arg[i],i,arg))
     } 
     return result
@@ -656,7 +657,15 @@ function dropRightWhile(array,f) {
     }
     return result
   }
-
+  
+  //Computes the sum of the values in array.
+  function sum(arr) {
+    let result = 0
+    for (let i of arr) {
+      result += i
+    }
+    return result
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -693,6 +702,7 @@ function dropRightWhile(array,f) {
     keyBy:keyBy,
     reduceRight:reduceRight,
     shuffle:shuffle,
+    sum:sum,
   }
 } ();
 

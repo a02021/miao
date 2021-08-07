@@ -682,6 +682,9 @@ function dropRightWhile(array,f) {
 
   //Checks if value is NaN.
   function isNaN(n) {
+    if(typeof n === 'object') {
+      n = n.valueOf()
+    }
     return n !== n
   }
 

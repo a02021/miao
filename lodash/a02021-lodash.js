@@ -744,10 +744,15 @@ function dropRightWhile(array,f) {
   // 找出第一个匹配值的下标
   function indexOf(arr,val,index = 0) {
     if(index < 0) index = 0
+    let p = f(val)
     for (let i = index; i < arr.length; i++) {
-      if (arr[i] == val) return i
+      if (p(arr[i])) return i
     }
     return -1
+    function f(n) {
+      if (isNaN(val)) return m => isNaN(m)
+      return m => m === n
+    }
   }
 
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.

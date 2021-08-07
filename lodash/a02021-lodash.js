@@ -742,11 +742,25 @@ function dropRightWhile(array,f) {
 
   // Gets the index at which the first occurrence of value is found in array using SameValueZero for equality comparisons. If fromIndex is negative, it's used as the offset from the end of array.
   // 找出第一个匹配值的下标
+  // includes使用的比较算法是SameValueZero
   function indexOf(arr,val,index = 0) {
     for (let i = index; i < arr.length; i++) {
-      if (Object.is(arr[i],val)) return i
+      if (arr[i].includes(val)) return i
     }
     return -1
+    // includes使用的比较算法是SameValueZero
+  }
+
+  //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
+  // 找出所有相同值 返回新数组
+  //includes使用的比较算法是SameValueZero
+  function intersection(arr,arr2) {
+    let result = []
+    for (let i of arr2) {
+      if (arr.includes(i)) result.push(i)
+    }
+    return result
+    // includes使用的比较算法是SameValueZero
   }
 
   //Creates a new array concatenating array with any additional arrays and/or values.
@@ -825,6 +839,7 @@ function dropRightWhile(array,f) {
     toPairs:toPairs,
     head:head,
     indexOf:indexOf,
+    intersection:intersection,
     concat:concat,
     isNative:isNative,
     initial:initial,

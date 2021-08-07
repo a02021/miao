@@ -671,7 +671,7 @@ function dropRightWhile(array,f) {
     let result = 0
     let p = f(ite)
     for (let i of arr) {
-      result += i
+      result += p(i)
     }
     return result
     function f(n){
@@ -711,6 +711,15 @@ function dropRightWhile(array,f) {
     } finally {
     return result
     }
+  }
+
+  //The inverse of _.toPairs; this method returns an object composed from key-value pairs.
+  function fromPairs(pairs) {
+    let result = {}
+    for (let i of pairs) {
+      result[i[0]] = i[1]
+    }
+    return result
   }
 
   return {
@@ -753,8 +762,10 @@ function dropRightWhile(array,f) {
     sumBy:sumBy,
     isNaN:isNaN,
     isNull:isNull,
+    isNil:isNil,
     isUndefined:isUndefined,
     toArray:toArray,
+    fromPairs:fromPairs,
   }
 } ();
 

@@ -753,8 +753,11 @@ function dropRightWhile(array,f) {
   function concat(arr,...args) {
     let result = arr
     args.forEach(n => {
-      if (typeof n === 'object') result.push(...n)
+      if (typeof n === 'object') {
+        result.push(...n)
+      } else {
       result.push(n)
+      }
     })
     return result
   }

@@ -231,8 +231,7 @@ function dropRightWhile(array,f) {
   function map(arg, ite){
     let result = []
     let p = f(ite)
-    let k = Object.keys(arg)
-    for (let i of k) {
+    for (let i = 0; i < arg.length; i++) {
       result.push(p(arg[i],i,arg))
     } 
     return result

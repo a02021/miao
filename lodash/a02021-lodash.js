@@ -754,12 +754,18 @@ function dropRightWhile(array,f) {
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
   // 找出所有相同值 返回新数组
   //includes使用的比较算法是SameValueZero
-  function intersection(arr,arr2) {
-    let result = []
-    for (let i of arr2) {
-      if (arr.includes(i)) result.push(i)
+  // 不要重复值 按第一个数组的值顺序排列
+  function intersection(...arrs) {
+    let cas = Array.from(new Set(arrs[0])) 
+    let nex = []
+    for (let i = 1; i < arrs.length ; i++) {
+      cas.forEach(n => {
+        if (arrs[i].includes(n) ) nex.push(n)
+      })
+      cas = nex
+      nex = []
     }
-    return result
+    return cas
     // includes使用的比较算法是SameValueZero
   }
 

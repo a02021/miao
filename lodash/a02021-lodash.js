@@ -722,6 +722,15 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  //Creates an array of own enumerable string keyed-value pairs for object which can be consumed by _.fromPairs. If object is a map or set, its entries are returned.
+  function toPairs(obj) {
+    let result = []
+    let k = Object.keys(obj)
+    for (let i of k) {
+      result.push([i,obj[i]])
+    }
+    return result
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -766,6 +775,7 @@ function dropRightWhile(array,f) {
     isUndefined:isUndefined,
     toArray:toArray,
     fromPairs:fromPairs,
+    toPairs:toPairs,
   }
 } ();
 

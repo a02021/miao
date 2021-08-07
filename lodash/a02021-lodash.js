@@ -797,12 +797,12 @@ function dropRightWhile(array,f) {
   function isNative(val) {
     let type = [String,Number,Boolean,Array,Object]
     let nam = val.toString().match(/(?<=function )\w+/)[0]
-    type.forEach(t => {
+    for (let t of type) {
       if(t.prototype.hasOwnProperty(nam)) return true
-    })
+    }
     return false
   }
-
+  
   //Gets all but the last element of array.
   function initial(arr) {
     return arr.slice(0,arr.length-1)

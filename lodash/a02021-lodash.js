@@ -749,6 +749,16 @@ function dropRightWhile(array,f) {
     return -1
   }
 
+  //Creates a new array concatenating array with any additional arrays and/or values.
+  function concat(arr,...args) {
+    let result = arr
+    args.forEach(n => {
+      if (typeof n === 'object') result.push(...n)
+      result.push(n)
+    })
+    return result
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -796,6 +806,7 @@ function dropRightWhile(array,f) {
     toPairs:toPairs,
     head:head,
     indexOf:indexOf,
+    concat:concat,
   }
 } ();
 

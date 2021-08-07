@@ -666,6 +666,20 @@ function dropRightWhile(array,f) {
     }
     return result
   }
+
+  function sumBy(arr,ite) {
+    let result = 0
+    let p = f(ite)
+    for (let i of arr) {
+      result += i
+    }
+    return result
+    function f(n){
+      if(typeof n == 'string') return m => m(n)
+      if(typeof n == 'function') return n 
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -703,6 +717,7 @@ function dropRightWhile(array,f) {
     reduceRight:reduceRight,
     shuffle:shuffle,
     sum:sum,
+    sumBy:sumBy,
   }
 } ();
 

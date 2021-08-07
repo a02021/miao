@@ -742,13 +742,12 @@ function dropRightWhile(array,f) {
 
   // Gets the index at which the first occurrence of value is found in array using SameValueZero for equality comparisons. If fromIndex is negative, it's used as the offset from the end of array.
   // 找出第一个匹配值的下标
-  // includes使用的比较算法是SameValueZero
   function indexOf(arr,val,index = 0) {
+    if(index < 0) index = 0
     for (let i = index; i < arr.length; i++) {
-      if (arr[i].includes(val)) return i
+      if (arr[i] == val) return i
     }
     return -1
-    // includes使用的比较算法是SameValueZero
   }
 
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.

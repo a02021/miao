@@ -740,6 +740,15 @@ function dropRightWhile(array,f) {
     return arr[0]
   }
 
+  // Gets the index at which the first occurrence of value is found in array using SameValueZero for equality comparisons. If fromIndex is negative, it's used as the offset from the end of array.
+  // 找出第一个匹配值的下标
+  function indexOf(arr,val,index = 0) {
+    for (let i = index; i < arr.length; i++) {
+      if (Object.is(arr[i],val)) return i
+    }
+    return -1
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -786,6 +795,7 @@ function dropRightWhile(array,f) {
     fromPairs:fromPairs,
     toPairs:toPairs,
     head:head,
+    indexOf:indexOf,
   }
 } ();
 

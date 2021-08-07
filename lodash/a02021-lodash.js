@@ -682,11 +682,37 @@ function dropRightWhile(array,f) {
 
   //Checks if value is NaN.
   function isNaN(n) {
-    if (n !== n) return true
-    return false
-
-  
+    return n !== n
   }
+
+  //Checks if value is null.
+  function isNull(n) {
+    return n === null
+  }
+
+  //Checks if value is null or undefined.
+  function isNil(n) {
+    return n === null || n === undefined
+  }
+
+  //Checks if value is undefined
+  function isUndefined(n) {
+    return  n === undefined
+  }
+
+  // Converts value to an array.
+  function toArray(val) {
+    let result = []
+    try {
+      let k = Object.keys(val)
+      for (let i of k) {
+        result.push(val[i])
+      }
+    } finally {
+    return result
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -726,6 +752,9 @@ function dropRightWhile(array,f) {
     sum:sum,
     sumBy:sumBy,
     isNaN:isNaN,
+    isNull:isNull,
+    isUndefined:isUndefined,
+    toArray:toArray,
   }
 } ();
 

@@ -231,8 +231,9 @@ function dropRightWhile(array,f) {
   function map(arg, ite){
     let result = []
     let p = f(ite)
-    for (let i = 0; i < arg.length; i++) {
-      result.push(p(arg[i],i,arg))
+    let k = Object.keys(arg)
+    for (let i in keys) {
+      result.push(p(arg[keys[i]],Number(i),arg))
     } 
     return result
     function f(n) {
@@ -679,6 +680,13 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Checks if value is NaN.
+  function isNaN(n) {
+    if (n !== n) return true
+    return false
+
+  
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -717,6 +725,7 @@ function dropRightWhile(array,f) {
     shuffle:shuffle,
     sum:sum,
     sumBy:sumBy,
+    isNaN:isNaN,
   }
 } ();
 

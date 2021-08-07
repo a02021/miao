@@ -755,17 +755,27 @@ function dropRightWhile(array,f) {
   // 找出所有相同值 返回新数组
   //includes使用的比较算法是SameValueZero
   // 不要重复值 按第一个数组的值顺序排列
+  // function intersection(...arrs) {
+  //   let cas = Array.from(new Set(arrs[0])) 
+  //   let nex = []
+  //   for (let i = 1; i < arrs.length ; i++) {
+  //     cas.forEach(n => {
+  //       if (arrs[i].includes(n) ) nex.push(n)
+  //     })
+  //     cas = nex
+  //     nex = []
+  //   }
+  //   return cas
+  //   // includes使用的比较算法是SameValueZero
+  // }
   function intersection(...arrs) {
-    let cas = Array.from(new Set(arrs[0])) 
-    let nex = []
-    for (let i = 1; i < arrs.length ; i++) {
-      cas.forEach(n => {
-        if (arrs[i].includes(n) ) nex.push(n)
-      })
-      cas = nex
-      nex = []
+    arrs[0] = Array.from(new Set(arrs[0])) 
+    function cp(a,b) {
+      let nex = []
+      a.forEach(n => {if (b.includes(n)) nex.push(n)})
+      return nex
     }
-    return cas
+    return arrs.reduce(cp)
     // includes使用的比较算法是SameValueZero
   }
 

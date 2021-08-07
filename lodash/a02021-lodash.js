@@ -675,8 +675,8 @@ function dropRightWhile(array,f) {
     }
     return result
     function f(n){
-      if(typeof n == 'string') return m => m(n)
-      if(typeof n == 'function') return n 
+      if(typeof n === 'string') return m => m(n)
+      if(typeof n === 'function') return n 
     }
   }
 

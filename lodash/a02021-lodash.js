@@ -772,6 +772,12 @@ function dropRightWhile(array,f) {
     })
     return false
   }
+
+  //Gets all but the last element of array.
+  function initial(arr) {
+    return arr.slice(0,arr.length-1)
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -821,6 +827,7 @@ function dropRightWhile(array,f) {
     indexOf:indexOf,
     concat:concat,
     isNative:isNative,
+    initial:initial,
   }
 } ();
 

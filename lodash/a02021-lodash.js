@@ -734,6 +734,12 @@ function dropRightWhile(array,f) {
     }
     return result
   }
+
+  // Gets the first element of array.
+  function head(arr) {
+    return arr[0]
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -779,6 +785,7 @@ function dropRightWhile(array,f) {
     toArray:toArray,
     fromPairs:fromPairs,
     toPairs:toPairs,
+    head:head,
   }
 } ();
 

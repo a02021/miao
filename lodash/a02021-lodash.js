@@ -819,15 +819,18 @@ function dropRightWhile(array,f) {
     return parseType(cas)
     function parseType(n) {
       let a = n[0]
-      if (a === '\"')  return parseString(n)
+      if (a === '\"') return parseString(n)
       if (!isNaN(a)) return parseNumber(n)
       if (a === '[') return parseArray(n)
+      if (a === 't') return parseTrue(n)
+      if (a === 'n') return parseNull(n)
+      if (a === '{') return parseObject(n)
     }
   
   
     function parseString(n) {
       if (n[n.length-1] !== '\"') return "parse error!"
-      return cas
+      return cas.slice(1,cas.length -1)
     }
     function parseNumber(n) {
       if (isNaN(n)) return "parse error!"
@@ -848,6 +851,40 @@ function dropRightWhile(array,f) {
       if (c !== "") r.push(parseJson(c))
       return r
     }
+    function parseTrue(n) {
+      if (n !== "true") return "parse error!"
+      return true
+    }
+    function parseNull(n) {
+      if (n !== "null") return "parse error!"
+      return null
+    }
+    function parseObject(n) {
+      if (n[n.length-1] !== "}") return "parse error!"
+      let r = {}
+      let c = ""
+      let d = ""
+      n = n.slice(1,n.length-1)
+      for (let i =0; i<n.length;i++) {
+        console.log(n.length)
+        while (n[i] !== ":" && i<n.length) {
+          c += n[i]
+          console.log(i)
+          i++
+        }
+        let p = parseJson(c)
+        c = ""
+        i++
+        while (n[i] !== "," && i< n.length) {
+          d += n[i]
+          i++
+        }
+        r[p] = parseJson(d)
+        d = ""
+      }
+      return r
+    }
+  }
 
   return {
     chunk:chunk,

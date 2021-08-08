@@ -813,6 +813,42 @@ function dropRightWhile(array,f) {
     return arr.slice(0,arr.length-1)
   }
 
+  function parseJson(str) {
+    let cas = str
+  
+    return parseType(cas)
+    function parseType(n) {
+      let a = n[0]
+      if (a === '\"')  return parseString(n)
+      if (!isNaN(a)) return parseNumber(n)
+      if (a === '[') return parseArray(n)
+    }
+  
+  
+    function parseString(n) {
+      if (n[n.length-1] !== '\"') return "parse error!"
+      return cas
+    }
+    function parseNumber(n) {
+      if (isNaN(n)) return "parse error!"
+      return Number(n)
+    }
+    function parseArray(n) {
+      if (n[n.length-1] !== ']') return "parse error!"
+      let r = []
+      let c = ""
+      n = n.slice(1,n.length-1)
+      for (let i of n) {
+        if (i !== ',') c += i
+        if (i === ',') {
+          r.push(parseJson(c))
+          c = ""
+        }
+      }
+      if (c !== "") r.push(parseJson(c))
+      return r
+    }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -864,6 +900,7 @@ function dropRightWhile(array,f) {
     concat:concat,
     isNative:isNative,
     initial:initial,
+    parseJson:parseJson,
   }
 } ();
 

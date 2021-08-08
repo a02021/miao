@@ -844,8 +844,18 @@ function dropRightWhile(array,f) {
       for (let i of n) {
         if (i !== ',') c += i
         if (i === ',') {
-          r.push(parseJson(c))
-          c = ""
+          if(c[0] == '{') {
+            if (c[c.length-1 == '}']) {
+              r.push(parseJson(c))
+              c = ""
+            } else {
+              c += i
+            }
+          } else {
+            c += i
+            r.push(parseJson(c))
+            c = ""
+          }
         }
       }
       if (c !== "") r.push(parseJson(c))
@@ -860,16 +870,14 @@ function dropRightWhile(array,f) {
       return null
     }
     function parseObject(n) {
-      if (n[n.length-1] !== "}") return "parse error!"
+      if (n[n.length-1] !== "}") return "parse obj error!"
       let r = {}
       let c = ""
       let d = ""
       n = n.slice(1,n.length-1)
       for (let i =0; i<n.length;i++) {
-        console.log(n.length)
         while (n[i] !== ":" && i<n.length) {
           c += n[i]
-          console.log(i)
           i++
         }
         let p = parseJson(c)

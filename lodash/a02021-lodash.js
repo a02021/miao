@@ -783,6 +783,24 @@ function dropRightWhile(array,f) {
     // includes使用的比较算法是SameValueZero
   }
 
+  //This method is like _.intersection except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which they're compared. The order and references of result values are determined by the first array. The iteratee is invoked with one argument:
+  function intersectionBy(...arrs) {
+    let p = f(arrs[arrs.length-1])
+    arrs = arrs.slice(0,arrs.length-1)
+    function cp(a,b) {
+      let nex = []
+      a.forEach(n => {
+        b.forEach(m => {
+          if (p(n) == p(m)) nex.push(n)
+        })})
+      return nex
+    }
+    return arrs.reduce(cp)
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
   //Creates a new array concatenating array with any additional arrays and/or values.
   function concat(arr,...args) {
     let result = arr

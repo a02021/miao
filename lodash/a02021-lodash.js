@@ -1064,6 +1064,85 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //This method is like _.indexOf except that it performs a binary search on a sorted array.
+  // 和sortedIndex 返回值不同(没有匹配值返回-1)
+  // 返回下标最小的匹配
+  function sortedIndexOf(arr,val) {
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    if (arr[0] == val) return 0
+    let result = -1
+    while (true) {
+      let cur = arr[mid]
+      if (cur == val) {
+        result = mid
+        max = mid
+      }
+      if (cur < val) min = mid 
+      if (cur > val) max = mid
+      if ((max - min) == 1) return result
+      mid = Math.floor((min+max)/2)
+    }
+  }
+
+  //This method is like _.sortedIndex except that it returns the highest index at which value should be inserted into array in order to maintain its sort order.
+  // 和sortedIndex 返回值不同
+  // 返回匹配结果最大的下标
+  function sortedLastIndex(arr,val) {
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    while (true) {
+      let cur = arr[mid]
+      if (cur <= val) min = mid 
+      if (cur > val) max = mid
+      if ((max - min) == 1) return max
+      mid = Math.floor((min+max)/2)
+    }
+  }
+
+  //This method is like _.sortedLastIndex except that it accepts iteratee which is invoked for value and each element of array to compute their sort ranking. The iteratee is invoked with one argument: (value).
+  // 返回匹配结果最大的下标
+  function sortedLastIndexBy(arr,value,ite) {
+    let p = f(ite)
+    let val = p(value)
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    while (true) {
+      let cur = p(arr[mid])
+      if (cur < val) min = mid 
+      if (cur > val) max = mid
+      if ((max - min) == 1) return max
+      mid = Math.floor((min+max)/2)
+    }
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
+  //This method is like _.lastIndexOf except that it performs a binary search on a sorted array.
+  function sortedLastIndexOf(arr,val) {
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    if (arr[0] == val) return 0
+    let result = -1
+    while (true) {
+      let cur = arr[mid]
+      if (cur == val) {
+        min = mid
+        result = mid
+      }
+      if (cur < val) min = mid 
+      if (cur > val) max = mid
+      if ((max - min) == 1) return result
+      mid = Math.floor((min+max)/2)
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1128,6 +1207,10 @@ function dropRightWhile(array,f) {
     pullAllWith:pullAllWith,
     sortedIndex:sortedIndex,
     sortedIndexBy:sortedIndexBy,
+    sortedIndexOf:sortedIndexOf,
+    sortedLastIndex:sortedLastIndex,
+    sortedLastIndexBy:sortedLastIndexBy,
+    sortedLastIndexOf:sortedLastIndexOf,
   }
 } ();
 

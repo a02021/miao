@@ -1152,6 +1152,27 @@ function dropRightWhile(array,f) {
     return result
   }
 
+  //This method is like _.uniq except that it accepts iteratee which is invoked for each element in array to generate the criterion by which uniqueness is computed. The order of result values is determined by the order they occur in the array. The iteratee is invoked with one argument:
+  // 比较器接收1个参数
+  function uniqBy(arr, ite) {
+    let p = f(ite)
+    let result = []
+    arr.forEach( n => {
+      let t = false
+      result.forEach( m => {
+        if (!m) result.push(n)
+        if (p(n) == p(m)) t = true 
+      })
+      if (!t) result.push(n)
+      t = false
+    })
+    return result
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1221,6 +1242,7 @@ function dropRightWhile(array,f) {
     sortedLastIndexBy:sortedLastIndexBy,
     sortedLastIndexOf:sortedLastIndexOf,
     uniq:uniq,
+    uniqBy:uniqBy,
   }
 } ();
 

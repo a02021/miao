@@ -1042,6 +1042,28 @@ function dropRightWhile(array,f) {
     }
   }
 
+  // This method is like _.sortedIndex except that it accepts iteratee which is invoked for value and each element of array to compute their sort ranking. The iteratee is invoked with one argument: (value).
+  // 比较器接收1个参数  
+  function sortedIndexBy(arr,value,ite) {
+    let p = f(ite)
+    let val = p(value)
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    while (true) {
+      let cur = p(arr[mid])
+      if (cur == val) return mid
+      if (cur < val) min = mid 
+      if (cur > val) max = mid
+      if ((max - min) == 1) return max
+      mid = Math.floor((min+max)/2)
+    }
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1105,6 +1127,7 @@ function dropRightWhile(array,f) {
     pullAllBy:pullAllBy,
     pullAllWith:pullAllWith,
     sortedIndex:sortedIndex,
+    sortedIndexBy:sortedIndexBy,
   }
 } ();
 

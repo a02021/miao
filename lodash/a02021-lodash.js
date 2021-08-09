@@ -756,8 +756,9 @@ function dropRightWhile(array,f) {
   }
 
   //This method is like _.indexOf except that it iterates over elements of array from right to left.
-  function lastIndexOf(arr,val,index = 0) {
-    return arr.length-1-indexOf(arr.reverse(),val,index)
+  function lastIndexOf(arr,val,index = arr.length - 1) {
+    if (index < 0 || index > arr.length - 1) return -1
+    return arr.length - 1 - indexOf(arr.reverse(),val,index)
   }
 
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
@@ -952,10 +953,11 @@ function dropRightWhile(array,f) {
   }
   
   //Converts all elements in array into a string separated by separator.
-  function join(array,separator=',') {
-    let result = ''
-    for (let i of array) {
-      result += i + separator
+  function join(array, separator = ',') {
+    let result = array[0].toString()
+    separator = separator.toString()
+    for (let i = 1; i < array.length; i++) {
+      result += separator + array[i].toString() 
     }
     return result
   }
@@ -988,11 +990,30 @@ function dropRightWhile(array,f) {
   }
 
   // This method is like _.pullAll except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The iteratee is invoked with one argument: (value).
+  // 比较器接收1个参数
   function pullAllBy(arr, vals, ite) {
     let p = f(ite)
     for (let i = 0; i < arr.length; i++) {
       for (let j = 0; j < vals.length; j++) {
         if (p(vals[j]) === p(arr[i])) {
+          arr.splice(i,1)
+          i--
+          break
+    }}}
+    return arr
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
+  //This method is like _.pullAll except that it accepts comparator which is invoked to compare elements of array to values. The comparator is invoked with two arguments: (arrVal, othVal).
+  // 比较器接收2个参数
+  function pullAllWith(arr, vals, ite) {
+    let p = f(ite)
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < vals.length; j++) {
+        if (p(vals[j],arr[i])) {
           arr.splice(i,1)
           i--
           break
@@ -1065,6 +1086,7 @@ function dropRightWhile(array,f) {
     pull:pull,
     pullAll:pullAll,
     pullAllBy:pullAllBy,
+    pullAllWith:pullAllWith,
   }
 } ();
 

@@ -1142,6 +1142,16 @@ function dropRightWhile(array,f) {
       mid = Math.floor((min+max)/2)
     }
   }
+  // Creates a duplicate-free version of an array, using SameValueZero for equality comparisons, in which only the first occurrence of each element is kept. The order of result values is determined by the order they occur in the array.
+  // SameValueZero 
+  function uniq(arr) {
+    //  return Array.from(new Set(arr))
+    let result = []
+    for(let i of arr) {
+      if (!result.includes(i)) result.push(i)
+    }
+    return result
+  }
 
   return {
     chunk:chunk,
@@ -1211,6 +1221,7 @@ function dropRightWhile(array,f) {
     sortedLastIndex:sortedLastIndex,
     sortedLastIndexBy:sortedLastIndexBy,
     sortedLastIndexOf:sortedLastIndexOf,
+    uniq:uniq,
   }
 } ();
 

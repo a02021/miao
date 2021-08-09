@@ -1034,9 +1034,9 @@ function dropRightWhile(array,f) {
     let min = 0
     let max = arr.length - 1
     while (true) {
-      if (arr[mid] == val) return mid
-      if (arr[mid] < val) min = mid 
-      if (arr[mid] > val) max = mid
+      let cur = arr[mid]
+      if (cur < val) min = mid 
+      if (cur >= val) max = mid
       if ((max - min) == 1) return max
       mid = Math.floor((min+max)/2)
     }
@@ -1052,10 +1052,9 @@ function dropRightWhile(array,f) {
     let max = arr.length - 1
     while (true) {
       let cur = p(arr[mid])
-      if (cur == val) return mid
       if (cur < val) min = mid 
-      if (cur > val) max = mid
-      if ((max - min) == 1) return max
+      if (cur >= val) max = mid
+      if ((max - min) == 1) return min
       mid = Math.floor((min+max)/2)
     }
     function f(n) {

@@ -965,6 +965,45 @@ function dropRightWhile(array,f) {
     return array.pop()
   }
 
+  //Gets the element at index n of array. If n is negative, the nth element from the end is returned.
+  function nth(array, n = 0) {
+    return n < 0 ? array[array.length + n] : array[n]
+  }
+
+  //Removes all given values from array using SameValueZero for equality comparisons.
+  function pull(arr, ...vals) {
+    for (let i = 0; i < arr.length; i++) {
+      if (vals.includes(arr[i])) {
+      // includes 使用SameValueZero算法
+        arr.splice(i,1)
+        i--
+      }
+    }
+    return arr
+  }
+
+  //This method is like _.pull except that it accepts an array of values to remove.
+  function pullAll(arr, vals) {
+    return pull(arr,...vals)
+  }
+
+  // This method is like _.pullAll except that it accepts iteratee which is invoked for each element of array and values to generate the criterion by which they're compared. The iteratee is invoked with one argument: (value).
+  function pullAllBy(arr, vals, ite) {
+    let p = f(ite)
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = 0; j < vals.length; j++) {
+        if (p(vals[j]) === p(arr[i])) {
+          arr.splice(i,1)
+          i--
+          break
+    }}}
+    return arr
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1022,6 +1061,10 @@ function dropRightWhile(array,f) {
     parseJson:parseJson,
     join:join,
     last:last,
+    nth:nth,
+    pull:pull,
+    pullAll:pullAll,
+    pullAllBy:pullAllBy,
   }
 } ();
 

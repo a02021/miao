@@ -815,7 +815,6 @@ function dropRightWhile(array,f) {
 
   function parseJson(str) {
     let cas = str
-  
     return parseType(cas)
     function parseType(n) {
       let a = n[0]
@@ -827,17 +826,16 @@ function dropRightWhile(array,f) {
       if (a === '{') return parseObject(n)
     }
   
-  
     function parseString(n) {
-      if (n[n.length-1] !== '\"') return "parse error!"
+      if (n[n.length-1] !== '\"') return "parse s error!"
       return cas.slice(1,cas.length -1)
     }
     function parseNumber(n) {
-      if (isNaN(n)) return "parse error!"
+      if (isNaN(n)) return "parse n error!"
       return Number(n)
     }
     function parseArray(n) {
-      if (n[n.length-1] !== ']') return "parse error!"
+      if (n[n.length-1] !== ']') return "parse arr error!"
       let r = []
       let c = ""
       n = n.slice(1,n.length-1)
@@ -845,14 +843,20 @@ function dropRightWhile(array,f) {
         if (i !== ',') c += i
         if (i === ',') {
           if(c[0] == '{') {
-            if (c[c.length-1 == '}']) {
+            if (c[c.length-1] == '}') {
+              r.push(parseJson(c))
+              c = ""
+            } else {
+              c += i
+            }
+          } else if(c[0] == '[') {
+            if (c[c.length-1] == ']') {
               r.push(parseJson(c))
               c = ""
             } else {
               c += i
             }
           } else {
-            c += i
             r.push(parseJson(c))
             c = ""
           }
@@ -886,6 +890,14 @@ function dropRightWhile(array,f) {
         while (n[i] !== "," && i< n.length) {
           d += n[i]
           i++
+          if(d[0] === '[' && n[i] === ',' && d[d.length - 1] !== ']') {
+            d += n[i]
+            i++
+          }
+          if(d[0] === '{' && n[i] === ',' && d[d.length - 1] !== '}') {
+            d += n[i]
+            i++
+          }
         }
         r[p] = parseJson(d)
         d = ""
@@ -893,6 +905,7 @@ function dropRightWhile(array,f) {
       return r
     }
   }
+  
 
   return {
     chunk:chunk,

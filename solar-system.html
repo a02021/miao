@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: black;
+      color: darksalmon;
+    }
+    #line1 {
+      color: cornsilk;
+    }
+    #blackhole {
+      position: absolute;
+    }
+    #ri {
+      width: 100px;
+      height: 100px;
+      position: absolute;   
+      /* margin: auto;    */
+    }   
+    #moon {
+      width: 20px;
+      height: 20px;
+      /* margin: auto; */
+    }
+    #earth {
+      /* left: 100px;
+      right: 100px; */
+      width: 50px;
+      height: 50px;
+      /* margin: auto; */
+    }
+    .earthLine {
+      text-align: center;
+      height: 2px; width: 2px;
+      color:cyan;
+      background-color: cyan;
+      border-radius: 4px;
+      position: absolute;
+      z-index: -10;
+    }
+  </style>
+</head>
+<body>
+  <p style="text-align: center">
+    Hua ji
+    <div id="blackhole"></div>
+    <img id="ri" src="img/ri.png" >
+    <img id="earth" src="img/earth.png" style="position: absolute">
+    <img id="moon" src="img/moon.png" style="position: absolute">
+    <div id="stars"></div>
+    <div id="line1">.</div> 
+  </p>
+
+  <script>
+    let bh = document.querySelector("#blackhole")
+    let ri = document.querySelector("#ri")
+    let earth = document.querySelector("#earth")
+    let line1 = document.querySelector("#line1")
+    let moon = document.querySelector("#moon")
+    let stars = document.querySelector("#stars")
+    function posri() {
+    let Height=document.documentElement.clientHeight;//取得浏览器页面可视区域的宽度   
+    let Width=document.documentElement.clientWidth;//取得浏览器页面可视区域的宽度   
+    bh.style.top = (Height - bh.offsetHeight)/2 + 'px'
+    bh.style.left = (Width - bh.offsetWidth)/2 + 'px'
+    // console.log(Height,ri.offsetHeight,Width,ri.offsetWidth)
+    }
+    posri()
+    window.addEventListener('resize', function() {
+      posri()
+      let dots = document.getElementsByClassName('earthLine')
+      let i = dots.length
+      while(dots.length > 0){
+        dots[i].remove();
+        console.log("safas")
+        i--
+     }
+
+    // console.log("posri==========");
+    })      
+
+    function move(bh,sun,obj,obj2) {
+      let angle = Math.PI / 2;
+      let rt = 0
+      return function animate(time, lastTime) {
+        if (lastTime != null) {
+          angle += (time - lastTime) * 0.001;
+        }
+        let x = Math.sin(angle)
+        let y = Math.cos(angle)
+        ri.style.transform = "rotate("+rt+"deg)";
+        rt++
+        pos(bh,sun,speed(Math.sin,angle,50),speed(Math.cos,angle,50))
+        pos(sun,obj,speed(Math.sin,angle,300),speed(Math.cos,angle,300))
+        pos(obj,obj2,speed(Math.sin,angle*12,100),speed(Math.cos,angle*12,100))
+        // line(line1)
+
+        requestAnimationFrame(newTime => animate(newTime, time));
+      }
+        
+      function speed(f,n,l) {
+        return f(n)*l
+      }
+      function pos(obj,obj2,x,y) {
+        console.log(ri.offsetTop,ri.offsetLeft)
+        let objTop = Number(obj.offsetTop)
+        let objLeft = Number(obj.offsetLeft)
+        obj2.style.top = objTop+ x + "px";
+        obj2.style.left = objLeft + y  + "px";
+
+        let dot = document.createElement("div")
+        dot.style.top = objTop+x + "px";
+        dot.style.left = objLeft +y + "px";
+        dot.className = "earthLine"
+        document.body.appendChild(dot);
+      }
+      // function line(l) {
+      //   let x = Math.sin(angle) * 20
+      //   let y = Math.cos(angle) * 20
+        // obj.style.left = (x) + "px";
+      // obj.style.top = (y) + "px";
+      // }
+    }
+
+    move(bh,ri,earth,moon)()
+  </script>
+</body>
+</html>

@@ -756,9 +756,11 @@ function dropRightWhile(array,f) {
   }
 
   //This method is like _.indexOf except that it iterates over elements of array from right to left.
+  // (从右往左)找出第一个匹配值的下标
   function lastIndexOf(arr,val,index = arr.length - 1) {
-    if (index < 0 || index > arr.length - 1) return -1
-    return arr.length - 1 - indexOf(arr.reverse(),val,index)
+    if (index < 0 || index > (arr.length - 1)) return -1
+    let len = arr.length - 1
+    return len - indexOf(arr.reverse(), val,len - index)
   }
 
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
@@ -1025,6 +1027,21 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Uses a binary search to determine the lowest index at which value should be inserted into array in order to maintain its sort order.
+  // 使用 二分法检索 值应该插入已排序数组的位置,返回下标
+  function sortedIndex(arr,val) {
+    let mid = Math.floor(arr.length/2)
+    let min = 0
+    let max = arr.length - 1
+    while (true) {
+      if (arr[mid] == val) return mid
+      if (arr[mid] < val) min = mid 
+      if (arr[mid] > val) max = mid
+      if ((max - min) == 1) return max
+      mid = Math.floor((min+max)/2)
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1087,6 +1104,7 @@ function dropRightWhile(array,f) {
     pullAll:pullAll,
     pullAllBy:pullAllBy,
     pullAllWith:pullAllWith,
+    sortedIndex:sortedIndex,
   }
 } ();
 

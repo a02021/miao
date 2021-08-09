@@ -755,6 +755,11 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //This method is like _.indexOf except that it iterates over elements of array from right to left.
+  function lastIndexOf(arr,val,index = 0) {
+    return arr.length-1-indexOf(arr.reverse(),val,index)
+  }
+
   //Creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
   // 找出所有相同值 返回新数组
   //includes使用的比较算法是SameValueZero
@@ -784,6 +789,7 @@ function dropRightWhile(array,f) {
   }
 
   //This method is like _.intersection except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which they're compared. The order and references of result values are determined by the first array. The iteratee is invoked with one argument:
+// 比较器接收1个参数
   function intersectionBy(...arrs) {
     let p = f(arrs[arrs.length-1])
     arrs = arrs.slice(0,arrs.length-1)
@@ -801,6 +807,27 @@ function dropRightWhile(array,f) {
       if (typeof n === 'function') return n
     }
   }
+
+  //This method is like _.intersection except that it accepts comparator which is invoked to compare elements of arrays. The order and references of result values are determined by the first array. The comparator is invoked with two arguments: (arrVal, othVal).
+  // 比较器同时接收2个参数
+  function intersectionWith(...arrs) {
+    let p = f(arrs[arrs.length-1])
+    arrs = arrs.slice(0,arrs.length-1)
+    function cp(a,b) {
+      let nex = []
+      a.forEach(n => {
+        b.forEach(m => {
+          if (p(n,m)) nex.push(n)
+        })})
+      return nex
+    }
+    return arrs.reduce(cp)
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
   //Creates a new array concatenating array with any additional arrays and/or values.
   function concat(arr,...args) {
     let result = arr
@@ -924,6 +951,19 @@ function dropRightWhile(array,f) {
     }
   }
   
+  //Converts all elements in array into a string separated by separator.
+  function join(array,separator=',') {
+    let result = ''
+    for (let i of array) {
+      result += i + separator
+    }
+    return result
+  }
+
+  //Gets the last element of array.
+  function last(array) {
+    return array.pop()
+  }
 
   return {
     chunk:chunk,
@@ -972,11 +1012,16 @@ function dropRightWhile(array,f) {
     toPairs:toPairs,
     head:head,
     indexOf:indexOf,
+    lastIndexOf:lastIndexOf,
     intersection:intersection,
+    intersectionBy:intersectionBy,
+    intersectionWith:intersectionWith,
     concat:concat,
     isNative:isNative,
     initial:initial,
     parseJson:parseJson,
+    join:join,
+    last:last,
   }
 } ();
 

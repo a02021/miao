@@ -26,7 +26,7 @@
   </style>
 </head>
 <body>
-  <div id="d1" style="top: 50px; left: 350px;"> </div>
+  <div id="d1" style="top: 250px; left: 50px;"> </div>
   <div id="d2" style="top: 50px; left: 50px;"> </div>
 
   <script>
@@ -42,7 +42,7 @@
     // posri()
     let l,r,u,d = 0
     let l2,r2,u2,d2 = 0
-    let speed = 0.5
+    let speed = 0.25
     document.addEventListener('keydown', function(e) {
       if (e.key == 'ArrowRight' ) r = 1
       if (e.key == 'ArrowLeft') l = -1
@@ -69,10 +69,12 @@
     })
     requestAnimationFrame(function move(time,lastTime) {
       let timeDiff = time - lastTime
-      div1.style.left = parseInt(div1.style.left) +speed*timeDiff*(l+r)+'px'
-      div1.style.top = parseInt(div1.style.top) +speed*timeDiff*(u+d)+'px'
-      div2.style.left = parseInt(div2.style.left) +speed*timeDiff*(l2+r2)+'px'
-      div2.style.top = parseInt(div2.style.top) +speed*timeDiff*(u2+d2)+'px'
+      let speedx1 = Math.abs(l+r)+Math.abs(u+d) == 2 ? Math.sqrt(2):2
+      let speedx2 = Math.abs(l2+r2)+Math.abs(u2+d2) == 2 ? Math.sqrt(2):2
+      div1.style.left = parseInt(div1.style.left) +speedx1*speed*timeDiff*(l+r)+'px'
+      div1.style.top = parseInt(div1.style.top) +speedx1*speed*timeDiff*(u+d)+'px'
+      div2.style.left = parseInt(div2.style.left) +speedx2*speed*timeDiff*(l2+r2)+'px'
+      div2.style.top = parseInt(div2.style.top) +speedx2*speed*timeDiff*(u2+d2)+'px'
       requestAnimationFrame(n => move(n,time))
     })
    

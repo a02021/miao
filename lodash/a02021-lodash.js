@@ -1368,6 +1368,14 @@ function dropRightWhile(array,f) {
     }
   }
 
+  // Removes all given values from array using SameValueZero for equality comparisons.
+  //和pull不同: 输出新数组 不改变原数组
+  function without(arr, ...vals) {
+    let r = []
+    arr.forEach(n => {if (!vals.includes(n)) r.push(n)})
+    return r
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1450,6 +1458,7 @@ function dropRightWhile(array,f) {
     union:union,
     unionBy:unionBy,
     unionWith:unionWith,
+    without:without,
   }
 } ();
 

@@ -1173,6 +1173,52 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Creates a duplicate-free version of an array, using SameValueZero for equality comparisons, in which only the first occurrence of each element is kept. The order of result values is determined by the order they occur in the array.
+  function sortedUniq(arr) {
+    //  return Array.from(new Set(arr))
+    let result = [arr[0]]
+    for(let i = 1;i <arr.length; i++) {
+      if (result[result.length-1] !== i) result.push(i)
+    }
+    return result
+  }
+
+  //This method is like _.uniqBy except that it's designed and optimized for sorted arrays.
+  function sortedUniqBy(arr, ite) {
+    let p = f(ite)
+    let result = [arr[0]]
+    arr.forEach( n => {
+      if (p(result[result.length-1]) !== p(n)) {
+        result.push(n)
+      }
+    })
+    return result
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
+  // This method is like _.uniq except that it accepts comparator which is invoked to compare elements of array. The order of result values is determined by the order they occur in the array.The comparator is invoked with two arguments: (arrVal, othVal).
+  function uniqWith(arr, ite) {
+    let p = f(ite)
+    let result = []
+    arr.forEach( n => {
+      let t = false
+      result.forEach( m => {
+        if (!m) result.push(n)
+        if (p(m,n)) t = true 
+      })
+      if (!t) result.push(n)
+      t = false
+    })
+    return result
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+   }
+  
   return {
     chunk:chunk,
     compact:compact,
@@ -1243,6 +1289,9 @@ function dropRightWhile(array,f) {
     sortedLastIndexOf:sortedLastIndexOf,
     uniq:uniq,
     uniqBy:uniqBy,
+    sortedUniq:sortedUniq,
+    sortedUniqBy:sortedUniqBy,
+    uniqWith:uniqWith,
   }
 } ();
 

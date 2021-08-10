@@ -1219,6 +1219,64 @@ function dropRightWhile(array,f) {
     }
    }
   
+   //Gets all but the first element of array.
+   function tail(arr) {
+    let r = []
+    for (let i =1;i < arr.length; i++) {
+      r.push(arr[i])
+    }
+    return r
+  }
+
+  // Creates a slice of array with n elements taken from the beginning.
+  function take(arr, n = 1) {
+    let r = []
+    let maxLength = n <= arr.length ? n : arr.length
+    for (let i = 0; i < maxLength; i++) {
+      r.push(arr[i])
+    }
+    return r
+  }
+
+  // Creates a slice of array with n elements taken from the end.
+  function takeRight(arr, n = 1) {
+    let r = []
+    let start = n <= arr.length ? arr.length - n : 0
+    for (let i = start; i < arr.length; i++) {
+      r.push(arr[i])
+    }
+    return r
+  }
+
+  //Creates a slice of array with elements taken from the end. Elements are taken until predicate returns falsey. The predicate is invoked with three arguments: (value, index, array).
+  function takeRightWhile(arr,pre) {
+    let p = f(pre)
+    let k = Object.keys(arr).reverse()
+    let r = []
+    for (let i of k) {
+      if(p(arr[i])) r.unshift(arr[i])
+      if(!p(arr[i])) return r
+    }
+      function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
+        }
+      }
+    }
+  }
+
+  console.log(tail([]))
   return {
     chunk:chunk,
     compact:compact,
@@ -1292,6 +1350,10 @@ function dropRightWhile(array,f) {
     sortedUniq:sortedUniq,
     sortedUniqBy:sortedUniqBy,
     uniqWith:uniqWith,
+    tail:tail,
+    take:take,
+    takeRight:takeRight,
+    takeRightWhile:takeRightWhile,
   }
 } ();
 

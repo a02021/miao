@@ -574,6 +574,14 @@ function dropRightWhile(array,f) {
     return zip(...arr)
   }
   
+  //This method is like _.unzip except that it accepts iteratee to specify how regrouped values should be combined. The iteratee is invoked with the elements of each group: (...group).
+  function unzipWith(arrays,f) {
+    let z = zip(...arrays)
+    let r = []
+    z.forEach(arr => {r.push(arr.reduce((a,b) => f(a,b)))})
+    return r
+  }
+
   //Performs a deep comparison between two values to determine if they are equivalent.
   //深层比较2个参数的值是否相同
   function isEqual(a, b) {
@@ -1276,7 +1284,90 @@ function dropRightWhile(array,f) {
     }
   }
 
-  console.log(tail([]))
+  // Creates a slice of array with elements taken from the beginning. Elements are taken until predicate returns falsey. The predicate is invoked with three arguments: (value, index, array).
+  function takeWhile(arr,pre) {
+    let p = f(pre)
+    let k = Object.keys(arr)
+    let r = []
+    for (let i of k) {
+      if(p(arr[i])) r.push(arr[i])
+      if(!p(arr[i])) break
+    }
+    return r 
+      function f(p){
+      if(typeof p == 'function') return p
+      if(typeof p == 'string') return n => n[p]
+      if(Object.prototype.toString.call(p) == '[object Array]') {
+        return n => n[p[0]] == p[1]
+      }
+      if(Object.prototype.toString.call(p) == '[object Object]') {
+        return n => {
+          let kp = Object.keys(p)
+          let bol = true
+          for(let key of kp) {
+            if(n[key] !== p[key]) bol = false
+          }
+          if(bol) return true
+        }
+      }
+    }
+  }
+
+  //Creates an array of unique values, in order, from all given arrays using SameValueZero for equality comparisons.
+  function union(...arrs) {
+    let r = []
+    arrs.forEach(arr => {
+      arr.forEach(n => {
+        if(!r.includes(n)) r.push(n)
+      })
+    })
+    return r
+  }
+
+  // This method is like _.union except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which uniqueness is computed. Result values are chosen from the first array in which the value occurs. The iteratee is invoked with one argument:
+  // (value).
+  function unionBy(...arrs) {
+    let ite = arrs[arrs.length - 1]
+    let p = f(ite)
+    let r = []
+    let rp = []
+    arrs = arrs.slice(0,-1)
+    arrs.forEach(arr => {
+      arr.forEach(n => {
+        if(!rp.includes(p(n))) {
+          rp.push(p(n))
+          r.push(n)
+        }
+      })
+    })
+    return r
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
+  // This method is like _.union except that it accepts comparator which is invoked to compare elements of arrays. Result values are chosen from the first array in which the value occurs. The comparator is invoked with two arguments: (arrVal, othVal).
+  function unionWith(...arrs) {
+    let ite = arrs[arrs.length - 1]
+    let p = f(ite)
+    let r = []
+    arrs = arrs.slice(0,-1)
+    arrs.forEach(arr => {
+      arr.forEach(n => {
+        let t = false
+        r.forEach( m => {
+          if (p(m,n)) t = true
+        })
+        if (!t) r .push(n)
+    })})
+    return r
+    function f(n) {
+      if (typeof n === 'string') return m => m[n]
+      if (typeof n === 'function') return n
+    }
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1307,6 +1398,7 @@ function dropRightWhile(array,f) {
     reduce:reduce,
     zip:zip,
     unzip:unzip,
+    unzipWith:unzipWith,
     isEqual:isEqual,
     reverse:reverse,
     countBy:countBy,
@@ -1354,6 +1446,10 @@ function dropRightWhile(array,f) {
     take:take,
     takeRight:takeRight,
     takeRightWhile:takeRightWhile,
+    takeWhile:takeWhile,
+    union:union,
+    unionBy:unionBy,
+    unionWith:unionWith,
   }
 } ();
 

@@ -18,22 +18,34 @@
       background-color: rgb(247, 164, 191);
       position: absolute;
     }
+    svg {
+      background-color: aliceblue;
+      color: crimson;
+    }
   </style>
 </head>
 <body>
-  <p class="dot"></p>
-
+  <p class="dot">点</p>
+  <svg width="500" height="500"></svg>
   <script>
+
+    let svg = document.querySelector('svg')
+    let lastpos = null
+
     let m = 0
     document.addEventListener('mousedown',function(e) {
       m = 1
       drawDot(e)
       document.addEventListener('mousemove',function(e) {
-        if (m) drawDot(e)
+        if (m) {
+          drawDot(e)
+          drawDotSvg(e)
+        }
         console.log(e.pageX,e.pageY)
       })
       document.addEventListener('mouseup',function once() {
         m = 0
+        lastpos == null
         // 鼠标松开后停止检测
         document.removeEventListener('mouseup',once)
         document.removeEventListener('mousemove',drawDot)
@@ -43,9 +55,39 @@
   function drawDot(e) {
     let dot = document.createElement('span')
         dot.classList.add('dot')
-        dot.style.left = e.pageX + 'px'
-        dot.style.top = e.pageY + 'px'
+        dot.style.left = e.pageX -8+ 'px'
+        dot.style.top = e.pageY -8+ 'px'
         document.body.appendChild(dot)
+  }
+
+  function drawDotSvg(e) {
+    let pos = mousePos(svg)
+    console.log(pos)
+    let line = document.createElementNS("http://www.w3.org/2000/svg",'line')
+    if (lastpos == null) {
+      line.setAttribute('x1', pos.x)
+      line.setAttribute('y1', pos.y)
+      line.setAttribute('x2', pos.x)
+      line.setAttribute('y2', pos.y)
+      line.setAttribute('stroke', 'black')
+      line.setAttribute('stroke-width', '5')
+    } else {
+      line.setAttribute('x1', pos.x)
+      line.setAttribute('y1', pos.y)
+      line.setAttribute('x2', lastpos.x)
+      line.setAttribute('y2', lastpos.y)
+      line.setAttribute('stroke', 'pink')
+      line.setAttribute('stroke-width', '5')
+    }
+    lastpos = pos
+    svg.appendChild(line)
+  }
+  function mousePos(node) {
+    // let box = node.getBoundingClientRect()
+    return {
+      x: window.event.clientX ,
+      y: window.event.clientY ,
+    }
   }
   </script>
 </body>

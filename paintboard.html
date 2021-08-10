@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: slateblue;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 666px;
+      border-color: rgb(248, 239, 237);
+      color: magenta;
+      background-color: rgb(247, 164, 191);
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <p class="dot"></p>
+
+  <script>
+    let m = 0
+    document.addEventListener('mousedown',function(e) {
+      m = 1
+      drawDot(e)
+      document.addEventListener('mousemove',function(e) {
+        if (m) drawDot(e)
+        console.log(e.pageX,e.pageY)
+      })
+      document.addEventListener('mouseup',function once() {
+        m = 0
+        // 鼠标松开后停止检测
+        document.removeEventListener('mouseup',once)
+        document.removeEventListener('mousemove',drawDot)
+      })
+    })
+
+  function drawDot(e) {
+    let dot = document.createElement('span')
+        dot.classList.add('dot')
+        dot.style.left = e.pageX + 'px'
+        dot.style.top = e.pageY + 'px'
+        document.body.appendChild(dot)
+  }
+  </script>
+</body>
+</html>

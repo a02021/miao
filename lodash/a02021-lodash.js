@@ -1376,6 +1376,25 @@ function dropRightWhile(array,f) {
     return r
   }
 
+  // Creates an array of unique values that is the symmetric difference of the given arrays. The order of result values is determined by the order they occur in the arrays.
+  // 版本1 : 每组的数依次和其他组比较
+  function xor(...arrs) {
+    let r = []
+    for (let i = 0 ; i < arrs.length; i++) {
+      let keys = Object.keys(arrs)
+      keys.splice(i,1)
+      arrs[i].forEach(n => { 
+        let t = true
+        for (let k = 0; k < keys.length; k++) {
+          if (arrs[keys[k]].includes(n)) {
+            t = false
+            break
+          }}
+        if (t) r.push(n)
+    })}
+    return uniq(r)
+  }
+  
   return {
     chunk:chunk,
     compact:compact,
@@ -1459,6 +1478,7 @@ function dropRightWhile(array,f) {
     unionBy:unionBy,
     unionWith:unionWith,
     without:without,
+    xor:xor,
   }
 } ();
 

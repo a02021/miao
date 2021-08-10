@@ -32,17 +32,8 @@
   <script>
     let div1 = document.querySelector("#d1")
     let div2 = document.querySelector("#d2")
-    // function posri() {
-    // let Height=document.documentElement.clientHeight;//取得浏览器页面可视区域的宽度   
-    // let Width=document.documentElement.clientWidth;//取得浏览器页面可视区域的宽度   
-    // d1.style.top = (Height - bh.offsetHeight)/2 + 'px'
-    // d1.style.left = (Width - bh.offsetWidth)/2 + 'px'
-    // // console.log(Height,ri.offsetHeight,Width,ri.offsetWidth)
-    // }
-    // posri()
-    let l,r,u,d = 0
-    let l2,r2,u2,d2 = 0
-    let speed = 0.25
+    let l,r,u,d,l2,r2,u2,d2 = 0
+    let speed = 0.5
     document.addEventListener('keydown', function(e) {
       if (e.key == 'ArrowRight' ) r = 1
       if (e.key == 'ArrowLeft') l = -1
@@ -62,19 +53,16 @@
       if (e.key == 'a') l2 = 0
       if (e.key == 'w') u2 = 0
       if (e.key == 's') d2 = 0
-      // l = Math.floor(Math.random()*10)
-      // r = Math.floor(Math.random()*10)
-      // u = Math.floor(Math.random()*10)
-      // d = Math.floor(Math.random()*10)
     })
     requestAnimationFrame(function move(time,lastTime) {
       let timeDiff = time - lastTime
-      let speedx1 = Math.abs(l+r)+Math.abs(u+d) == 2 ? Math.sqrt(2):2
-      let speedx2 = Math.abs(l2+r2)+Math.abs(u2+d2) == 2 ? Math.sqrt(2):2
-      div1.style.left = parseInt(div1.style.left) +speedx1*speed*timeDiff*(l+r)+'px'
-      div1.style.top = parseInt(div1.style.top) +speedx1*speed*timeDiff*(u+d)+'px'
-      div2.style.left = parseInt(div2.style.left) +speedx2*speed*timeDiff*(l2+r2)+'px'
-      div2.style.top = parseInt(div2.style.top) +speedx2*speed*timeDiff*(u2+d2)+'px'
+      let speedAll = speed*timeDiff
+      let speedx1 = Math.abs(l+r)+Math.abs(u+d) == 2 ? Math.sqrt(2)/2*speedAll:speedAll
+      let speedx2 = Math.abs(l2+r2)+Math.abs(u2+d2) == 2 ? Math.sqrt(2)/2*speedAll:speedAll
+      div1.style.left = parseInt(div1.style.left) + speedx1*(l+r) + 'px'
+      div1.style.top = parseInt(div1.style.top) + speedx1*(u+d) + 'px'
+      div2.style.left = parseInt(div2.style.left) + speedx2*(l2+r2) + 'px'
+      div2.style.top = parseInt(div2.style.top) + speedx2*(u2+d2) + 'px'
       requestAnimationFrame(n => move(n,time))
     })
    

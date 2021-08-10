@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color:wheat;
+    }
+    span {
+      font: 2em sans-serif;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <p><button>滴滴滴滴</button></p>
+  <script>
+    let tr = 0
+    document.addEventListener('dblclick',function(){
+      let dot = document.createElement("div")
+      dot.innerHTML = '双击!!!'
+      document.body.appendChild(dot);
+    })
+    document.addEventListener('click',function(){
+      tr ++
+      if(tr == 3) {
+        let dot = document.createElement("span")
+        dot.innerHTML = '3击!!!!!!!!'
+        document.body.appendChild(dot);
+        tr = 0
+      } else {
+        let dot = document.createElement("div")
+        dot.innerHTML = '#单击'
+        document.body.appendChild(dot);
+      }
+    })
+    let lastTime = 0
+    let ct = 10
+    requestAnimationFrame(function move(time,lastTime) {
+      if(lastTime){
+        lastTime = time - lastTime
+        ct = ct + lastTime 
+      }
+      // ct为500 大约半秒, 如果没有成功三击,重置计数
+      if (ct > 500) {
+        ct = 0
+        tr = 0
+      }
+      requestAnimationFrame(n => move(n,time))
+    })
+  </script>
+</body>
+</html>

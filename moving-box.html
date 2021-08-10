@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: rgb(63, 59, 51);
+    }
+    #d1 {
+      width: 30px;
+      height: 30px;
+      background-color:rgb(207, 7, 207);
+      border-radius: 9999px;
+      position: absolute;
+    }
+    #d2 {
+      width: 30px;
+      height: 30px;
+      background-color:rgb(233, 233, 13);
+      border-radius: 9999px;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="d1" style="top: 50px; left: 350px;"> </div>
+  <div id="d2" style="top: 50px; left: 50px;"> </div>
+
+  <script>
+    let div1 = document.querySelector("#d1")
+    let div2 = document.querySelector("#d2")
+    // function posri() {
+    // let Height=document.documentElement.clientHeight;//取得浏览器页面可视区域的宽度   
+    // let Width=document.documentElement.clientWidth;//取得浏览器页面可视区域的宽度   
+    // d1.style.top = (Height - bh.offsetHeight)/2 + 'px'
+    // d1.style.left = (Width - bh.offsetWidth)/2 + 'px'
+    // // console.log(Height,ri.offsetHeight,Width,ri.offsetWidth)
+    // }
+    // posri()
+    let l,r,u,d = 0
+    let l2,r2,u2,d2 = 0
+    let speed = 0.5
+    document.addEventListener('keydown', function(e) {
+      if (e.key == 'ArrowRight' ) r = 1
+      if (e.key == 'ArrowLeft') l = -1
+      if (e.key == 'ArrowUp') u = -1
+      if (e.key == 'ArrowDown') d = 1
+      if (e.key == 'd' ) r2 = 1
+      if (e.key == 'a') l2 = -1
+      if (e.key == 'w') u2 = -1
+      if (e.key == 's') d2 = 1
+    })
+    document.addEventListener('keyup', function(e) {
+      if (e.key == 'ArrowRight' ) r = 0
+      if (e.key == 'ArrowLeft') l = 0
+      if (e.key == 'ArrowUp') u = 0
+      if (e.key == 'ArrowDown') d = 0
+      if (e.key == 'd') r2 = 0
+      if (e.key == 'a') l2 = 0
+      if (e.key == 'w') u2 = 0
+      if (e.key == 's') d2 = 0
+      // l = Math.floor(Math.random()*10)
+      // r = Math.floor(Math.random()*10)
+      // u = Math.floor(Math.random()*10)
+      // d = Math.floor(Math.random()*10)
+    })
+    requestAnimationFrame(function move(time,lastTime) {
+      let timeDiff = time - lastTime
+      div1.style.left = parseInt(div1.style.left) +speed*timeDiff*(l+r)+'px'
+      div1.style.top = parseInt(div1.style.top) +speed*timeDiff*(u+d)+'px'
+      div2.style.left = parseInt(div2.style.left) +speed*timeDiff*(l2+r2)+'px'
+      div2.style.top = parseInt(div2.style.top) +speed*timeDiff*(u2+d2)+'px'
+      requestAnimationFrame(n => move(n,time))
+    })
+   
+
+
+  </script>
+</body>
+</html>

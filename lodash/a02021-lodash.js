@@ -1377,7 +1377,7 @@ function dropRightWhile(array,f) {
   }
 
   // Creates an array of unique values that is the symmetric difference of the given arrays. The order of result values is determined by the order they occur in the arrays.
-  // 版本1 : 每组的数依次和其他组比较
+  // 版本1 : 每组的数依次和其他组比较, 最后去重
   function xor(...arrs) {
     let r = []
     for (let i = 0 ; i < arrs.length; i++) {

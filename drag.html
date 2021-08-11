@@ -84,13 +84,12 @@
 
     function stop(e){
       m = 0
-      console.log(m)
-      // s1.setAttribute('style','z-index:0')
+      // console.log(m)
       this.removeEventListener('mouseup',move)
       this.removeEventListener('mousemove',move)
     }
     function move(e) {
-    console.log(m)
+    // console.log(m)
       if(m == 1) {
       this.style.left = e.pageX-50 + 'px'
       this.style.top = e.pageY-50 + 'px'

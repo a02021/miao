@@ -479,6 +479,13 @@ function dropRightWhile(array,f) {
       }
     }
   }
+
+  //Iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
+  // 和findIndex不同 ,返回值
+  function find(collection,predicate) {
+    return collection[findIndex(collection,predicate)]
+  }
+
   //This method is like _.findIndex except that it iterates over elements of collection from right to left.
   //和findIndex一样 仅将索引反转
   function findLastIndex(collection,predicate) {
@@ -510,6 +517,11 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index|key, collection).
+  // 和findLastIndex不同 ,返回值
+  function findLast(collection,predicate,fromIndex=collection.length-1) {
+    return collection[findLastIndex(collection,predicate)]
+  }
 
   //Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
   // (accumulator, value, index|key, collection).
@@ -1448,7 +1460,7 @@ function dropRightWhile(array,f) {
     }
   }
 
-  
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1475,6 +1487,8 @@ function dropRightWhile(array,f) {
     some:some,
     findLastIndex:findLastIndex,
     findIndex:findIndex,
+    findLast:findLast,
+    find:find,
     filter:filter,
     reduce:reduce,
     zip:zip,
@@ -1536,6 +1550,7 @@ function dropRightWhile(array,f) {
     unionWith:unionWith,
     without:without,
     xor:xor,
+
   }
 } ();
 

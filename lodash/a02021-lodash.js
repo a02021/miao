@@ -1460,7 +1460,28 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Creates a flattened array of values by running each element in collection thru iteratee and flattening the mapped results. The iteratee is invoked with three arguments: (value, index|key, collection).
+  function flatMap(obj,f) {
+    let r = []
+    for (let i of obj) {
+      r.push(...f(i))
+    }
+    return r
+  }
 
+  //This method is like _.flatMap except that it recursively flattens the mapped results.
+  function flatMapDeep(obj,f) {
+    return flattenDeep(flatMap(obj,f))
+  }
+
+  //This method is like _.flatMap except that it recursively flattens the mapped results up to depth times.
+  function flatMapDepth(obj,f,depth=1) {
+    let r = []
+    for (let i of obj) {
+      r.push(...flatten(f(i),depth-1))
+    }
+    return r
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1550,7 +1571,9 @@ function dropRightWhile(array,f) {
     unionWith:unionWith,
     without:without,
     xor:xor,
-
+    flatMap:flatMap,
+    flatMapDeep:flatMapDeep,
+    flatMapDepth:flatMapDepth,
   }
 } ();
 

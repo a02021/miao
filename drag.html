@@ -108,7 +108,6 @@
     }
     function moved(e) {
       this.setAttribute("style",'z-index:'+z)
-
       this.style.left = e.pageX-50 + 'px'
       this.style.top = e.pageY-50 + 'px'
       z++
@@ -120,6 +119,10 @@
     function stop(e){
       m = 0
       // console.log(m)
+      r= r+Math.floor(Math.random()*100)
+      g= g+Math.floor(Math.random()*100)
+      b= b+Math.floor(Math.random()*100)
+      console.log(r,g,b)
       this.removeEventListener('mouseup',move)
       this.removeEventListener('mousemove',move)
     }
@@ -127,9 +130,9 @@
     // console.log(m)
       if(m == 1) {
       pp.setAttribute("style",'color:rgb('+r+','+b+','+g+')')
-      r = r-1
-      g = g-1
-      b = b-1
+      r = r<0 ? 100:r-9
+      g = g<0 ? 100:g-8
+      b = b<0 ? 100:b-10
       this.style.left = e.pageX-50 + 'px'
       this.style.top = e.pageY-50 + 'px'
       }

@@ -582,6 +582,25 @@ function dropRightWhile(array,f) {
     return r
   }
 
+  //This method is like _.fromPairs except that it accepts two arrays, one of property identifiers and one of corresponding values.
+  function zipObject(pro,val) {
+    let result = {}
+    for (let i in pro) {
+      result[pro[i]] = val[i]
+    }
+    return result
+  }
+
+  //This method is like _.zip except that it accepts iteratee to specify how grouped values should be combined. The iteratee is invoked with the elements of each group: (...group).
+  function zipWith(...arrays) {
+    let ite = arrays.pop()
+    let result = zip(...arrays)
+    for (let i in result) {
+      result[i] = ite(...result[i])
+    }
+    return result
+  }
+
   //Performs a deep comparison between two values to determine if they are equivalent.
   //深层比较2个参数的值是否相同
   function isEqual(a, b) {
@@ -1395,6 +1414,41 @@ function dropRightWhile(array,f) {
     return uniq(r)
   }
   
+  //This method is like _.zipObject except that it supports property paths.
+  function zipObjectDeep(pro, val) {
+    let result = {}
+    for (let i in pro) {
+      let s= f(pro[i])(result) 
+      s[0][s[1]] = val[i]
+    }
+    return result
+    // 1 分解string
+    // 2 生成obj的每层的key,返回最深层的[obj,key] (val = null)
+    function f(n) {
+        let arr = []
+        let cas = []
+        for (let i of n) {
+          if (i !== '[' && i !== ']' && i !== '.') {
+              cas += i
+          } else if (cas) {
+              arr.push(cas)
+              cas = ''
+          }
+        }
+        if (cas) arr.push(cas)
+        return m => {
+          for (let i = 1; i < arr.length; i++) {
+            if (!isNaN(arr[i]) && !m[arr[i-1]]) m[arr[i-1]] = []
+            if (isNaN(arr[i]) && !m[arr[i-1]]) m[arr[i-1]] = {}
+            m = m[arr[i-1]]
+            if(i ==arr.length -1) m[arr[i]] = null
+          }
+          return [m,arr[arr.length - 1]]
+        }
+    }
+  }
+
+  
   return {
     chunk:chunk,
     compact:compact,
@@ -1426,6 +1480,9 @@ function dropRightWhile(array,f) {
     zip:zip,
     unzip:unzip,
     unzipWith:unzipWith,
+    zipObject:zipObject,
+    zipObjectDeep:zipObjectDeep,
+    zipWith:zipWith,
     isEqual:isEqual,
     reverse:reverse,
     countBy:countBy,

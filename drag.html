@@ -46,6 +46,16 @@
       top:380px;
       z-index:5;
     }
+    #s7 {
+      background-color:rgb(248, 68, 68);
+      top:0px;
+      left:200px;
+      z-index:6;
+      color:rgb(240, 195, 201);
+      font-size: 200px;
+      width: 200px;
+      height: 200px;
+    }
     p {
       color:rgb(240, 195, 201);
       font-size: 200px;
@@ -70,19 +80,24 @@
   <div id="s4"></div>
   <div id="s5"></div>
   <div id="s6"></div>
-
+  <div id="s7">喵</div>
   <script>
     let s1 = document.querySelector('#s1')
     let s2 = document.querySelector('#s2')
     let s3 = document.querySelector('#s3')
+    let s4 = document.querySelector('#s4')
+    let s5 = document.querySelector('#s5')
+    let s6 = document.querySelector('#s6')
+    let s7 = document.querySelector('#s7')
     let m = 0
-    let z = 6
-    s1.addEventListener('mousedown',moved )
-    s2.addEventListener('mousedown',moved )
-    s3.addEventListener('mousedown',moved )
-    s4.addEventListener('mousedown',moved )
-    s5.addEventListener('mousedown',moved )
-    s6.addEventListener('mousedown',moved )
+    let z = 7
+    s1.addEventListener('mousedown', moved)
+    s2.addEventListener('mousedown', moved)
+    s3.addEventListener('mousedown', moved)
+    s4.addEventListener('mousedown', moved)
+    s5.addEventListener('mousedown', moved)
+    s6.addEventListener('mousedown', moved)
+    s7.addEventListener('mousedown', moved)
     function buttonPressed(e) {
       if (e.buttons == null) return e.which != 0
       return e.buttons != 0

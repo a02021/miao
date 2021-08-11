@@ -1482,6 +1482,42 @@ function dropRightWhile(array,f) {
     }
     return r
   }
+
+  // This method is like _.forEach except that it iterates over elements of collection from right to left.
+  function forEachRight(obj,f){
+    //限制循环条件参数为 数组/对象/字符串 
+     if (obj instanceof Object || typeof(obj) =='string'){
+       let k = Object.keys(obj).reverse()
+      for(let i of k){
+        f(obj[i], i )
+      }
+    }
+    return obj
+  }
+
+  //Creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection. The corresponding value of each key is an array of elements responsible for generating the key. The iteratee is invoked with one argument: (value).
+  // 和countby 一样,仅返回值不同
+  function groupBy(collection, predicate) {
+    if (!predicate) return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = {}
+    for (let i of k) {
+      if(!result[p(collection[i])]) {
+        result[p(collection[i])]= [collection[i]]
+      }else{
+        result[p(collection[i])].push(collection[i])
+      }
+    }
+    return result
+  
+    function f(p) {
+        if (typeof p == 'function') return p
+        if (typeof p == 'string') return n => n[p]
+    }
+  }
+
+  
   return {
     chunk:chunk,
     compact:compact,
@@ -1574,6 +1610,8 @@ function dropRightWhile(array,f) {
     flatMap:flatMap,
     flatMapDeep:flatMapDeep,
     flatMapDepth:flatMapDepth,
+    forEachRight:forEachRight,
+    groupBy:groupBy,
   }
 } ();
 

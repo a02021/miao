@@ -82,6 +82,7 @@
   <div id="s6"></div>
   <div id="s7">喵</div>
   <script>
+    let pp = document.querySelector('p')
     let s1 = document.querySelector('#s1')
     let s2 = document.querySelector('#s2')
     let s3 = document.querySelector('#s3')
@@ -91,6 +92,9 @@
     let s7 = document.querySelector('#s7')
     let m = 0
     let z = 7
+    let r = 240
+    let b = 195 
+    let g = 201
     s1.addEventListener('mousedown', moved)
     s2.addEventListener('mousedown', moved)
     s3.addEventListener('mousedown', moved)
@@ -104,6 +108,7 @@
     }
     function moved(e) {
       this.setAttribute("style",'z-index:'+z)
+
       this.style.left = e.pageX-50 + 'px'
       this.style.top = e.pageY-50 + 'px'
       z++
@@ -121,6 +126,10 @@
     function move(e) {
     // console.log(m)
       if(m == 1) {
+      pp.setAttribute("style",'color:rgb('+r+','+b+','+g+')')
+      r = r-1
+      g = g-1
+      b = b-1
       this.style.left = e.pageX-50 + 'px'
       this.style.top = e.pageY-50 + 'px'
       }

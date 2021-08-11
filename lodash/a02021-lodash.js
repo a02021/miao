@@ -1487,7 +1487,7 @@ function dropRightWhile(array,f) {
     some:some,
     findLastIndex:findLastIndex,
     findIndex:findIndex,
-    findLast:findLast,
+    findLast:findLast,//待改进
     find:find,
     filter:filter,
     reduce:reduce,

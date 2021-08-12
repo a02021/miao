@@ -99,39 +99,30 @@
   <div id="s5"></div>
   <div id="s6"></div>
   <div id="s7">喵</div>
-
   <div id="cl">彩色</div>
   <div id="dk">dark</div>
   <script>
     let pp = document.querySelector('p')
-    let s1 = document.querySelector('#s1')
-    let s2 = document.querySelector('#s2')
-    let s3 = document.querySelector('#s3')
-    let s4 = document.querySelector('#s4')
-    let s5 = document.querySelector('#s5')
-    let s6 = document.querySelector('#s6')
-    let s7 = document.querySelector('#s7')
-    let m = 0
-    let z = 7
-    let r = 240
-    let b = 195 
-    let g = 201
-    let pos 
-    s1.addEventListener('mousedown', moved)
-    s2.addEventListener('mousedown', moved)
-    s3.addEventListener('mousedown', moved)
-    s4.addEventListener('mousedown', moved)
-    s5.addEventListener('mousedown', moved)
-    s6.addEventListener('mousedown', moved)
-    s7.addEventListener('mousedown', moved)
-
+    let m = 0, z = 7
+    let ex,ey
+    let r, b, g
+    let sss = ['#s1','#s2','#s3','#s4','#s5','#s6','#s7']
+    let mo,st
+    sss.forEach(n => {
+      let m = document.querySelector(n)
+      m.addEventListener('mousedown', moved.bind(m))
+    })
     function moved(e) {
       this.style.zIndex = z
       z++
       m = 1
-      pos = mousePos(this)
-      this.addEventListener('mousemove',move)
-      this.addEventListener('mouseup', stop )
+      ex = e.clientX
+      ey = e.clientY 
+      r = 240, b = 195, g = 201
+      mo = move.bind(this)
+      st = stop.bind(this)
+      window.addEventListener('mousemove',mo)
+      window.addEventListener('mouseup', st )
     }
 
     function stop(e){
@@ -140,18 +131,25 @@
       g= g+Math.floor(Math.random()*100)
       b= b+Math.floor(Math.random()*100)
       // console.log(r,g,b)
-      this.removeEventListener('mousemove',move)
-      this.removeEventListener('mouseup',stop)
+      console.log(this)
+      window.removeEventListener('mousemove',mo)
+      window.removeEventListener('mouseup',st)
     }
     function move(e) {
+      // 鼠标没有按下,停止监听
+      // if (e.which === 0 || e.buttons ===0) stop(e)
     // console.log(m)
       if(m == 1) {
       pp.setAttribute("style",'color:rgb('+r+','+b+','+g+')')
       r = r<0 ? 100:r-9
       g = g<0 ? 100:g-8
       b = b<0 ? 100:b-10
-      this.style.top = e.pageY - pos.y + "px"
-      this.style.left = e.pageX - pos.x + "px"
+      console.log('++++++++',this)
+      let poss = this.getBoundingClientRect()
+      this.style.top = poss.top + e.clientY - ey + "px"
+      this.style.left = poss.left + e.clientX - ex + "px"
+      ex = e.clientX
+      ey = e.clientY 
     }
   }
     

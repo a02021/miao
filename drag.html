@@ -144,10 +144,16 @@
       r = r<0 ? 100:r-9
       g = g<0 ? 100:g-8
       b = b<0 ? 100:b-10
-      console.log('++++++++',this)
+      // console.log('++++++++',this)
       let poss = this.getBoundingClientRect()
-      this.style.top = poss.top + e.clientY - ey + "px"
-      this.style.left = poss.left + e.clientX - ex + "px"
+      let to = poss.top + e.clientY - ey 
+      let le = poss.left + e.clientX - ex 
+      if (to < 10) to = 0
+      if (to > window.innerHeight - this.offsetHeight -10) to = window.innerHeight - this.offsetHeight
+      if (le > window.innerWidth - this.offsetWidth - 10) le = window.innerWidth - this.offsetWidth
+      if (le < 10) le = 0
+      this.style.top = to + "px"
+      this.style.left = le + "px"
       ex = e.clientX
       ey = e.clientY 
     }

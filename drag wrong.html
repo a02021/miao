@@ -100,8 +100,8 @@
   <div id="s6"></div>
   <div id="s7">喵</div>
 
-  <div id="cl">彩色</div>
-  <div id="dk">dark</div>
+  <!-- <div id="cl">彩色</div>
+  <div id="dk">dark</div> -->
   <script>
     let pp = document.querySelector('p')
     let s1 = document.querySelector('#s1')
@@ -116,7 +116,8 @@
     let r = 240
     let b = 195 
     let g = 201
-    let pos 
+    let tx=0
+    let ty=0
     s1.addEventListener('mousedown', moved)
     s2.addEventListener('mousedown', moved)
     s3.addEventListener('mousedown', moved)
@@ -126,65 +127,46 @@
     s7.addEventListener('mousedown', moved)
 
     function moved(e) {
-      this.style.zIndex = z
+      this.setAttribute("style",'z-index:'+z)
       z++
+      tx = e.pageX
+      ty = e.pageY
+      // console.log(tx,ty,m)
+      // this.style.left = this.offsetLeft + 'px'
+      // this.style.top = this.offsetTop  + 'px'
       m = 1
-      pos = mousePos(this)
       this.addEventListener('mousemove',move)
-      this.addEventListener('mouseup', stop )
-    }
-
-    function stop(e){
+      this.addEventListener('mouseup',  function stop(e){
       m = 0
       r= r+Math.floor(Math.random()*100)
       g= g+Math.floor(Math.random()*100)
       b= b+Math.floor(Math.random()*100)
-      // console.log(r,g,b)
+      // console.log('stop',tx,ty,m)
+      // console.log(e.pageX-tx,e.pageY-ty)
+      // console.log(this)
       this.removeEventListener('mousemove',move)
-      this.removeEventListener('mouseup',stop)
+      this.removeEventListener('mouseup',move)
+      
+    } )
     }
+
+
     function move(e) {
-    // console.log(m)
+    console.log(m)
       if(m == 1) {
       pp.setAttribute("style",'color:rgb('+r+','+b+','+g+')')
       r = r<0 ? 100:r-9
       g = g<0 ? 100:g-8
       b = b<0 ? 100:b-10
-      this.style.top = e.pageY - pos.y + "px"
-      this.style.left = e.pageX - pos.x + "px"
-    }
-  }
-    
-    let cl = document.querySelector('#cl')
-    let dk = document.querySelector('#dk')
-    let body = document.querySelector('body')
-    dk.addEventListener('click',function() {
-      s1.setAttribute("style",'background-color:black')
-      s2.setAttribute("style",'background-color:gray')
-      s3.setAttribute("style",'background-color:black')
-      s4.setAttribute("style",'background-color:gray')
-      s5.setAttribute("style",'background-color:black')
-      s6.setAttribute("style",'background-color:gray')
-      body.setAttribute("style",'background-color:midnightblue')
-      cl.removeEventListener('click', cool)
-    })
-    cl.addEventListener('click',cool)
-    function cool() {
-      s1.setAttribute("style",'background-color:red')
-      s2.setAttribute("style",'background-color:orange')
-      s3.setAttribute("style",'background-color:yellow')
-      s4.setAttribute("style",'background-color:green')
-      s5.setAttribute("style",'background-color:blue')
-      s6.setAttribute("style",'background-color:purple')
-    }
-
-    function mousePos(n) {
-      let box = n.getBoundingClientRect()
-      return {
-        x: window.event.clientX - box.x,
-        y: window.event.clientY - box.y,
+      // let ll = parseFloat(this.style.left)this.offsetLeft+this.offsetTop +
+      this.style.left = e.pageX-50 + 'px'
+      this.style.top = e.pageY-50 + 'px'
+      // console.log(this)
+      tx = e.pageX
+      ty = e.pageY
       }
     }
+     console.log(parseFloat('23.sc'))
   </script>
 </body>
 </html>

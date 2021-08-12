@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    body {
+      background-color: mistyrose;
+    }
+    div {
+      border-radius: 999px;
+      width: 100px;
+      height: 100px;
+      position: absolute;
+    }
+    #s1 {
+      background-color: rgb(245, 138, 159);
+      z-index:0;
+    }
+    #ss2 {
+      background-color:teal;
+      /* top:80px; */
+      z-index:1;
+
+    }
+  </style>
+</head>
+<body>
+  <div id="s1" style="left:10px; top:10px;"></div>
+  <div id="ss2"  style="left:20px; top:30px;"></div></div>
+  <script>
+    let s1 = document.querySelector('#s1')
+    let s2 = document.querySelector('#ss2')
+    let m = 0
+    let z = 7
+    s2.addEventListener('mousedown', function (e) {
+        z++
+        s2.style.zIndex = z
+        var pos = mousePos(s2)
+        function drag(e) {
+          s2.style.top = e.pageY - pos.y + "px"
+          s2.style.left = e.pageX - pos.x + "px"
+            console.log(e.pageX, e.pageY)
+        }
+        document.addEventListener("mousemove", drag)
+        document.addEventListener("mouseup", function up() {
+            document.removeEventListener("mousemove", drag)
+            document.removeEventListener("mouseup", up)
+        })
+    })
+    function mousePos(n) {
+      let box = n.getBoundingClientRect()
+      return {
+        x: window.event.clientX - box.x,
+        y: window.event.clientY - box.y,
+      }
+    }
+  </script>
+</body>
+</html>

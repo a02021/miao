@@ -5,8 +5,45 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    .trail { /* className for the trail elements */
+      position: absolute;
+      height: 6px; width: 6px;
+      border-radius: 3px;
+      background: teal;
+    }
+    body {
+      height: 300px;
+    }
+  </style>
 </head>
 <body>
-  
+  <div class="trail"></div>
+
+  <script>
+    let n = 0
+    let trs = []
+    for(let i = 0;i < 10 ; i++) {
+    let p = document.createElement('div')
+    p.classList.add('trail')
+    document.body.append(p)
+    trs.push(p)
+    }
+    console.log(trs)
+    window.addEventListener('mousemove',function(e) {
+      n++
+      if(n>9) n=0
+      let xx = e.clientX
+      let yy = e.clientY
+      trs[n].style.left = xx + 'px'
+      trs[n].style.top = yy + 'px'
+      setTimeout(function (){
+        for(let i = 0;i < 10 ; i++) {
+          trs[i].style.left = xx + 'px'
+          trs[i].style.top = yy + 'px'
+      }},200)
+    })
+
+  </script>
 </body>
 </html>

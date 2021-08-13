@@ -23,7 +23,7 @@
   <script>
     let n = 0
     let trs = []
-    for(let i = 0;i < 10 ; i++) {
+    for(let i = 0;i < 20 ; i++) {
     let p = document.createElement('div')
     p.classList.add('trail')
     document.body.append(p)
@@ -32,16 +32,18 @@
     console.log(trs)
     window.addEventListener('mousemove',function(e) {
       n++
-      if(n>9) n=0
+      if(n>19) n=0
       let xx = e.clientX
       let yy = e.clientY
       trs[n].style.left = xx + 'px'
       trs[n].style.top = yy + 'px'
-      setTimeout(function (){
-        for(let i = 0;i < 10 ; i++) {
+      
+        for(let i = 19;i >= 0 ; i--) {
+          setTimeout(function (){
+            console.log(i)
           trs[i].style.left = xx + 'px'
           trs[i].style.top = yy + 'px'
-      }},80)
+      },100)}
     })
 
   </script>

@@ -26,10 +26,12 @@
     let trs = []
     let dots = 20
     drawT(20)
+    let cur = 0
     window.addEventListener('mousemove',function(e){
       xx = e.clientX
       yy = e.clientY
-      moveT()
+      if(!cur) moveT()
+      cur = 1
     })
     let lastTime = 0
     let ct = 10
@@ -47,11 +49,10 @@
     })
 
     function moveT() {
-      n++
-      if(n > dots) n = 0
       console.log(n)
       trs[n].style.left = xx + 'px'
       trs[n].style.top = yy + 'px'
+      n = (n + 1) % dots
     }
 
     function drawT(c) {

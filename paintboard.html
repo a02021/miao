@@ -89,6 +89,13 @@
       y: window.event.clientY ,
     }
   }
+
+  let drawandnosave
+  window.addEventListener('beforeunload', e => {
+    if (drawandnosave) {
+      return e.
+    }
+  })
   </script>
 </body>
 </html>

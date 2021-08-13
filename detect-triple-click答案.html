@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <section></section>
+
+  <script>
+
+    // let last1 = last2 = last3 = 0
+    // window.addEventListener('click', e => {
+    //   let time = Date.now()
+    //   if (time - last2 < 400 && last2 - last1 > 400) {
+    //     console.log('triple click')
+    //   }
+    //   last1 = last2
+    //   last2 = last3
+    //   last3 = time
+    // })
+
+    // let last = 0
+    // let c = 0
+    // let id
+    // window.addEventListener('click', e => {
+    //   let time = Date.now()
+    //   clearTimeout(id)
+    //   id = setTimeout(() => c = 1,200)
+    //   if (time - last < 200) c++
+    //   if (c == 3) console.log('triple click')
+    //   if (c == 4) console.log('four click')
+    //   last = time
+    // })
+
+    // let dblChecked = false
+    // window.addEventListener('dblclick',e => {
+    //   dblChecked = true
+    //   setTimeout(() => dblChecked = false,200)
+    // })
+    // window.addEventListener('click', e=> {
+    //   if(dblChecked) console.log('triple click')
+    // })
+
+    //方法4: 用自带方法探测连击次数
+    window.addEventListener('click', e=> {
+      console.log(e.detail)
+      if (e.detail == 3) console.log('triple click')
+    })
+
+  </script>
+</body>
+</html>

@@ -22,29 +22,46 @@
 
   <script>
     let n = 0
+    let xx,yy
     let trs = []
-    for(let i = 0;i < 20 ; i++) {
-    let p = document.createElement('div')
-    p.classList.add('trail')
-    document.body.append(p)
-    trs.push(p)
-    }
-    console.log(trs)
-    window.addEventListener('mousemove',function(e) {
+    let dots = 20
+    drawT(20)
+    window.addEventListener('mousemove',function(e){
+      xx = e.clientX
+      yy = e.clientY
+      moveT()
+    })
+    let lastTime = 0
+    let ct = 10
+    requestAnimationFrame(function move(time,lastTime) {
+      if(lastTime){
+        lastTime = time - lastTime
+        ct = ct + lastTime 
+      }
+      // ct控制动画间隔
+      if (ct > 10) {
+        ct = 0
+        moveT()
+      }
+      requestAnimationFrame(n => move(n,time))
+    })
+
+    function moveT() {
       n++
-      if(n>19) n=0
-      let xx = e.clientX
-      let yy = e.clientY
+      if(n > dots) n = 0
+      console.log(n)
       trs[n].style.left = xx + 'px'
       trs[n].style.top = yy + 'px'
-      
-        for(let i = 19;i >= 0 ; i--) {
-          setTimeout(function (){
-            console.log(i)
-          trs[i].style.left = xx + 'px'
-          trs[i].style.top = yy + 'px'
-      },100)}
-    })
+    }
+
+    function drawT(c) {
+      for(let i = 0;i <= c ; i++) {
+        let p = document.createElement('div')
+        p.classList.add('trail')
+        document.body.append(p)
+        trs.push(p)
+      }
+    }
 
   </script>
 </body>

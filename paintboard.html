@@ -26,40 +26,32 @@
     button {
       display: block;
     }
+
+    input {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <p class="dot">点</p>
+  <br><br>
+  <input type="text" name="" id="">
+  <br>
   <svg width="500" height="500" viewbox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://wwww.w3.org/1999/xlink"></svg>
 
- 
   <button onclick="save()"> 保存(⊙o⊙)？ </button>
   <script>
-
     let svg = document.querySelector('svg')
     let lastpos = null
-
-    let m = 0
     document.addEventListener('mousedown',function(e) {
-      m = 1
-      if (e.pageX < 500 && e.pageX > 50 &&
-          e.pageY < 500 && e.pageY > 50 ){
-        drawDot(e)
-      }
-      document.addEventListener('mousemove',function(e) {
-        if (m && e.pageX < 500 && e.pageX > 20 &&
-          e.pageY < 500 && e.pageY > 20 ) {
-          drawDot(e)
-          drawDotSvg(e)
-        }
-        console.log(e.pageX,e.pageY)
-      })
+      console.log(lastpos)
+      document.addEventListener('mousemove',drawDotSvg)
       document.addEventListener('mouseup',function once() {
-        m = 0
-        lastpos == null
+        lastpos = null
+        console.log('kj',lastpos)
         // 鼠标松开后停止检测
+        document.removeEventListener('mousemove',drawDotSvg)
         document.removeEventListener('mouseup',once)
-        document.removeEventListener('mousemove',drawDot)
       })
     })
 
@@ -78,27 +70,26 @@
     if (lastpos == null) {
       line.setAttribute('x1', pos.x)
       line.setAttribute('y1', pos.y)
-      line.setAttribute('x2', pos.x)
-      line.setAttribute('y2', pos.y)
-      line.setAttribute('stroke', 'black')
-      line.setAttribute('stroke-width', '5')
     } else {
-      line.setAttribute('x1', pos.x)
-      line.setAttribute('y1', pos.y)
-      line.setAttribute('x2', lastpos.x)
-      line.setAttribute('y2', lastpos.y)
+      line.setAttribute('x1', lastpos.x)
+      line.setAttribute('y1', lastpos.y)
+    }
       line.setAttribute('stroke', 'pink')
       line.setAttribute('stroke-width', '5')
-    }
+    
+    line.setAttribute('x2', pos.x)
+    line.setAttribute('y2', pos.y)
     lastpos = pos
     svg.appendChild(line)
   }
+
+  
   function mousePos(node) {
     // svg 函数
     let box = node.getBoundingClientRect()
     return {
-      x: window.event.clientX ,
-      y: window.event.clientY ,
+      x: window.event.clientX - box.x,
+      y: window.event.clientY - box.y,
     }
   }
 
@@ -118,8 +109,6 @@
     anchor.download = 'xxxx.svg'
     anchor.click()
     // el.focus() el.blur()
-
-
   }
 
   </script>

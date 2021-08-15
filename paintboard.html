@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     body {
       background-color: slateblue;
@@ -22,11 +23,17 @@
       background-color: aliceblue;
       color: crimson;
     }
+    button {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <p class="dot">点</p>
-  <svg width="500" height="500"></svg>
+  <svg width="500" height="500" viewbox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://wwww.w3.org/1999/xlink"></svg>
+
+ 
+  <button onclick="save()"> 保存(⊙o⊙)？ </button>
   <script>
 
     let svg = document.querySelector('svg')
@@ -35,9 +42,13 @@
     let m = 0
     document.addEventListener('mousedown',function(e) {
       m = 1
-      drawDot(e)
+      if (e.pageX < 500 && e.pageX > 50 &&
+          e.pageY < 500 && e.pageY > 50 ){
+        drawDot(e)
+      }
       document.addEventListener('mousemove',function(e) {
-        if (m) {
+        if (m && e.pageX < 500 && e.pageX > 20 &&
+          e.pageY < 500 && e.pageY > 20 ) {
           drawDot(e)
           drawDotSvg(e)
         }
@@ -83,19 +94,34 @@
     svg.appendChild(line)
   }
   function mousePos(node) {
-    // let box = node.getBoundingClientRect()
+    // svg 函数
+    let box = node.getBoundingClientRect()
     return {
       x: window.event.clientX ,
       y: window.event.clientY ,
     }
   }
 
-  let drawandnosave
-  window.addEventListener('beforeunload', e => {
-    if (drawandnosave) {
-      return e.
-    }
-  })
+  // let drawandnosave
+  // window.addEventListener('beforeunload', e => {
+  //   if (drawandnosave) {
+  //     return e.
+  //   }
+  // })
+
+  function save() {
+    let svgSource = svg.outerHTML
+    let blob = new Blob([svgSource], {type: 'image/xml+svg'})
+    let url = URL.createObjectURL(blob)
+    let anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = 'xxxx.svg'
+    anchor.click()
+    // el.focus() el.blur()
+
+
+  }
+
   </script>
 </body>
 </html>

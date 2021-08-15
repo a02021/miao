@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    span {
+      width: 5px;
+      height: 5px;
+      position: absolute;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+   
+
+  <script>
+    let nn = 20
+    let n = 0
+    // window.addEventListener('mousemove', e=> {
+    //   let span = document.createElement('span')
+    //   span.classList.add('mouse-shadow')
+    //   span.style.left = e.clientX + 'px'
+    //   span.style.top = e.clientY + 'px'
+    //   document.body.append(span)
+    //   setTimeout(() => {document.body.removeChild(span)}, 80)
+    // })
+
+
+
+    let x = y =0
+    addEventListener('mousemove', e=> {
+      x = e.clientX
+      y = e.clientY
+    })
+
+    let stack = []
+    function getSpan() {
+      if (stack.length ) {
+        return stack.pop()
+      } else {
+        return document.createElement('span')
+      }
+    }
+    requestAnimationFrame(function ani(){
+      let span = getSpan()
+      span.classList.add('mouse-shadow')
+      span.style.left = x + 'px'
+      span.style.top = y + 'px'
+      document.body.append(span)
+      setTimeout(() => {
+        document.body.removeChild(span)
+      }, 16*8)
+      requestAnimationFrame(ani)
+    })
+
+    
+  </script>
+</body>
+</html>

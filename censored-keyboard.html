@@ -11,20 +11,50 @@
   <script>
     //阻止某些字符输入
     let textarea = document.querySelector('textarea')
-    textarea.addEventListener('keydown', e => {
-      if (e.key == 'Q' || e.key == 'W' || e.key == 'X') {
-        console.log(e.key)
-        e.preventDefault()
+    // textarea.addEventListener('keydown', e => {
+    //   if (e.key == 'Q' || e.key == 'W' || e.key == 'X') {
+    //     console.log(e.key)
+    //     e.preventDefault()
+    //   }
+    // })
+
+    textarea.addEventListener('paste', e=> {
+      // e.preventDefault()
+      console.log(e,e.clipboardData.files)
+      let text = e.clipboardData.getData('text')
+      text = text.replace(/[QWX]/g, '*')
+      let start = textarea.selectionStart
+      let end = textarea.selectionEnd
+      let value = textarea.value
+      textarea.value = value.slice(0, start) + text + value.slice(end)
+      textarea.selectionStart = textarea.selectionEnd = (value.slice(0, start) + text).length
+      e.preventDefault()
+    })
+
+    textarea.addEventListener('drop', e=> {
+      e.preventDefault()
+    })
+
+    textarea.addEventListener('input', e => {
+      console.log('e.data',e.data)
+      let text = e.data.replace(/[QWX]/g, '*')
+      textarea.value += text
+      e.preventDefault()
+    })
+
+    //输入法会触发:
+    // inputType: "insertCompositionText"
+
+    let prevValue = Object.getOwnPropertyDescriptor(textarea.__proto__, 'value')
+    console.log('prevValue',prevValue)
+    Object.defineProperty(textarea, 'value', {
+      get: function() {
+        return prevValue.get.call(this)
+      },
+      set: function(val) {
+        return prevValue.set.call(this, val.replace(/[QWX]/g, '*'))
       }
     })
-    textarea.addEventListener('paste', e=> {
-      e.preventDefault()
-      console.log(e,e.clipboardData.files)
-    })
-     textarea.addEventListener('drop', e=> {
-       e.preventDefault()
-     })
-
   </script>
 </body>
 </html>

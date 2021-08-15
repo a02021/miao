@@ -12,6 +12,7 @@
     span {
       font: 2em sans-serif;
       color: red;
+      display: block;
     }
   </style>
 </head>
@@ -19,22 +20,17 @@
   <p><button>滴滴滴滴</button></p>
   <script>
     let tr = 0
-    document.addEventListener('dblclick',function(){
-      let dot = document.createElement("div")
-      dot.innerHTML = '双击!!!'
-      document.body.appendChild(dot);
-    })
     document.addEventListener('click',function(){
       tr ++
+      let dot = document.createElement("span")
+      document.body.appendChild(dot);
       if(tr == 3) {
-        let dot = document.createElement("span")
-        dot.innerHTML = '3击!!!!!!!!'
-        document.body.appendChild(dot);
+        dot.innerHTML = '-----3击!!!!!!!!-----'
         tr = 0
+      } else if (tr == 2) {
+        dot.innerHTML = '双!!'
       } else {
-        let dot = document.createElement("div")
-        dot.innerHTML = '#单击'
-        document.body.appendChild(dot);
+        dot.innerHTML = '单'
       }
     })
     let lastTime = 0
@@ -45,7 +41,7 @@
         ct = ct + lastTime 
       }
       // ct为500 大约半秒, 如果没有成功三击,重置计数
-      if (ct > 500) {
+      if (ct > 800) {
         ct = 0
         tr = 0
       }

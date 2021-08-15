@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="wrapper">
+    <div data-tabname="Home">Tab one    <p>sfsfsafsafsfsfsf</p></div>
+    <div data-tabname="Link">Tab two <p>regergergergergregerg</p></div>
+    <div data-tabname="About">Tab three <p>35g3gergrgreerg</p></div>
+
+  </div>
+  <div id="wrapper">
+    <div data-tabname="Home">Tab one    <p>sfsfsafsafsfsfsf</p></div>
+    <div data-tabname="Link">Tab two <p>regergergergergregerg</p></div>
+    <div data-tabname="About">Tab three <p>35g3gergrgreerg</p></div>
+
+  </div>
+  <script>
+    function asTabs(node) {
+      let children = Array.from(node.children)
+      console.log(children)
+      let buttons = []
+      for (let child of children.reverse()) {
+        let button = document.createElement('button')
+        buttons.push(button)
+        button.textContent = child.dataset.tabname
+        child.style.display = 'none'
+        buttons.forEach(it => it.style.background = 'grey')
+        
+        button.addEventListener('click', e => {
+          children.forEach(it => it.style.display = 'none')
+          child.style.display = 'block'
+          buttons.forEach(it => it.style.background = 'grey')
+          button.classList.add('active')
+          button.style.background = 'pink'
+        })
+
+        node.prepend(button)
+      }
+    }
+    asTabs(document.querySelector('body > div'))
+    asTabs(document.querySelectorAll('body > div')[1])
+  </script>
+</body>
+</html>

@@ -26,25 +26,43 @@
     button {
       display: block;
     }
-
+    
+    p {
+      display: inline;
+      color:antiquewhite;
+    }
     input {
-      display: block;
+      display: inline;
+      width: 180px;
     }
   </style>
 </head>
 <body>
-  <p class="dot">点</p>
+  <!-- <p class="dot">点</p> -->
   <br><br>
-  <input type="text" name="" id="">
-  <br>
+  <p>Color</p>
+  <input type="color" value="#FF5599" id="colorInput">
+  <p>Line</p>
+  <input type="range" min="1" max="10" value="3" id="widthInput">
+  <span class="line-width-value"></span>
+  <br><br>
   <svg width="500" height="500" viewbox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://wwww.w3.org/1999/xlink"></svg>
-
+  <br>
+  <p>ctrl + z 撤销笔画</p>
   <button onclick="save()"> 保存(⊙o⊙)？ </button>
+
   <script>
+    //SVG文档!!!
+    //https://developer.mozilla.org/zh-CN/docs/Web/SVG
+
     let svg = document.querySelector('svg')
     let lastpos = null
+    let count = 0
+    let draw
     document.addEventListener('mousedown',function(e) {
-      console.log('mousedown',lastpos)
+      // 将每笔放进draw元素里面,方便删除
+      draw = document.createElementNS("http://www.w3.org/2000/svg", 'g')
+      svg.append(draw)
       drawDotSvg(e)
       document.addEventListener('mousemove',drawDotSvg)
       document.addEventListener('mouseup',function once() {
@@ -55,6 +73,35 @@
         document.removeEventListener('mousemove',drawDotSvg)
         document.removeEventListener('mouseup',once)
       })
+    })
+
+    let colorInput = document.querySelector('#colorInput')
+    console.log(colorInput.value)
+    let widthInput = document.querySelector('#widthInput') 
+    let widthSpan = document.querySelector('.line-width-value')
+    //change必须松开鼠标后触发
+    //input 随时触发
+    widthInput.addEventListener('input', e=> {
+      widthSpan.textContent =widthInput.value
+    })
+
+    // ctrl + z 撤销笔画
+    // document.addEventListener('keydown', function(e) {
+    //   if (e.ctrlKey && e.key == 'z') {
+    //     if (svg.lastElementChild) {
+    //       let count = svg.lastElementChild.dataset.count
+    //       while (svg.lastElementChild && 
+    //              svg.lastElementChild.dataset.count == count) {
+    //         svg.removeChild(svg.lastElementChild)
+    //       }
+    //     }
+    //   }
+    // })
+
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key == 'z') {
+        svg.removeChild(svg.lastElementChild)
+      }
     })
 
   function drawDot(e) {
@@ -76,13 +123,15 @@
       line.setAttribute('x1', lastpos.x)
       line.setAttribute('y1', lastpos.y)
     }
+    // 每笔标记(计数)
+    // line.setAttribute('data-count', count)
     line.setAttribute('x2', pos.x)
     line.setAttribute('y2', pos.y)
-    line.setAttribute('stroke', 'pink')
-    line.setAttribute('stroke-width', '5')
+    line.setAttribute('stroke', colorInput.value)
+    line.setAttribute('stroke-width', widthInput.value)
     line.setAttribute('stroke-linecap', 'round')
     lastpos = pos
-    svg.appendChild(line)
+    draw.append(line)
   }
 
   function mousePos(node) {
@@ -93,13 +142,6 @@
       y: window.event.clientY - box.y,
     }
   }
-
-  // let drawandnosave
-  // window.addEventListener('beforeunload', e => {
-  //   if (drawandnosave) {
-  //     return e.
-  //   }
-  // })
 
   function save() {
     let svgSource = svg.outerHTML

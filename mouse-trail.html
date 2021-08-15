@@ -30,10 +30,15 @@
   <script>
     let mx = my = 0
     let fires = document.querySelectorAll('div')
+    let r = 200, b = 211, g = 50
     window.addEventListener('mousemove', e => {
       mx = e.clientX
       my = e.clientY
+      r = r<0 ? 255:r-7
+      g = g<0 ? 255:g-8
+      b = b<0 ? 255:b-9
     })
+
     requestAnimationFrame(function ani(time) {
       let angle = time *0.001
       let angle2 = angle +  2/3 * Math.PI
@@ -42,6 +47,8 @@
       for (let fire of fires) {
         fire.style.left = Math.cos(angle) * 150 + mx + 'px'
         fire.style.top = Math.sin(angle) * 150 + my+ 'px'
+        fire.style.backgroundColor = 'rgb('+r+','+b+','+g+')'
+
         angle +=  Math.PI*2 / fires.length
       }
 

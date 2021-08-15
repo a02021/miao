@@ -44,11 +44,13 @@
     let svg = document.querySelector('svg')
     let lastpos = null
     document.addEventListener('mousedown',function(e) {
-      console.log(lastpos)
+      console.log('mousedown',lastpos)
+      drawDotSvg(e)
       document.addEventListener('mousemove',drawDotSvg)
       document.addEventListener('mouseup',function once() {
+        //重置坐标 防止下次连线
         lastpos = null
-        console.log('kj',lastpos)
+        console.log('mouseup',lastpos)
         // 鼠标松开后停止检测
         document.removeEventListener('mousemove',drawDotSvg)
         document.removeEventListener('mouseup',once)
@@ -65,25 +67,24 @@
 
   function drawDotSvg(e) {
     let pos = mousePos(svg)
-    console.log(pos)
     let line = document.createElementNS("http://www.w3.org/2000/svg",'line')
     if (lastpos == null) {
+      console.log('pos',pos,pos.x,pos.y)
       line.setAttribute('x1', pos.x)
       line.setAttribute('y1', pos.y)
     } else {
       line.setAttribute('x1', lastpos.x)
       line.setAttribute('y1', lastpos.y)
     }
-      line.setAttribute('stroke', 'pink')
-      line.setAttribute('stroke-width', '5')
-    
     line.setAttribute('x2', pos.x)
     line.setAttribute('y2', pos.y)
+    line.setAttribute('stroke', 'pink')
+    line.setAttribute('stroke-width', '5')
+    line.setAttribute('stroke-linecap', 'round')
     lastpos = pos
     svg.appendChild(line)
   }
 
-  
   function mousePos(node) {
     // svg 函数
     let box = node.getBoundingClientRect()

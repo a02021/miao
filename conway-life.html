@@ -6,8 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
+    body {
+      width: max-content;
+      height: max-content;
+    }
     #newLong {
-      width: 80px;
+      width: 60px;
     }
     p {
       display: inline;
@@ -22,7 +26,7 @@
   <div id="grid"></div>
 <script>
   // Your code here.
-  let long = 10
+  let long = 100
   let checkbox = []
   createBox()
   function createBox() {
@@ -103,9 +107,9 @@
       removeBox()
       long = Number(newLong.value)
       createBox()
-
+    } else {
+      newLong.value = ''
     }
-
   })
   let button = document.querySelector("button")
   let a = 0

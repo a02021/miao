@@ -5,56 +5,83 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    #newLong {
+      width: 80px;
+    }
+    p {
+      display: inline;
+    }
+  </style>
 </head>
 <body>
+  <p id="nGener"></p><br><br>
+  <p>输入新长度</p><input type="text"  id="newLong"><br><br>
+  <button id="next">Next generation</button>
+  <p id="nextGen"></p><br><br>
   <div id="grid"></div>
-<button id="next">Next generation</button>
-<p></p>
 <script>
   // Your code here.
+  let long = 10
   let checkbox = []
-  let grid = document.querySelector("div")
-  for (let y = 0; y < 10; y++) {
-    let row = document.createElement("span")
-    grid.appendChild(row)
-    for (let x = 0; x < 10; x++) {
-      let box = document.createElement("input");
-      box.type = "checkbox";
-      box.name = x + y * 10;
-      box.checked = Math.round(Math.random()*0.7)  //随机0或1
-      row.appendChild(box)
-      checkbox.push(box);
-      //console.log(checkbox[x+y*10].checked)  //true or false
+  createBox()
+  function createBox() {
+    let nGener = document.querySelector("#nGener")
+    nGener.innerHTML = '当前长度' + ':' + long + '*' + long 
+
+    let grid = document.querySelector("#grid")
+    for (let y = 0; y < long; y++) {
+      let row = document.createElement("span")
+      grid.appendChild(row)
+      for (let x = 0; x < long; x++) {
+        let box = document.createElement("input");
+        box.type = "checkbox";
+        box.name = x + y * long;
+        box.checked = Math.round(Math.random()*0.7)  //随机0或1
+        row.appendChild(box)
+        checkbox.push(box);
+        //console.log(checkbox[x+y*10].checked)  //true or false
+      }
+      let brr = document.createElement("br")
+      grid.appendChild(brr)
     }
-    let brr = document.createElement("br")
-    grid.appendChild(brr)
+    console.log(checkbox)
   }
-  console.log(checkbox)
+  function removeBox() {
+    let grid = document.querySelector("#grid")
+    if (grid){
+    grid.innerHTML = ""
+    checkbox = []
+    }
+  }
   function clickNext() {
     let liveNext = []
     let diedNext = []
-    for (let y = 0; y < 10; y++) {
-      for (let x = 0; x < 10; x++) {
-        let now = x + y * 10
+    for (let y = 0; y < long; y++) {
+      for (let x = 0; x < long; x++) {
+        let now = x + y * long
         let count = 0
-        let neighbor = [-11, -10, -9, -1, +1, +9, +10, +11]
-        if (x == 0) { neighbor = [-10, -9, +1, +10, +11] }
-        if (x == 9) { neighbor = [-11, -10, -1, +9, +10] }
-          for (let i in neighbor) {
-            if (now + neighbor[i] >= 0 && now + neighbor[i] < 100 ) {
-              if (checkbox[(now + neighbor[i])].checked) {
-              count++
-              }
+        let neighbor = [-long-1, -long, -long+1, -1, +1, +long-1, +long, +long+1]
+        if (x == 0) { 
+          neighbor = [-long, -long+1, +1, +long, +long+1] 
+        }
+        if (x == long-1) { 
+          neighbor = [-long-1, -long, -1, +long-1, +long] 
+        }
+        for (let i in neighbor) {
+          if (now + neighbor[i] >= 0 && now + neighbor[i] < long*long ) {
+            if (checkbox[(now + neighbor[i])].checked) {
+            count++
             }
           }
-          //console.log('count',x+y*10,count)
+        }
         //少于两个或多于三个的活着的邻居，都会死亡
         if (checkbox[now].checked){
           if (count < 2 || count > 3) {
             diedNext.push(now)
           }
         }
-      //死去的细胞，周围有三个活着的邻居，可以再次复活。
+        //死去的细胞，周围有三个活着的邻居，可以再次复活。
         if (!checkbox[now].checked) {
           if (count == 3) {
             liveNext.push(now)
@@ -69,10 +96,20 @@
       checkbox[i].checked = false
     }
   }
-  
+
+  let newLong = document.querySelector("#newLong")
+  newLong.addEventListener('change', e => {
+    if (Number(newLong.value)) {
+      removeBox()
+      long = Number(newLong.value)
+      createBox()
+
+    }
+
+  })
   let button = document.querySelector("button")
   let a = 0
-  let p = document.querySelector('p')
+  let p = document.querySelector('#nextGen')
   button.addEventListener(
     "click", () => {
       clickNext()

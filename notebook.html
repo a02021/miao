@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: pink;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="addNote()">new</button><br>
+<select id="list" size="8"></select>
+
+<textarea id="currentnote" style="width: 70%; height: 10em">
+</textarea>
+
+<script>
+  var list = document.querySelector("#list");
+  function addToList(name) {
+    var option = document.createElement("option");
+    option.textContent = name;
+    list.appendChild(option);
+  }
+
+  // Initialize the list from localStorage
+  var notes = JSON.parse(localStorage.getItem("notes")) ||
+              {"shopping list": ""};
+  for (var name in notes)
+    if (notes.hasOwnProperty(name))
+      addToList(name);
+
+  function saveToStorage() {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }
+
+  var current = document.querySelector("#currentnote");
+  current.value = notes[list.value];
+
+  list.addEventListener("change", function() {
+    current.value = notes[list.value];
+  });
+  current.addEventListener("change", function() {
+    notes[list.value] = current.value;
+    saveToStorage();
+  });
+
+  function addNote() {
+    var name = prompt("Note name", "");
+    if (!name) return;
+    if (!notes.hasOwnProperty(name)) {
+      notes[name] = "";
+      addToList(name);
+      saveToStorage();
+    }
+    list.value = name;
+    current.value = notes[name];
+  }
+</script>
+</body>
+</html>

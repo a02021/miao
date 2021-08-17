@@ -9,38 +9,64 @@
     body {
       background-color: pink;
     }
+
+    button {
+      position: absolute;
+      top:10px;
+      left: 50px;
+      width: 150px;
+      height: 30px;
+    }
+    select {
+      position: absolute;
+      top: 50px;
+      left:50px;
+      width: 150px;
+    }
+    textarea {
+      top: 50px;
+      left: 210px;
+      position: absolute;
+      width: 600px;
+      height: 400px;
+    }
   </style>
+
 </head>
 <body>
   <button onclick="addNote()">new</button><br>
-<select id="list" size="8"></select>
-
-<textarea id="currentnote" style="width: 70%; height: 10em">
-</textarea>
+  <select id="list" size="25"></select>
+  <textarea id="currentnote" ></textarea>
 
 <script>
-  var list = document.querySelector("#list");
+  let list = document.querySelector("#list");
   function addToList(name) {
-    var option = document.createElement("option");
+    let option = document.createElement("option");
     option.textContent = name;
     list.appendChild(option);
   }
 
-  // Initialize the list from localStorage
-  var notes = JSON.parse(localStorage.getItem("notes")) ||
-              {"shopping list": ""};
-  for (var name in notes)
-    if (notes.hasOwnProperty(name))
+  // 初始化 notes为对象 只需要第一次绑定
+  let notes = JSON.parse(localStorage.getItem("notes")) ||
+              {"shopping list": "fgfdsgdsf"};
+              console.log(notes)
+  for (let name in notes) {
+    if (notes.hasOwnProperty(name)){
       addToList(name);
-
+    }
+  }
   function saveToStorage() {
     localStorage.setItem("notes", JSON.stringify(notes));
   }
 
-  var current = document.querySelector("#currentnote");
+
+  let current = document.querySelector("#currentnote");
+
   current.value = notes[list.value];
 
+  // select自带value 自动保存上次点击的选项 
   list.addEventListener("change", function() {
+    console.log(list.value)
     current.value = notes[list.value];
   });
   current.addEventListener("change", function() {
@@ -49,12 +75,17 @@
   });
 
   function addNote() {
-    var name = prompt("Note name", "");
-    if (!name) return;
+    let name = prompt("Note name", "")
+    if (!name) {
+      alert('未添加标签')
+      return
+    }
     if (!notes.hasOwnProperty(name)) {
       notes[name] = "";
       addToList(name);
       saveToStorage();
+    } else {
+      alert('已存在同名标签!')
     }
     list.value = name;
     current.value = notes[name];

@@ -23,19 +23,44 @@
   <p id="nGener"></p><br><br>
   <p>输入新长度</p><input type="text"  id="newLong"><br><br>
   <button id="next">Next generation</button>
-  <p id="nextGen"></p><br>
+  <button id="randomNew">随机生成</button>
+  <button id="auto">Auto Play</button>  
   <button id="clearAll">清空</button>
+  <p id="nextGen"></p>
+<br><br>
   <div id="grid"></div>
 <script>
   // Your code here.
-  let long = 100
+  let gen = 0
+  let long = 50
   let checkbox = []
+  let liveNext = []
+  let diedNext = []
+  let liveNow =[]
+  let autoPlay = endGame = false
+  let newLong = document.querySelector("#newLong")
+  newLong.addEventListener('change', e => {
+    if (Number(newLong.value)) {
+      long = Number(newLong.value)
+      createBox()
+    } else {
+      newLong.value = ''
+    }
+  })
   createBox()
+  let randomNew = document.querySelector("#randomNew")
+  randomNew.addEventListener('click', e => {
+    gen = 0
+    nextG()
+    createBox()
+  })
   function createBox() {
     let nGener = document.querySelector("#nGener")
     nGener.innerHTML = '当前长度' + ':' + long + '*' + long 
-
     let grid = document.querySelector("#grid")
+    grid.innerHTML = ""
+    checkbox = []
+    autoPlay = endGame = false
     for (let y = 0; y < long; y++) {
       let row = document.createElement("span")
       grid.appendChild(row)
@@ -44,6 +69,9 @@
         box.type = "checkbox";
         box.name = x + y * long;
         box.checked = Math.round(Math.random()*0.7)  //随机0或1
+        if (box.checked) {
+          liveNow.push(x + y * long)
+        }
         row.appendChild(box)
         checkbox.push(box);
         //console.log(checkbox[x+y*10].checked)  //true or false
@@ -51,18 +79,13 @@
       let brr = document.createElement("br")
       grid.appendChild(brr)
     }
-    console.log(checkbox)
+    // console.log(checkbox)
   }
-  function removeBox() {
-    let grid = document.querySelector("#grid")
-    if (grid){
-    grid.innerHTML = ""
-    checkbox = []
-    }
-  }
+
   function clickNext() {
-    let liveNext = []
-    let diedNext = []
+    liveNext = []
+    diedNext = []
+    liveNow = []
     for (let y = 0; y < long; y++) {
       for (let x = 0; x < long; x++) {
         let now = x + y * long
@@ -85,6 +108,8 @@
         if (checkbox[now].checked){
           if (count < 2 || count > 3) {
             diedNext.push(now)
+          } else {
+            liveNow.push(now)
           }
         }
         //死去的细胞，周围有三个活着的邻居，可以再次复活。
@@ -101,29 +126,46 @@
     for (let i of diedNext) {
       checkbox[i].checked = false
     }
+    if (liveNow.length == 0 && liveNext.length == 0) {
+      endGame = true
+      alert('结束')
+    }
   }
 
-  let newLong = document.querySelector("#newLong")
-  newLong.addEventListener('change', e => {
-    if (Number(newLong.value)) {
-      removeBox()
-      long = Number(newLong.value)
-      createBox()
-    } else {
-      newLong.value = ''
-    }
-  })
   let button = document.querySelector("button")
-  let a = 0
-  let p = document.querySelector('#nextGen')
-  button.addEventListener(
-    "click", () => {
-      clickNext()
-      a++
-      p.innerHTML = '第'+ a +'代'
-    }
-  )
+  button.addEventListener("click", nextG)
 
+  let auto = document.querySelector("#auto")
+  auto.addEventListener('click',e => {
+    autoPlay = !autoPlay ? true : false
+    let ct = 0
+    console.log(autoPlay)
+    requestAnimationFrame(function moove(n,lastTime) {
+      if(!lastTime) lastTime = 0
+      ct += n - lastTime
+        if (ct >150) {
+          nextG()
+          ct = 0
+        }
+        if (autoPlay && !endGame) {
+          requestAnimationFrame(newTime => moove(newTime,n))
+        }
+      })
+  })
+
+  function  nextG(){
+    clickNext()
+    gen++
+    document.querySelector('#nextGen').innerHTML = '第'+ gen +'代'
+
+  }
+  let clearAll = document.querySelector('#clearAll')
+  clearAll.addEventListener('click', e => {
+    for (let n of liveNow) checkbox[n].checked = false
+    for (let n of liveNext) checkbox[n].checked = false
+    liveNext = []
+    liveNow = []
+  })
 </script>
 </body>
 </html>

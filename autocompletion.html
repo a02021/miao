@@ -5,6 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    #field {
+      width: 300px;
+      position: absolute;
+    }
+    #suggestions {
+      position: absolute;
+      z-index: 100;
+      top: 25px;
+      display:none;
+      border:2px solid pink;
+      width: 300px;
+    }
+  </style>
 </head>
 <body>
   <input type="text" id="field">
@@ -23,12 +37,17 @@
   let suggestions = document.querySelector('#suggestions')
   field.addEventListener('input', e=> {
     suggestions.innerHTML = ''
+    suggestions.style.display = 'none'
     let curVal = field.value
+    if (curVal == '') {
+      return
+    }
     terms.forEach(n => {
       if (n.indexOf(curVal) == 0) {
         suggestions.innerHTML += n + '</br>'
       }
     })
+    suggestions.style.display = 'block'
   })
 </script>
 </body>

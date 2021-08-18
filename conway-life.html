@@ -7,167 +7,138 @@
   <title>Document</title>
   <style>
     body {
-      background-color:blanchedalmond;
+      background-color: wheat;
       width: max-content;
       height: max-content;
-    }
-    #newLong {
-      width: 60px;
+      /* 检测换行符 */
+      white-space:pre-line;
     }
     p {
-      display: inline;
+      color: red;
     }
+
   </style>
 </head>
 <body>
-  <p id="nGener"></p><br><br>
-  <p>输入新长度</p><input type="text"  id="newLong"><br><br>
-  <button id="next">Next generation</button>
-  <button id="randomNew">随机生成</button>
-  <button id="auto">Auto Play</button>  
-  <button id="clearAll">清空</button>
-  <p id="nextGen"></p>
-<br><br>
+  <p>class版本</p>
   <div id="grid"></div>
-<script>
-  // Your code here.
-  // 建议修改: 把数据存入class和数组 而不是DOM
-
-  let gen = 0
-  let long = 50
-  let checkbox = []
-  let liveNext = []
-  let diedNext = []
-  let liveNow =[]
-  let autoPlay = endGame = false
-  let newLong = document.querySelector("#newLong")
-  newLong.addEventListener('change', e => {
-    if (Number(newLong.value)) {
-      long = Number(newLong.value)
-      createBox()
-    } else {
-      newLong.value = ''
-    }
-  })
-  createBox()
-  let randomNew = document.querySelector("#randomNew")
-  randomNew.addEventListener('click', e => {
-    gen = 0
-    createBox()
-    nextG()
-  })
-  function createBox() {
-    let nGener = document.querySelector("#nGener")
-    nGener.innerHTML = '当前长度' + ':' + long + '*' + long 
-    let grid = document.querySelector("#grid")
-    grid.innerHTML = ""
-    checkbox = []
-    autoPlay = endGame = false
-    for (let y = 0; y < long; y++) {
-      let row = document.createElement("span")
-      grid.appendChild(row)
-      for (let x = 0; x < long; x++) {
-        let box = document.createElement("input");
-        box.type = "checkbox";
-        box.name = x + y * long;
-        box.checked = Math.round(Math.random()*0.7)  //随机0或1
-        if (box.checked) {
-          liveNow.push(x + y * long)
-        }
-        row.appendChild(box)
-        checkbox.push(box);
-        //console.log(checkbox[x+y*10].checked)  //true or false
+  <div>尺寸<input type="range" id="range" min='5' max='25' value='10' onclick="startNew()"></div>
+  <button onclick="next()">Next generation</button>
+  <button onclick="clearAll()">清空</button>
+  <button onclick="randomNew()">重新随机</button>
+  <p>jk ' \n '</p>
+  <script>
+    class Conway {
+      constructor(width, height) {
+        this.width = width
+        this.height = height
+        this.world = new Array(height).fill([]).map(i => i = new Array(height).fill(0))
       }
-      let brr = document.createElement("br")
-      grid.appendChild(brr)
-    }
-    // console.log(checkbox)
-  }
-
-  function clickNext() {
-    liveNext = []
-    diedNext = []
-    liveNow = []
-    for (let y = 0; y < long; y++) {
-      for (let x = 0; x < long; x++) {
-        let now = x + y * long
+      get(row, col) {
+        if (row < 0) row = this.width -1
+        if (row > this.width) row = 0
+        if (col < 0) col = this.height -1
+        if (col > this.col) row = 0
+        return this.world[row][col]
+      }
+      set(row, col, val) {
+        this.world[row][col] = val
+      }
+      printWorld(callback) {
+        return callback(this.world)
+      }
+      randomFill(ratio = 0.5) {
+        this.world = this.world.map(it => it = it.map(n => 
+          n = Math.random() > ratio ? 0 : 1))
+      }
+      neighborsCount(row, col) {
         let count = 0
-        let neighbor = [-long-1, -long, -long+1, -1, +1, +long-1, +long, +long+1]
-        if (x == 0) { 
-          neighbor = [-long, -long+1, +1, +long, +long+1] 
-        }
-        if (x == long-1) { 
-          neighbor = [-long-1, -long, -1, +long-1, +long] 
-        }
-        for (let i in neighbor) {
-          if (now + neighbor[i] >= 0 && now + neighbor[i] < long*long ) {
-            if (checkbox[(now + neighbor[i])].checked) {
-            count++
-            }
+        let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
+        let jLength = col + 1 > this.height - 1 ? this.height - 1: col + 1
+        for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
+          for (let j = col - 1 < 0 ? 0 : col - 1; j <= jLength; j++) {
+            // console.log(i,j,this.world[i][j])
+            if (this.world[i][j] === 1) count++
           }
         }
         //少于两个或多于三个的活着的邻居，都会死亡
-        if (checkbox[now].checked){
+        // console.log('co',row,col,count)
+        if (this.world[row][col] === 1) {
+          count--
           if (count < 2 || count > 3) {
-            diedNext.push(now)
+            return false
           } else {
-            liveNow.push(now)
+            return true
+          }
+        } else {//死去的细胞，周围有三个活着的邻居，可以再次复活。
+          if (count === 3) {
+            return true
           }
         }
-        //死去的细胞，周围有三个活着的邻居，可以再次复活。
-        if (!checkbox[now].checked) {
-          if (count == 3) {
-            liveNext.push(now)
+        return false
+      }
+      next() {
+        let newWorld = []
+        for (let row = 0; row < this.width; row++) {
+          newWorld[row] = []
+          for (let col =0; col < this.height; col++) {
+            if(this.neighborsCount(row, col)) {
+              newWorld[row][col] = 1
+            } else {
+              newWorld[row][col] = 0
+            }
           }
         }
+        this.world = newWorld
       }
     }
-    for (let i of liveNext) {
-      checkbox[i].checked = true
-    }
-    for (let i of diedNext) {
-      checkbox[i].checked = false
-    }
-    if (liveNow.length == 0 && liveNext.length == 0) {
-      endGame = true
-      alert('结束')
-    }
-  }
 
-  let button = document.querySelector("button")
-  button.addEventListener("click", nextG)
-
-  let auto = document.querySelector("#auto")
-  auto.addEventListener('click',e => {
-    autoPlay = !autoPlay ? true : false
-    let ct = 0
-    console.log(autoPlay)
-    requestAnimationFrame(function moove(n,lastTime) {
-      if(!lastTime) lastTime = 0
-      ct += n - lastTime
-        if (ct >150) {
-          nextG()
-          ct = 0
+    let newGame 
+    startWorld(10, 10, 0.5)
+    function startWorld(width, height, ratio = 0.5) {
+      newGame = new Conway(width, height)
+      newGame.randomFill(ratio)
+      newGame.printWorld(printHTML)
+    }
+    let grid = document.querySelector('#grid')
+    grid.addEventListener('click', e => {
+      let row = e.target.dataset.row
+      let col = e.target.dataset.col
+      newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
+    })
+    
+    function startNew() {
+      let range = document.querySelector('#range')
+      let long = Number(range.value)
+      startWorld(long, long)
+    }
+    function printHTML(m) {
+      let grid = document.querySelector('#grid')
+      grid.innerHTML = ''
+      for (let row = 0; row < m.length; row++) {
+        for (let col = 0; col < m[row].length; col++) {
+          if (m[row][col] === 0) grid.innerHTML += `<input type="checkbox" data-row="${row}" data-col="${col}">`
+          if (m[row][col] === 1) grid.innerHTML += `<input type="checkbox" checked data-row="${row}" data-col="${col}">`
         }
-        if (autoPlay && !endGame) {
-          requestAnimationFrame(newTime => moove(newTime,n))
-        }
-      })
-  })
+        grid.innerHTML += '\n'
+      }
+    }
+    function next() {
+      newGame.next()
+      newGame.printWorld(printHTML)
+    }
+    function clearAll() {
+      newGame.randomFill(0)
+      newGame.printWorld(printHTML)
+    }
+    function randomNew() {
+      newGame.randomFill(0.5)
+      newGame.printWorld(printHTML)
+    }
 
-  function  nextG(){
-    clickNext()
-    gen++
-    document.querySelector('#nextGen').innerHTML = '第'+ gen +'代'
 
-  }
-  let clearAll = document.querySelector('#clearAll')
-  clearAll.addEventListener('click', e => {
-    for (let n of liveNow) checkbox[n].checked = false
-    for (let n of liveNext) checkbox[n].checked = false
-    liveNext = []
-    liveNow = []
-  })
-</script>
+
+
+  </script>
 </body>
 </html>

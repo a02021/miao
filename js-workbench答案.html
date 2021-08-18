@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #code {
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <textarea  id="code">
+  let a = 1
+  let c = 0
+  console.log(a)
+  c = a +5
+  </textarea>
+<button id="button" onclick="run()">Run</button>
+<pre id="output"></pre>
+
+<script>
+  // Your code here.
+  let code = document.querySelector('#code')
+  let output = document.querySelector('#output')
+  function run() {
+    output.textContent = ''
+    let console = {
+      log: function(...args) {
+        window.console.log(...args)
+        output.textContent += args.join(' ')+'\n'
+      }
+    }
+
+    let result = eval(code.value)
+    output.textContent += '>'+result
+    // console.log('rr',result)
+  }
+</script>
+</body>
+</html>

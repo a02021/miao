@@ -31,6 +31,8 @@
   <div id="grid"></div>
 <script>
   // Your code here.
+  // 建议修改: 把数据存入class和数组 而不是DOM
+
   let gen = 0
   let long = 50
   let checkbox = []
@@ -51,8 +53,8 @@
   let randomNew = document.querySelector("#randomNew")
   randomNew.addEventListener('click', e => {
     gen = 0
-    nextG()
     createBox()
+    nextG()
   })
   function createBox() {
     let nGener = document.querySelector("#nGener")

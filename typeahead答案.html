@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" name="" id="">
+  <ul id="ul"></ul>
+
+  <script>
+    let input = document.querySelector('input')
+    let ul = document.querySelector('#ul')
+    input.addEventListener('input', e => {
+      getSuggest(e.target.value, (suggests) => {
+        ul.innerHTML = ''
+        suggests.forEach(suggest => {
+          let li = document.createElement('li')
+          li.textContent = suggest
+          ul.append(li)
+        });
+        console.log(ul)
+      })
+    })
+    function getSuggest(word, callback) {
+      let suggests = Array(10).fill(0).map((a, i) => {
+        return word + i
+      })
+      setTimeout(() => {
+        callback(suggests)
+      }, 500 + 1000*Math.random())
+    }
+  </script>
+</body>
+</html>

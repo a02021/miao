@@ -26,6 +26,7 @@
   <div id="grid"></div>
   <div>尺寸<input type="range" id="range" min='5' max='25' value='10' onclick="startNew()"></div>
   <button onclick="next()">Next generation</button>
+  <input type="checkbox" name="" id="ifAuto" onclick="autoNext()">
   <button onclick="clearAll()">清空</button>
   <button onclick="randomNew()">重新随机</button>
   <p>jk ' \n '</p>
@@ -98,6 +99,7 @@
     let newGame, nGen
     let range = document.querySelector('#range')
     let long = Number(range.value)
+    let autoPlay 
     startWorld(long, long, 0.5)
     function startWorld(width, height, ratio = 0.5) {
       nGen = 0
@@ -138,7 +140,14 @@
     function randomNew() {
       startWorld(long, long, 0.5)
     }
-
+    function autoNext() {
+      let ifAuto = document.querySelector('#ifAuto')
+      if (ifAuto.checked) {
+        autoPlay = setInterval(next, 500)
+      } else {
+        clearInterval(autoPlay)
+      }
+    }
 
 
 

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" id="field">
+<div id="suggestions" style="cursor: pointer"></div>
+
+<script>
+  // Builds up an array with global variable names, like
+  // 'alert', 'document', and 'scrollTo'
+  let terms = []
+  console.log(window)
+  for (let name in window) {
+    terms.push(name)
+  }
+  // Your code here.
+  let field = document.querySelector('#field')
+  let suggestions = document.querySelector('#suggestions')
+  field.addEventListener('input', e=> {
+    suggestions.innerHTML = ''
+    let curVal = field.value
+    terms.forEach(n => {
+      if (n.indexOf(curVal) == 0) {
+        suggestions.innerHTML += n + '</br>'
+      }
+    })
+  })
+</script>
+</body>
+</html>

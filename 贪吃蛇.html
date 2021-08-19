@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  □■
+  <pre>
+
+  </pre>
+
+  <script>
+
+    class SnakeGame {
+      constructor(width = 10, height = 10) {
+        this.width = width
+        this.height = height
+        this.snakeLength = 0
+        this.headpos = null  //蛇头[2,3]
+        this.tailpos = null  //蛇尾[1,2]
+        this.world = null
+        this.gameEnd = false
+      }
+      init() {
+        this.world = Array(this.height).fill(0).map(it => Array(this.width).fill('.'))
+        this.world[3][3] = '>' // 蛇头
+        this.snakeLength = 1
+        this.headpos = {"row":3, "col":3}
+        this.tailpos = {"row":3, "col":3}
+        this.placeApple() // 苹果
+      }
+      placeApple() {
+        let row = Math.floor(this.height * Math.random())
+        let col = Math.floor(this.width * Math.random())
+        if (this.world[row][col] == '.') {
+          this.world[row][col] = 'Q'
+        } else {
+          this.placeApple()
+        }
+      }
+
+      getChar(pos) {
+        return this.world[pos.row][pos.col]
+      }
+      getNextPos(pos) {
+        let currChar = this.getChar(pos)
+        if (currChar == '>') {
+          return ({"row": pos.row, "col": pos.col +1})
+        } else if (currChar == '<') {
+          return ({"row": pos.row, "col": pos.col -1})
+        } else if (currChar == '^') {
+          return ({"row": pos.row - 1, "col": pos.col})
+        } else if (currChar == 'v') {
+          return ({"row": pos.row + 1, "col": pos.col})
+        }
+      }
+
+      setChar(pos, char) {
+        console.log(this.world[pos.row][pos.col])
+        this.world[pos.row][pos.col] = char
+
+      }
+      gameOver() {
+        this.gameEnd = true
+        alert('game over, score:' + this.snakeLength )
+      }
+      next() {
+        if (this.gameEnd) return
+        let headChar = this.getChar(this.headpos)  //头的符号
+        let headNextPos = this.getNextPos(this.headpos) //下一个位
+        let headNextChar = this.getChar(headNextPos) // 下个符号
+        console.log(headChar)
+        if (headNextChar == '.') {
+          this.setChar(headNextPos, headChar)
+          this.headpos = headNextPos
+        } else if (headNextChar == 'Q') {
+          this.setChar(headNextPos, headChar)
+          this.headpos = headNextPos
+          this.snakeLength++
+          this.placeApple()
+        } else {
+          this.gameOver()
+        }
+        if (headNextChar == '.') {
+          let tailNextPos = this.getNextPos(this.tailpos) //尾巴 下一个位
+          this.setChar(this.tailpos, '.')
+          this.tailpos = tailNextPos
+        } 
+      }
+
+      print() {
+        console.log(this.toString())
+      }
+      toString() {
+        let r = ''
+        this.world.map(it => { 
+          it.map(n => r += n )
+          r += '\n'
+        })
+        return r
+      }
+      
+      changeDirection(direction) {
+        switch(direction) {
+          case 'up': return this.setChar(this.headpos, '^')
+          case 'down': return this.setChar(this.headpos, 'v')
+          case 'left': return this.setChar(this.headpos, '<')
+          case 'right': return this.setChar(this.headpos, '>')
+        }
+        this.setChar(this.headpos)
+      }
+    }
+    let game = new SnakeGame()
+    game.init()
+    game.print()
+    
+    let pre = document.querySelector('pre')
+    function tick() {
+      setInterval(() => {
+        pre.textContent = game.toString()
+      }, 1000);
+    }
+    tick()
+    let id 
+    document.addEventListener('keydown', e => {
+      if (e.key.startsWith('Arrow')) {
+        let direction = e.key.slice(5).toLocaleLowerCase()
+        game.changeDirection(direction)
+        game.next()
+        pre.textContent = game.toString()
+        clearInterval(id)
+        tick()
+        id = setInterval(() => {
+          pre.textContent = game.toString()
+        }, 1000);
+      }
+    })
+
+
+  </script>
+</body>
+</html>

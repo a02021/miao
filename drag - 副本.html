@@ -90,10 +90,17 @@
   </style>
 </head>
 <body>
+  <p>大唬教育</p>
   <span></span>
   <div id="s1"></div>
   <div id="s2"></div>
-
+  <div id="s3"></div>
+  <div id="s4"></div>
+  <div id="s5"></div>
+  <div id="s6"></div>
+  <div id="s7">喵</div>
+  <div id="cl">彩色</div>
+  <div id="dk">dark</div>
   <script>
     let pp = document.querySelector('p')
     let m = 0, z = 7
@@ -154,6 +161,30 @@
       ey = e.clientY 
     }
   }
+    
+    let cl = document.querySelector('#cl')
+    let dk = document.querySelector('#dk')
+    let body = document.querySelector('body')
+    dk.addEventListener('click',function() {
+      s1.setAttribute("style",'background-color:black')
+      s2.setAttribute("style",'background-color:gray')
+      s3.setAttribute("style",'background-color:black')
+      s4.setAttribute("style",'background-color:gray')
+      s5.setAttribute("style",'background-color:black')
+      s6.setAttribute("style",'background-color:gray')
+      body.setAttribute("style",'background-color:midnightblue')
+      cl.removeEventListener('click', cool)
+    })
+    cl.addEventListener('click',cool)
+    function cool() {
+      s1.setAttribute("style",'background-color:red')
+      s2.setAttribute("style",'background-color:orange')
+      s3.setAttribute("style",'background-color:yellow')
+      s4.setAttribute("style",'background-color:green')
+      s5.setAttribute("style",'background-color:blue')
+      s6.setAttribute("style",'background-color:purple')
+    }
+
     function mousePos(n) {
       let box = n.getBoundingClientRect()
       return {

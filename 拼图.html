@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #div {
+      /* white-space:; */
+      width: 300px;
+      height: 300px;
+      display:flex;
+    }
+
+    #gameWorld span {
+      float: left;
+      font-size:32px;
+
+    }
+  </style>
+</head>
+<body>
+   行
+  <select name="row" id="rowCount">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+  </select>
+  列
+  <select name="col" id="colCount">
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+  图片
+  <select name="col" id="imgSelect">
+    <option value="3.jpg">3</option>
+    <option value="4.jpg">4</option>
+    <option value="5.jpg">5</option>
+  </select>
+
+  <button onclick="start()">start</button>
+
+  <div id="gameWorld"></div>
+    <span class="s-5"></span>
+    <span class="s-6"></span>
+    <span class="s-1"></span>
+    <span class="s-0"></span>
+    <span class="s-7"></span>
+
+  <script>
+    class Game{
+      constructor(width, height) {
+        this.width = width
+        this.height = height
+        this.emptyRow = null
+        this.emptyCol = null
+        this.world = Array(height).fill(0).map(it => Array(width).fill(0))
+      }
+      init() {
+        let i = 0
+        for (let row = 0; row < this.height; row++) {
+          for (let col = 0; col < this.width; col++) {
+            this.world[row][col] = i++
+          }
+        }
+        this.world[this.height - 1][this.width - 1] = -1
+        this.emptyRow = this.height - 1
+        this.emptyCol = this.width - 1
+      }
+      isInRange(row, col) {
+        if (row < 0 || col < 0 ) {
+          return false
+        } 
+        if (row >= this.height || col >= this.width) {
+          return false
+        }
+        return true
+      }
+      move(row, col) {
+        if (this.isInRange(row, col)) {
+          this.world[this.emptyRow][this.emptyCol] = this.world[row][col]
+          this.world[row][col] = -1
+          this.emptyRow = row
+          this.emptyCol = col
+        }
+      }
+      up() {
+        let moveRow = this.emptyRow + 1
+        let moveCol = this.emptyCol 
+        this.move(moveRow, moveCol)
+      }
+      down() {
+        let moveRow = this.emptyRow - 1
+        let moveCol = this.emptyCol 
+        this.move(moveRow, moveCol)
+      }
+      left() {
+        let moveRow = this.emptyRow
+        let moveCol = this.emptyCol + 1 
+        this.move(moveRow, moveCol)
+      }
+      right() {
+        let moveRow = this.emptyRow
+        let moveCol = this.emptyCol - 1 
+        this.move(moveRow, moveCol)
+      }
+
+      toString() {
+        return this.world.map(row => {
+          return row.map(it => {
+            if (it == -1) {
+              return ' '
+            } else {
+              return it
+            }
+          })
+        }).join('\n')
+      }
+      print() {
+        console.log(this.toString())
+      }
+
+      random() {
+        let direction = ['up', 'down', 'left', 'right']
+
+        for (let i = 0; i < 100; i++) {
+          let idx = Math.random() * 4 | 0
+          let direction = directions[idx]
+
+        }
+      }
+    }
+
+    let gameWorld = document.querySelector('#gameWorld')
+    let colCount = document.querySelector('#colCount').value
+    let rowCount = document.querySelector('#rowCount').value
+    let imgSelect = document.querySelector('#imgSelect')
+    function start() {
+      let width = colCount - 1
+      let height = rowCount - 1
+
+      let ng = new Game(3,3)
+      ng.init()
+      ng.print()
+
+      renderGame(ng)
+      gameWorld.textContent = ng.toString()
+    }
+
+
+    function renderGame(game) {
+      gameWorld.textContent = ''
+ 
+      for (let row = 0; row < game.world.length; row++) {
+        for (let col = 0; col < game.world[row].length; col++) {
+          let num = game.world[row][col]
+          let x = num % game.width
+          let y = Math.floor(num / game.width)
+          let span = document.createElement('span')
+          span.textContent = num
+          span.style = `
+            width: ${300 / game.width}px;
+            height: ${400 / game.height}px;
+            background-size: 300px 400px;
+            background-image: url(${imgSelect.value});
+            background-position: -${game.width * x}px -${game.height * y}px;
+          `
+          gameWorld.append(span)
+        }
+      }
+    }
+  </script>
+</body>
+</html>

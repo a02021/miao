@@ -10,32 +10,42 @@
       background-color:antiquewhite;
       width: max-content;
       height: max-content;
-      /* 检测换行符 */
-      white-space:pre-line;
     }
     p {
       color: red;
     }
     #grid {
+      /* 检测换行符 */
+      white-space:pre-line;
       color:darkred;
+      background-color:gold;
+      width: max-content;
+      height: max-content;
     }
+    .opt {
+      display:inline-block;
+    }
+
   </style>
 </head>
 <body>
   <p>class版本</p>
   <div id="grid"></div>
+  <div id="hint"></div>
+  <br>
   <div>尺寸<input type="range" id="range" min='5' max='25' value='10' onclick="startNew()"></div>
   <button onclick="next()">Next generation</button>
-  <div><input type="checkbox" name="" id="ifAuto" onclick="autoNext()">自动进化!</div>
+  <div class="opt"><input type="checkbox" id="ifAuto" onclick="autoNext()">自动进化!</div>
+  <div class="opt"><input type="checkbox" id="cancelB" onclick="cancelB()">取消边境!</div>
   <button onclick="clearAll()">清空</button>
   <button onclick="randomNew()">重新随机</button>
-  <p>jk ' \n '</p>
   <script>
     class Conway {
-      constructor(width, height) {
+      constructor(width, height, boundary) {
         this.width = width
         this.height = height
-        this.world = new Array(height).fill([]).map(i => i = new Array(height).fill(0))
+        this.boundary = boundary
+        this.world = new Array(width).fill([]).map(i => i = new Array(height).fill(0))
       }
       get(row, col) {
         if (row < 0) row = this.width -1
@@ -54,14 +64,35 @@
         this.world = this.world.map(it => it = it.map(n => 
           n = Math.random() > ratio ? 0 : 1))
       }
+      setBoundary(b) {
+        this.boundary = b
+      }
       neighborsCount(row, col) {
         let count = 0
-        let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
-        let jLength = col + 1 > this.height - 1 ? this.height - 1: col + 1
-        for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
-          for (let j = col - 1 < 0 ? 0 : col - 1; j <= jLength; j++) {
-            // console.log(i,j,this.world[i][j])
-            if (this.world[i][j] === 1) count++
+        if (this.boundary) {
+          let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
+          let jLength = col + 1 > this.height - 1 ? this.height - 1: col + 1        
+          for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
+             for (let j = col - 1 < 0 ? 0 : col - 1; j <= jLength; j++) {
+              // console.log(i,j,this.world[i][j])
+             if (this.world[i][j] === 1) count++
+            }
+          }
+        }
+        if (!this.boundary) {
+          console.log(this.boundary)
+          let iLength = row + 1 
+          let jLength = col + 1 
+          for (let i = row - 1 ; i <= iLength; i++) {
+             for (let j = col - 1 ; j <= jLength; j++) {
+              let r = i 
+              let c = j
+              if (i == -1) r = this.width - 1
+              if (i == this.width ) r = 0
+              if (j == -1) c =  this.height - 1
+              if (j == this.height ) c = 0
+              if (this.world[r][c] === 1) count++
+            }
           }
         }
         //少于两个或多于三个的活着的邻居，都会死亡
@@ -96,30 +127,31 @@
       }
     }
 
-    let newGame, nGen
+    let newGame, nGen, long, autoPlay
     let range = document.querySelector('#range')
-    let long = Number(range.value)
-    let autoPlay 
-    startWorld(long, long, 0.5)
+    let grid = document.querySelector('#grid')
+    startNew()
     function startWorld(width, height, ratio = 0.5) {
       nGen = 0
-      newGame = new Conway(width, height)
+      newGame = new Conway(width, height, true)
       newGame.randomFill(ratio)
       newGame.printWorld(printHTML)
     }
-    let grid = document.querySelector('#grid')
     grid.addEventListener('click', e => {
       let row = e.target.dataset.row
       let col = e.target.dataset.col
-      newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
+      //防止点到空白处 无法获取值
+      if (row && col){
+        newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
+      }
     })
-
     function startNew() {
       long = Number(range.value)
       startWorld(long, long, 0.5)
+      autoNext()
+      cancelB()
     }
     function printHTML(m) {
-      let grid = document.querySelector('#grid')
       grid.innerHTML = ''
       for (let row = 0; row < m.length; row++) {
         for (let col = 0; col < m[row].length; col++) {
@@ -128,7 +160,7 @@
         }
         grid.innerHTML += '\n'
       }
-      grid.innerHTML += '第' + nGen++ + '代'
+      document.querySelector('#hint').innerHTML = '第' + nGen++ + '代'
     }
     function next() {
       newGame.next()
@@ -148,8 +180,17 @@
         clearInterval(autoPlay)
       }
     }
+    function cancelB() {
+      let ifBoundary = document.querySelector('#cancelB')
+      if (ifBoundary.checked) {
+        newGame.setBoundary(false)
+        grid.style.border = ''
+      } else {
+        newGame.setBoundary(true)
+        grid.style.border = '2px solid red'
+      }
 
-
+    }
 
   </script>
 </body>

@@ -12,33 +12,34 @@
       height: max-content;
     }
     p {
-      color: red;
+      color: rgb(245, 67, 67);
     }
     #grid {
       /* 检测换行符 */
       white-space:pre-line;
-      color:darkred;
-      background-color:gold;
+      color:rgb(192, 157, 157);
+      background-color:rgb(243, 227, 133);
       width: max-content;
       height: max-content;
     }
-    .opt {
+    .opt,#rangeHint {
       display:inline-block;
+      ;
     }
 
   </style>
 </head>
 <body>
   <p>class版本</p>
-  <div id="grid"></div>
-  <div id="hint"></div>
-  <br>
-  <div>尺寸<input type="range" id="range" min='5' max='25' value='10' ></div>
+
+  <div>尺寸<input type="range" id="range" min='5' max='100' value='20'><p id="rangeHint"></p></div>
   <button onclick="next()">Next generation</button>
   <div class="opt"><input type="checkbox" id="ifAuto">自动进化!</div>
   <div class="opt"><input type="checkbox" id="cancelB">取消边境!</div>
   <button onclick="clearAll()">清空</button>
   <button onclick="randomNew()">重新随机</button>
+  <div id="hint"></div>
+  <div id="grid"></div>
   <script>
     class Conway {
       constructor(width, height, boundary = true) {
@@ -125,10 +126,10 @@
         this.world = newWorld
       }
     }
-
     let newGame, nGen, long, autoPlay
     let grid = document.querySelector('#grid')
     let range = document.querySelector('#range')
+    let rangeHint = document.querySelector('#rangeHint')
     let ifAuto = document.querySelector('#ifAuto')
     let ifBoundary = document.querySelector('#cancelB')
     range.addEventListener('change', startNew)
@@ -137,7 +138,8 @@
     startNew()
     function startNew() {
       long = Number(range.value)
-      startWorld(long, long, 0)
+      startWorld(long, long, 0.5)
+      rangeHint.innerHTML = long + '*' + long
       autoNext()
       cancelB()
     }
@@ -171,29 +173,24 @@
         newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
       }
     })
-    function printHTML(m) {
-      grid.innerHTML = ''
-      for (let row = 0; row < m.length; row++) {
-        for (let col = 0; col < m[row].length; col++) {
-          if (m[row][col] === 0) grid.innerHTML += `<input type="checkbox" data-row="${row}" data-col="${col}">`
-          if (m[row][col] === 1) grid.innerHTML += `<input type="checkbox" checked data-row="${row}" data-col="${col}">`
-        }
-        grid.innerHTML += '\n'
-      }
-      document.querySelector('#hint').innerHTML = '第' + nGen++ + '代'
-    }
     function next() {
       newGame.next()
       newGame.printWorld(printHTML)
     }
-    function clearAll() {
-      startWorld(long, long, 0)
+    function clearAll() {startWorld(long, long, 0)}
+    function randomNew() {startWorld(long, long, 0.5)}
+    function printHTML(m) { //性能优化 创建新字符串  再传给grid.innerHTMl 
+      let newHTML = ''
+      for (let row = 0; row < m.length; row++) {
+        for (let col = 0; col < m[row].length; col++) {
+          if (m[row][col] === 0) newHTML += `<input type="checkbox" data-row="${row}" data-col="${col}">`
+          if (m[row][col] === 1) newHTML += `<input type="checkbox" checked data-row="${row}" data-col="${col}">`
+        }
+        newHTML += '\n'
+      }
+      grid.innerHTML = newHTML
+      document.querySelector('#hint').innerHTML = '第' + nGen++ + '代'
     }
-    function randomNew() {
-      startWorld(long, long, 0.5)
-    }
-
-
 
   </script>
 </body>

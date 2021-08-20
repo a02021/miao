@@ -12,42 +12,50 @@
       height: 300px;
       display:flex;
     }
-
+    #gameWorld {
+      width: 300px;
+      height: 400px;
+    }
     #gameWorld span {
       float: left;
       font-size:32px;
+      color:white;
+      text-align: center;
+      text-shadow: 0 0 3px;
 
     }
   </style>
 </head>
 <body>
    行
-  <select name="row" id="rowCount">
-    <option value="1">1</option>
-    <option value="2">2</option>
+  <select name="" id="rowCount">
     <option value="3">3</option>
-  </select>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select> 
   列
-  <select name="col" id="colCount">
+  <select name="" id="colCount">
     <option value="3">3</option>
     <option value="4">4</option>
     <option value="5">5</option>
   </select>
   图片
-  <select name="col" id="imgSelect">
-    <option value="3.jpg">3</option>
-    <option value="4.jpg">4</option>
-    <option value="5.jpg">5</option>
+  <select name="" id="imgSelect">
+    <option value="https://travel.12306.cn/imgs/resources/uploadfiles/images/d9ae79de-2f3f-4e9f-ad6e-bdc291dda92a_product_W572_H370.jpg">33</option>
+    <option value="4.jpg">44</option>
+    <option value="5.jpg">55</option>
   </select>
 
   <button onclick="start()">start</button>
 
-  <div id="gameWorld"></div>
-    <span class="s-5"></span>
-    <span class="s-6"></span>
-    <span class="s-1"></span>
-    <span class="s-0"></span>
-    <span class="s-7"></span>
+  <div id="gameWorld">    
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
 
   <script>
     class Game{
@@ -78,6 +86,19 @@
         }
         return true
       }
+
+      check() {
+
+      }
+      random() {
+        let directions = ['up', 'down', 'left', 'right']
+
+        for (let i = 0; i < 1000; i++) {
+          let idx = Math.random() * 4 | 0
+          let direction = directions[idx]
+          this[direction]()
+        }
+      }
       move(row, col) {
         if (this.isInRange(row, col)) {
           this.world[this.emptyRow][this.emptyCol] = this.world[row][col]
@@ -87,6 +108,7 @@
         }
       }
       up() {
+        console.log('uuu[p')
         let moveRow = this.emptyRow + 1
         let moveCol = this.emptyCol 
         this.move(moveRow, moveCol)
@@ -122,55 +144,60 @@
         console.log(this.toString())
       }
 
-      random() {
-        let direction = ['up', 'down', 'left', 'right']
+    }
+    let game
+    let gameWorld = document.querySelector('#gameWorld')
+    let colCount = document.querySelector('#colCount')
+    let rowCount = document.querySelector('#rowCount')
+    let imgSelect = document.querySelector('#imgSelect')
 
-        for (let i = 0; i < 100; i++) {
-          let idx = Math.random() * 4 | 0
-          let direction = directions[idx]
-
-        }
+    function start() {
+      document.removeEventListener('keydown',keyy)
+      let width = Number(colCount.value)
+      let height = Number(rowCount.value)
+      game = new Game(width,height)
+      game.init()
+      game.random()
+      game.print()
+      renderGame(game)
+      document.addEventListener('keydown',keyy)
+    }
+    function keyy(e) {
+      if (e.key.startsWith('Arrow')) {
+        console.log(e.key)
+        let direction = e.key.slice(5).toLowerCase()
+        game[direction]()
+        renderGame(game)
       }
     }
 
-    let gameWorld = document.querySelector('#gameWorld')
-    let colCount = document.querySelector('#colCount').value
-    let rowCount = document.querySelector('#rowCount').value
-    let imgSelect = document.querySelector('#imgSelect')
-    function start() {
-      let width = colCount - 1
-      let height = rowCount - 1
-
-      let ng = new Game(3,3)
-      ng.init()
-      ng.print()
-
-      renderGame(ng)
-      gameWorld.textContent = ng.toString()
-    }
-
-
     function renderGame(game) {
       gameWorld.textContent = ''
- 
       for (let row = 0; row < game.world.length; row++) {
         for (let col = 0; col < game.world[row].length; col++) {
           let num = game.world[row][col]
           let x = num % game.width
           let y = Math.floor(num / game.width)
+          let width = 300 / game.width
+          let height = 400 / game.height
           let span = document.createElement('span')
           span.textContent = num
+          span.classList.add('slice-' + num)
           span.style = `
-            width: ${300 / game.width}px;
-            height: ${400 / game.height}px;
+            width: ${width}px;
+            height: ${height}px;
             background-size: 300px 400px;
             background-image: url(${imgSelect.value});
-            background-position: -${game.width * x}px -${game.height * y}px;
+            background-position: -${width * x}px -${height * y}px;
           `
+          if (num == -1) {
+            span.style.background = ''
+          }
           gameWorld.append(span)
         }
       }
     }
+
   </script>
 </body>
 </html>

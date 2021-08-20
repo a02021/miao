@@ -33,15 +33,15 @@
   <div id="grid"></div>
   <div id="hint"></div>
   <br>
-  <div>尺寸<input type="range" id="range" min='5' max='25' value='10' onclick="startNew()"></div>
+  <div>尺寸<input type="range" id="range" min='5' max='25' value='10' ></div>
   <button onclick="next()">Next generation</button>
-  <div class="opt"><input type="checkbox" id="ifAuto" onclick="autoNext()">自动进化!</div>
-  <div class="opt"><input type="checkbox" id="cancelB" onclick="cancelB()">取消边境!</div>
+  <div class="opt"><input type="checkbox" id="ifAuto">自动进化!</div>
+  <div class="opt"><input type="checkbox" id="cancelB">取消边境!</div>
   <button onclick="clearAll()">清空</button>
   <button onclick="randomNew()">重新随机</button>
   <script>
     class Conway {
-      constructor(width, height, boundary) {
+      constructor(width, height, boundary = true) {
         this.width = width
         this.height = height
         this.boundary = boundary
@@ -61,15 +61,14 @@
         return callback(this.world)
       }
       randomFill(ratio = 0.5) {
-        this.world = this.world.map(it => it = it.map(n => 
-          n = Math.random() > ratio ? 0 : 1))
+        this.world = this.world.map(it => it.map(n =>  Math.random() > ratio ? 0 : 1))
       }
-      setBoundary(b) {
-        this.boundary = b
+      setBoundary(booleanTF) {
+        this.boundary = booleanTF
       }
       neighborsCount(row, col) {
         let count = 0
-        if (this.boundary) {
+        if (this.boundary) { // 有边界
           let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
           let jLength = col + 1 > this.height - 1 ? this.height - 1: col + 1        
           for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
@@ -79,8 +78,8 @@
             }
           }
         }
-        if (!this.boundary) {
-          console.log(this.boundary)
+        if (!this.boundary) { // 没有边界
+          // console.log(this.boundary)
           let iLength = row + 1 
           let jLength = col + 1 
           for (let i = row - 1 ; i <= iLength; i++) {
@@ -111,7 +110,7 @@
         }
         return false
       }
-      next() {
+      next() { //计算新地图的每个值 再传给this.world
         let newWorld = []
         for (let row = 0; row < this.width; row++) {
           newWorld[row] = []
@@ -128,29 +127,50 @@
     }
 
     let newGame, nGen, long, autoPlay
-    let range = document.querySelector('#range')
     let grid = document.querySelector('#grid')
+    let range = document.querySelector('#range')
+    let ifAuto = document.querySelector('#ifAuto')
+    let ifBoundary = document.querySelector('#cancelB')
+    range.addEventListener('change', startNew)
+    ifAuto.addEventListener('change',autoNext)
+    ifBoundary.addEventListener('change',cancelB)
     startNew()
-    function startWorld(width, height, ratio = 0.5) {
-      nGen = 0
-      newGame = new Conway(width, height, true)
-      newGame.randomFill(ratio)
-      newGame.printWorld(printHTML)
-    }
-    grid.addEventListener('click', e => {
-      let row = e.target.dataset.row
-      let col = e.target.dataset.col
-      //防止点到空白处 无法获取值
-      if (row && col){
-        newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
-      }
-    })
     function startNew() {
       long = Number(range.value)
-      startWorld(long, long, 0.5)
+      startWorld(long, long, 0)
       autoNext()
       cancelB()
     }
+    function startWorld(width, height, ratio = 0.5) {
+      nGen = 0
+      newGame = new Conway(width, height)
+      newGame.randomFill(ratio)
+      newGame.printWorld(printHTML)
+    }
+    function autoNext() {
+      clearInterval(autoPlay)  //防止调整大小 没有清除
+      if (ifAuto.checked) {
+        autoPlay = setInterval(next, 300)
+      } else {
+        clearInterval(autoPlay)// console.log(autoPlay)
+      }
+    }
+    function cancelB() {
+      if (ifBoundary.checked) {
+        newGame.setBoundary(false)
+        grid.style.border = ''
+      } else {
+        newGame.setBoundary(true)
+        grid.style.border = '2px solid red'
+      }
+    }
+    grid.addEventListener('change', e => {
+      let row = e.target.dataset.row
+      let col = e.target.dataset.col
+      if (row && col){//防止点到空白处 无法获取值
+        newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
+      }
+    })
     function printHTML(m) {
       grid.innerHTML = ''
       for (let row = 0; row < m.length; row++) {
@@ -172,25 +192,8 @@
     function randomNew() {
       startWorld(long, long, 0.5)
     }
-    function autoNext() {
-      let ifAuto = document.querySelector('#ifAuto')
-      if (ifAuto.checked) {
-        autoPlay = setInterval(next, 500)
-      } else {
-        clearInterval(autoPlay)
-      }
-    }
-    function cancelB() {
-      let ifBoundary = document.querySelector('#cancelB')
-      if (ifBoundary.checked) {
-        newGame.setBoundary(false)
-        grid.style.border = ''
-      } else {
-        newGame.setBoundary(true)
-        grid.style.border = '2px solid red'
-      }
 
-    }
+
 
   </script>
 </body>

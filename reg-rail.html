@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <svg width="800px" height="800px"> </svg>
+  <script>
+    // let char = {
+    //   type: 'Char',
+    //   val: 'c',
+    //   ascii: 99,
+    //   startIdx: 0,
+    //   endIdx: 0,
+    //   raw: 0,
+    // }
+
+    // // [abc]
+    // let charclass = {
+    //   type: 'CharClass',
+    //   elements: [char, char, char, char, char],
+    // }
+
+    // let repeat = {
+    //   type: 'Repeat',
+    //   element: obj,
+    //   max: 5,
+    //   min: 3,
+    // }
+
+    // let captureGroup = {
+    //   type: 'CaptureGroup',
+    //   assertion: true/false,
+    //   index: 分组编号,
+    //   name: 分组名字,
+    //   branches: [branch, branch, branch],
+    // } 
+
+    // //  /a[1234](abc)x*d|abc/
+    // let branch = {
+    //   type: 'Branch',
+    //   element: [node, node, node, node, node],
+    // }  // [字符, 字符组, 分组, 量词, 字符]
+
+    // // a(1,b(1,2))
+    // fcall = {
+    //   type: 'fcall',
+    //   name: 'a',
+    //   args: [1, {type: 'fcall', name:'xxx', args:[1,2]}]
+    // }
+
+    // function parsePattern(reg) {
+      
+    // }
+
+    let groupIdx = 0
+    let str = 'abc|def?'
+    let i = 0
+
+    str = '[abc]'
+    console.log(parseCharacterClass())
+
+    i = 0
+    str = '{123, 356}'
+    console.log(parseQuantifier())
+    i = 0
+    str = '{22,}?'
+    console.log(parseQuantifier())
+
+    // i = 0
+    // str = 'ab*c?[123]{5,10}'
+    // console.log(parseAlternative())
+
+    i = 0
+    str = 'abc|def|ghi'
+    console.log(parseAlternatives())
+
+    groupIdx = 0
+    i = 0
+    str = '(abc|def)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?:foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?!foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?=foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?<=foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?<!foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = '(?<test2>foo|bar)'
+    console.log(parseCaptureGrroup())
+
+    groupIdx = 0
+    i = 0
+    str = 'fo{1,}o|(ba){2,8}r?|(?<test2>foo|bar)'
+    console.log(parseAlternatives())
+    console.log('sfasf')
+    console.log(parsePattern('foo|bar'))
+
+    console.log(parsePattern('(?<test3>foo|bar)'))
+
+    // 解析字符 abc
+    function parseCharacter() {
+      let node = {
+        type: 'Character',
+        start: i,
+        end: 0,
+        raw: '',
+        value: str[i],
+        ascii: str.charCodeAt(i),
+      }
+      i++
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+
+    // 解析中括号 [^abc]
+    function parseCharacterClass() {
+      let node = {
+        type: 'CharacterClass',
+        start: i,
+        end: 0,
+        raw: '',
+        elements: [],
+        revert: false, //是否 ^ 开始
+      }
+      i++  // skip [
+      if (str[i] == '^') {
+        node.revert = true
+      }
+      while (str[i] !== ']') {
+        let charNode = parseCharacter()
+        node.elements.push(charNode)
+      }
+      i++ // skip ]
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+
+    // 解析单个完整部分
+    function parseOneElement() {
+      if (str[i] == '[') {
+        return parseCharacterClass()
+      }  
+      if (str[i] == '(') {
+        return parseCaptureGrroup()
+      }  
+      if (str[i] == '\\') {
+        return parseEscape() // 转义
+      }  
+      if (str[i] == '?' || str[i] == '*' || str[i] == '+' || str[i] == '{' ) {
+        return parseQuantifier()
+      }  
+      return parseCharacter()
+    }
+
+    //解析量词
+    function parseQuantifier() {
+      let node = {
+        type: 'Quantifier',
+        start: i,
+        end: 0,
+        raw: '',
+        element: null, // 重复内容
+        greedy: true, // 贪婪?
+        min: 0,  //最低重复
+        max: Infinity, //最大重复
+      }
+
+      if (str[i] == '*') {
+        i++ 
+      } else if (str[i] == '?') {
+        node.max = 1
+        i++ 
+      } else if (str[i] == '+') {
+        node.min = 1
+        i++ 
+      } else if (str[i] == '{') {
+        // {1,2} {2,}
+        i++ // skip {
+        let min = parseNumber()
+        node.min = min
+        if (str[i] == "}") {
+          node.max = min
+        } else {
+          i++ // skip ,
+          if (str[i] == "}") {
+            i++ //skip }
+          } else {
+            let max = parseNumber()
+            node.max = max
+            i++  //skip }
+          }
+        }
+
+      }
+
+        if (str[i] == '?') {
+          node.greedy = false // 非贪婪匹配
+          i++
+        }
+      
+        node.end = i
+        node.raw = str.slice(node.start, node.end)
+        return node
+      
+    }
+
+    function parseNumber() {
+      let numStr = ''
+      // 避免 , }
+      while(str[i] >= '0' && str[i] <= '9') {
+        numStr += str[i]
+        i++
+      }
+      return Number(numStr)
+    }
+
+    
+    // a(bbb)?c|[def]*(x)
+    // (aaa|bbb)ccc
+    // (aaa|bbbccc|fowei|sofiew)
+    function parseAlternative() {
+      let node = {
+        type: 'Alternative',
+        start: i,
+        end: 0,
+        raw: '',
+        elements: [],
+      }
+
+      // 遇到 |  ) 或者 结尾 停止 
+      while(str[i] !== '|' && str[i] !== ')' && i < str.length) {
+        console.log('inloop')
+        let element = parseOneElement()
+
+        if (element.type == 'Quantifier') { // 如果量词 取出push的单个元素 
+          let quantifierElement = element
+          let prevElement = node.elements.pop()
+          console.log(prevElement)
+          if (prevElement.type == 'Quantifier') {
+            throw new SyntaxError('unexpected quantifier at pos: ' + i)
+          }
+          quantifierElement.element = prevElement
+          quantifierElement.start = prevElement.start
+          quantifierElement.raw = str.slice(quantifierElement.start, quantifierElement.end)
+          node.elements.push(quantifierElement)
+        } else {
+          node.elements.push(element)
+        } 
+      }
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+
+    function parseAlternatives() {
+      let alternatives = []
+      do {
+        let alt = parseAlternative()
+
+        alternatives.push(alt)
+        if (str[i] == '|') {
+          i++
+        } else if (str[i] == ')') {
+          break
+        } else if (i >= str.length) {
+          break
+        }
+      } while(true)
+      return alternatives
+    }
+    
+    function parseCaptureGrroup() {
+      let node = {
+        type: 'CaptureGroup',
+        start: i,
+        end: 0,
+        raw: '',
+        assertion: false, // 零宽断言?
+        lookahead: true, //是否预测断言 向右, false== 回顾,向左
+        positive: true, //正向断言 == 存在某种匹配
+        index: groupIdx++,  //分组编号
+        name: null, // 分组名
+      }
+      // (foobar)
+      // (?:foo)
+      // (?!foo)
+      // (?=foo)
+      // (?<=foo)
+      // (?<!foo|bar)
+      // (?<xxx>foobar)
+      i++ //skip (
+      if (str[i] == '?') {
+        i++ //skip ?
+        if (str[i] == ':') {
+          node.index = 0
+          groupIdx--
+          i++
+        } else if (str[i] == '='){
+          node.index = 0
+          groupIdx--
+          node.assertion = true
+          i++
+        } else if (str[i] == '!'){
+          node.index = 0
+          groupIdx--
+          node.assertion = true
+          node.positive = false
+          i++
+        } else if (str[i] == '<'){
+          i++ //skip<
+          if (str[i] == '=') {
+            node.lookahead = true
+            node.assertion = false
+            node.index = 0
+            groupIdx--
+            i++ //skip
+          } else if (str[i] == '!') {
+            node.lookahead = true
+            node.assertion = false
+            node.positive = false
+            node.index = 0
+            groupIdx--
+            i++ //skip
+          } else { //具名分组
+            let name = parseGroupName()
+            node.name = name
+            i++ //skip >
+          }
+        } 
+      } 
+      //  (foobar)
+      node.alternatives = parseAlternatives()
+      i++ // skip )
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+ 
+      // 解析分组名
+      function parseGroupName() {
+        let simStr = ''
+        while (str[i] !== '>') {
+          simStr += str[i]
+          i++
+        }
+        return simStr.trim() //去空格
+      }
+
+      function parsePattern(input) {
+        str = input
+        i = 0
+        groupIdx = 1
+        return {
+          type: 'Pattern',
+          alternatives: parseAlternatives(),
+          raw: input,
+        }
+      }
+
+      let svg = document.querySelector('svg')
+      let padding = 10
+
+      groupIdx = 0
+      i = 0
+      str = 'abcd'
+      node = parseCharacter()
+      console.log(node)
+      createGraph(node) 
+
+      function createGraph() {
+        if (node.type == 'Chatacter') {
+          return createChatacterGraph(node)
+        } 
+        if (node.type == 'CharacterClass') {
+          return createCharacterClassGraph(node)
+        } 
+        if (node.type == 'Quantifier') {
+          return createQuantifierGraph(node)
+        } 
+        if (node.type == 'CaptureGroup') {
+          return createCaptureGroupGraph(node)  //node.alternatives
+        } 
+        if (node.type == 'Pattern') {
+          return createPatternGraph(node)  //node.alternatives
+        } 
+        if (node.type == 'Alternative') {
+          return createAlternativeGraph(node)  //node.alternatives
+        } 
+
+      }
+
+      function createChatacterGraph(node) {
+        let text = svgElt('text', {
+          y:25,
+          x:padding,
+        })
+        console.log(text)
+        text.textContent = node.value
+        let textBox = text.getBBox()
+        let g = svgElt('g')
+        let rect = svgElt('rect', {
+          width: textBox.width + 2 * padding,
+          height: textBox.height + 2 * padding,
+          fill: '#dae9e5',
+          rx: padding / 4,
+          ry: padding / 4,
+        })
+        g.append(rect)
+        g.append(text)
+
+        return {
+          g: g,
+          box: g.getBBox(),
+        }
+      }
+
+      function add(a, b) {
+        return a + b
+      }
+      function max(a, b) {
+        return Math.max(a, b)
+      }
+      
+      function createAlternativeGraph() {
+        let subGraphs = node.elements.map(createGraph)
+        let width = subGraphs.map(it => it.box.width).reduce(max) + 6 * padding
+        let height = subGraphs.map(it => it.box.height).reduce(Math.max) + 2 * padding
+        let g = svgElt('g')
+        let rect = svgElt('rect', {
+          width: width,
+          height: height,
+          fill: 'pink',
+        })
+        g.append(rect)
+
+        let line = svgElt('path', {
+          strokewith: '2',
+          fill: 'none',
+        })
+
+        let d = ''
+        let offset = padding
+        for (let graph of subGraphs) {
+          graph.g.style.transform = `translate(${offset}px,${(height - graph.box.height) / 2}px)`
+          g.append(graph.g)
+          d += `M ${offset} ${height / 2} h -${padding}`
+          line.setAttribute('d', d)
+          offset += padding + graph.box.width
+        }
+        d += `M ${offset} ${height / 2} h -${padding}`
+        line.setAttribute('d', d)
+        return {
+          g: g,
+          box: g.getBBox(),
+        }
+      }
+
+
+      function createCharacterClassGraph() {
+        let subGraphs = node.elements.map(createGraph) // 得到每个字符的图像
+        let width = subGraphs.map(it => it.box.width).reduce(max) + 2*padding
+        let height = subGraphs.map(it => it.box.height).reduce(max) + (subGraphs.length + 1)*padding
+        
+        let g = svgElt('g')
+        let rect = svgElt('rect', {
+          width: width,
+          height: height.length,
+          fill: '#cbcbba',
+        })
+        g.append(rect)
+
+        let offset = padding
+        for (let graph of subGraphs) {
+          graph.g.style.transform = `translate(${(width - graph.length)/2}px,${offset}px)`
+          g.append(rect)
+          offset += padding + graph.box.width
+        }
+      }
+
+      function createAlternativesGraph(nodes) {
+        let subGraphs = nodes.map(createGraph)
+        let width = subGraphs.map(it => it.box.width).reduce(add) + (subGraphs.length + 1) * padding
+        let height = subGraphs.map(it => it.box.height).reduce(Math.max) + 2 * padding
+ 
+        let g = svgElt('g')
+        let rect = svgElt('rect', {
+          width: width,
+          height: height,
+          fill: 'lightgreen',
+        })
+        g.append(rect)
+
+        let line = svgElt('path', {
+          stroke: 0,
+          strokewith: '2',
+          fill: '0',
+        })
+
+
+        let d = ''
+        let offset = padding
+        for (let graph of subGraphs) {
+          graph.g.style.transform = `translate(${offset}px,${(height - graph.box.height) / 2}px)`
+          g.append(graph.g)
+          d += `M ${0} ${height / 2} L -${(width - graph.box.width)/2} ${(offset - graph.box.height)/2}`
+
+          line.setAttribute('d', d)
+          offset += padding + graph.box.width
+        }
+        d += `M ${offset} ${height / 2} h -${padding}`
+        line.setAttribute('d', d)
+        return {
+          g: g,
+          box: g.getBBox(),
+        }
+
+      }
+
+      function createQuantifierGraph(node) {
+        return 
+      }
+      function createPatternGraph(node) {
+        
+      }
+
+      function createCaptureGroupGraph(node) {
+        let graph = createAlternativesGraph(node.alternatives)
+        let width = graph.box.width + 2*padding
+        let height = graph.box.height +2*padding
+
+        let g = svgElt('g')
+        let rect = svgElt('rect', {
+          width: width, 
+          height: height,
+        })
+        let border = svgElt('rect', {
+          width: graph.box.width, 
+          height: graph.box.height,
+          fill: 'none',
+          strokeDasharray: '4 5',
+        })
+
+        graph.g.style.transform = `translate(${padding}px, ${padding}px)`
+        g.append(graph.g)
+        border.style.transform = `translate(${padding}px, ${padding}px)`
+        g.append(border)
+
+
+        return {
+          g: g,
+          box: g.getBBox(),
+        }
+
+      }
+
+
+      function svgElt(tagName, attrs) {
+        let el = document.createElementNS('http://www.w3.org/2000/svg', tagName)
+        for (let key in attrs) {
+          let val = attrs[key]
+          el.setAttribute(key, val)
+        }
+        svg.append(el)
+        return el
+      }
+
+
+
+  </script>
+</body>
+</html>

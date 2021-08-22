@@ -887,12 +887,14 @@ function dropRightWhile(array,f) {
   // 将函数名转化为string 调用原型hasOwnProperty()
   function isNative(val) {
     if (val === undefined) return false
-    let type = [String,Number,Boolean,Array,Object]
-    let nam = val.toString().match(/(?<=function )\w+/)[0]
-    for (let t of type) {
-      if(t.prototype.hasOwnProperty(nam)) return true
-    }
-    return false
+
+    if  Function.prototype.toString(val) === 'function () { [native code] }'
+    // let type = [String,Number,Boolean,Array,Object]
+    // let nam = val.toString().match(/(?<=function )\w+/)[0]
+    // for (let t of type) {
+    //   if(t.prototype.hasOwnProperty(nam)) return true
+    // }
+    // return false
   }
   
   //Gets all but the last element of array.

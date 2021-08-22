@@ -886,7 +886,7 @@ function dropRightWhile(array,f) {
   //Checks if value is a pristine native function.
   // 将函数名转化为string 调用原型hasOwnProperty()
   function isNative(val) {
-    if (!val) return false
+    if (val === undefined) return false
     let type = [String,Number,Boolean,Array,Object]
     let nam = val.toString().match(/(?<=function )\w+/)[0]
     for (let t of type) {

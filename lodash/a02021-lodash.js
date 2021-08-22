@@ -222,9 +222,24 @@ function dropRightWhile(array,f) {
   function keys(object) {
     let keyArr = []
     for (let i in object) {
-      keyArr.push(i)
+      if (object.hasOwnProperty(i)) {
+        keyArr.push(i)
+      }
     }
     return keyArr
+
+    // 增加可枚举属性后 可以用for in 遍历 
+    // 需要用hasOwnProperty检测是否自有属性
+    // Object.defineProperty(String.prototype, 'sizhe', {  
+    //   get: function () {return 999},  
+    //   set: function (val) { a = val},
+    //   enumerable: true,
+    // })  
+    // let jgh = 'knm'
+    // for (let i in jgh) {
+    //   console.log(i,jgh.hasOwnProperty(i))
+    // }
+    //0 true , 1 true, 2 true, sizhe false
   }
 
   //Creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with three arguments:

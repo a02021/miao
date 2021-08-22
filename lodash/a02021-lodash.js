@@ -888,7 +888,10 @@ function dropRightWhile(array,f) {
   function isNative(val) {
     if (val === undefined) return false
 
-    if  Function.prototype.toString(val) === 'function () { [native code] }'
+    if  (Function.prototype.toString(val).includes('native code')) {
+      return true
+    }
+    return false
     // let type = [String,Number,Boolean,Array,Object]
     // let nam = val.toString().match(/(?<=function )\w+/)[0]
     // for (let t of type) {
@@ -908,11 +911,12 @@ function dropRightWhile(array,f) {
     function parseType(n) {
       let a = n[0]
       if (a === '\"') return parseString(n)
-      if (!isNaN(a)) return parseNumber(n)
       if (a === '[') return parseArray(n)
       if (a === 't') return parseTrue(n)
       if (a === 'n') return parseNull(n)
       if (a === '{') return parseObject(n)
+      // if (!isNaN(a))
+       return parseNumber(n)
     }
   
     function parseString(n) {

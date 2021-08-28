@@ -5,56 +5,100 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    div {
+      /* pre-wrap 保留空格换行 */
+      /* pre-line 不压缩空格换行 */
+      white-space:pre-wrap;
+    }
+  </style>
 </head>
 <body>
+  <div>
+  语法分析 
+  单分支
+  abc => char "abc"
+  多分枝:
+  (?<testname>fio) =>  capture group "testname" + ("abc")
+  (abc) => capture group ("abc")
+  [123] => charclass  "One of:"1/2/3 
+  [^123] => charclass "none of:"1/2/3
+  a|b|c => down loop  "a" /"b" /"c"
+  量词:
+  a? =>  up loop  "a" + ""
+  a* =>  up+down loop  "a" + "" + ""
+  a+ => down loop   "a" + ""
+  a{1,2} => down loop   "a" + "at most once"
+  a{0,3} => down loop   "a" + "at most 2 times"
+  a{2,3} =>  down loop   "a" + "1...2 times"
+  a{1} => "a"
+  a{1,} => down loop  "a" + ""
+  a{0}  => down loop  "a" + ""
+  a{2} => down loop   "a" + "once"
+  a{3} => down loop   "a" + "2times"
+  a{3,3} => down loop   "a" + "2times"
+  a{3,} => down loop  "a" + "2+ times"
+
+  断言: assertion
+  正预测断言：
+  (?=foo) 某位置的右边匹配foo   => "foo"+("positive lookahead")
+  负预测断言:
+  (?!foo) 某位置的右边不能匹配foo  => "foo"+("negative lookahead")
+  正回顾断言:
+  (?<=foo) 某位置的左边匹配foo  => "foo"+("positive lookbehind")
+  负回顾断言：
+  (?<!foo) 某位置的左边不能匹配foo  => "foo"+("negative lookbehind")
+
+  let char = {
+    type: 'Char',
+    val: 'c',
+    ascii: 99,
+    startIdx: 0,
+    endIdx: 0,
+    raw: 0,
+  }
+
+  // [abc]
+  let charclass = {
+    type: 'CharClass',
+    elements: [char, char, char, char, char],
+  }
+
+  let repeat = {
+    type: 'Repeat',
+    element: obj,
+    max: 5,
+    min: 3,
+  }
+
+  let captureGroup = {
+    type: 'CaptureGroup',
+    assertion: true/false,
+    index: 分组编号,
+    name: 分组名字,
+    branches: [branch, branch, branch],
+  } 
+
+  //  /a[1234](abc)x*d|abc/
+  let branch = {
+    type: 'Branch',
+    element: [node, node, node, node, node],
+  }  // [字符, 字符组, 分组, 量词, 字符]
+
+  // a(1,b(1,2))
+  fcall = {
+    type: 'fcall',
+    name: 'a',
+    args: [1, {type: 'fcall', name:'xxx', args:[1,2]}]
+  }
+
+  function parsePattern(reg) {
+    
+  }
+</div>
   <svg width="800px" height="800px"> </svg>
   <script>
-    // let char = {
-    //   type: 'Char',
-    //   val: 'c',
-    //   ascii: 99,
-    //   startIdx: 0,
-    //   endIdx: 0,
-    //   raw: 0,
-    // }
 
-    // // [abc]
-    // let charclass = {
-    //   type: 'CharClass',
-    //   elements: [char, char, char, char, char],
-    // }
-
-    // let repeat = {
-    //   type: 'Repeat',
-    //   element: obj,
-    //   max: 5,
-    //   min: 3,
-    // }
-
-    // let captureGroup = {
-    //   type: 'CaptureGroup',
-    //   assertion: true/false,
-    //   index: 分组编号,
-    //   name: 分组名字,
-    //   branches: [branch, branch, branch],
-    // } 
-
-    // //  /a[1234](abc)x*d|abc/
-    // let branch = {
-    //   type: 'Branch',
-    //   element: [node, node, node, node, node],
-    // }  // [字符, 字符组, 分组, 量词, 字符]
-
-    // // a(1,b(1,2))
-    // fcall = {
-    //   type: 'fcall',
-    //   name: 'a',
-    //   args: [1, {type: 'fcall', name:'xxx', args:[1,2]}]
-    // }
-
-    // function parsePattern(reg) {
-      
-    // }
 
     let groupIdx = 0
     let str = 'abc|def?'

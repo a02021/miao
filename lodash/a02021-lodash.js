@@ -1538,6 +1538,10 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
+  function size(p) {
+    return p.length === "undefined" ? Object.keys(p).length : p.length
+  }
   
   return {
     chunk:chunk,
@@ -1633,6 +1637,7 @@ function dropRightWhile(array,f) {
     flatMapDepth:flatMapDepth,
     forEachRight:forEachRight,
     groupBy:groupBy,
+    size:size,
   }
 } ();
 

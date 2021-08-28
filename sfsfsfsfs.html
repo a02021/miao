@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+            position: absolute;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box" style="top: 20px;left:20px;"></div>
+    <div class="box" style="top:30px;left:30px;background-color:skyblue;"></div>
+    <div class="box" style="top:40px;left:40px;background-color:tomato;"></div>
+    <script>
+        let box = document.querySelectorAll('.box')
+        let div = document.querySelector('.div')
+        box.forEach(n => {addEventListener('mousedown', function(e) {
+            if (!e.target.classList.contains('box')) {
+                return
+            }
+            let startx = e.clientX
+            let starty = e.clientY
+            window.addEventListener('mousemove', function move(e) {
+                if (e.which == 0 || e.buttons == 0) {
+                    window.removeEventListener('mousemove', move)
+                    return
+                }
+                let curx = e.clientX
+                let cury = e.clientY
+                let dx = curx - startx
+                let dy = cury - starty
+                startx = curx
+                starty = cury
+                let left = parseInt(e.target.style.left) + dx
+                if (left < 0) {
+                    left = 0
+                }
+                if (left > window.innerWidth - e.target.offsetWidth) {
+                    left = window.innerWidth - e.target.offsetWidth
+                }
+                let top = parseInt(e.target.style.top) + dy
+                if (top < 0) {
+                    top = 0
+                }
+                if (top > window.innerHeight - e.target.offsetHeight) {
+                    top = window.innerHeight - e.target.offsetHeight
+                }
+                e.target.style.left = left + 'px'
+                e.target.style.top = top + 'px'
+            })
+        })
+      })
+    </script>
+</body>
+
+</html>

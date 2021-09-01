@@ -1,4 +1,37 @@
 var a02021 = function() {
+
+
+
+  function f(p){
+    if(typeof p == 'function') return p
+    if(typeof p == 'string') return n => n[p]
+    if(Object.prototype.toString.call(p) == '[object Array]') {
+      return n => n[p[0]] == p[1]
+    }
+    if(Object.prototype.toString.call(p) == '[object Object]') {
+      return n => {
+        let kp = Object.keys(p)
+        let bol = true
+        for(let key of kp) {
+          if(n[key] !== p[key]) bol = false
+        }
+        if(bol) return true
+      }
+    }
+  }
+
+  //The opposite of _.filter; this method returns the elements of collection that predicate does not return truthy for.
+  function reject(collection,predicate) {
+    if(!predicate)  return collection
+    let k = Object.keys(collection)
+    let p = f(predicate)
+    let result = []
+      for(let i of k) {
+        if (!p(collection[i])) result.push(collection[i])
+      }
+      return result
+  }
+
   //Creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.
   function chunk(array,size = 1) {
     var rel = []
@@ -1690,6 +1723,7 @@ function dropRightWhile(array,f) {
     size:size,
     includes:includes,
     partition:partition,
+    reject:reject,
   }
 } ();
 

@@ -1626,6 +1626,10 @@ function dropRightWhile(array,f) {
     }
   }
 
+  //Checks if value is likely an arguments object.
+  function isArguments(val) {
+    return toString.call(val) == '[object Arguments]'
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1724,6 +1728,7 @@ function dropRightWhile(array,f) {
     includes:includes,
     partition:partition,
     reject:reject,
+    isArguments:isArguments,
   }
 } ();
 

@@ -1648,6 +1648,33 @@ function dropRightWhile(array,f) {
     return Array.isArray(val)
   }
 
+  // Checks if value is classified as an ArrayBuffer object.
+  function isArrayBuffer(val) {
+    //ArrayBuffer是一块内存，比如var buf = new ArrayBuffer(1024)，就等于开辟了一块1kb大小的内存，但是你不能通过buf变量的索引去操作这块内存，比如console.log(buf[0])得到的是undefined，如果buf[0]=77,进行赋值操作，只是在buf对象上添加了一个属性名为‘0’的属性，并没有改变内存块中第一个字节的数据，如果想操作内存块中的数据，可以通过var int8= new Int8Array(buf)然后通过int8[0]=12;来操作这块内存中的数据，也可以用Int16Array(buf)，Int32Array(buf)等，传入的是同一块内存块的引用则操作同一块内存块，剩下的自己理解吧。
+    return toString.call(val) === '[object ArrayBuffer]'
+  }
+
+  // Checks if value is array-like. A value is considered array-like if it's not a function and has a value.length that's an integer greater than or equal to 0 and less than or equal to Number.MAX_SAFE_INTEGER.
+  function isArrayLike(val) {
+    if (typeof val !== 'Function') {
+      if (val.length >=0 && val.length <= Number.MAX_SAFE_INTEGER) {
+        return true
+      }
+    }
+    return false
+  }
+
+  // This method is like _.isArrayLike except that it also checks if value is an object.
+  function isArrayLikeObject(val) {
+    if (typeof val !== 'Function') {
+      let k = Object.keys(val)
+      if (k.length >=0 && k.length <= Number.MAX_SAFE_INTEGER) {
+        return true
+      }
+    }
+    return false
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1752,6 +1779,9 @@ function dropRightWhile(array,f) {
     gt:gt,
     gte:gte,
     isArray:isArray,
+    isArrayBuffer:isArrayBuffer,
+    isArrayLike:isArrayLike,
+    isArrayLikeObject:isArrayLikeObject,
   }
 } ();
 

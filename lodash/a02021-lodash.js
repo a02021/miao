@@ -1599,10 +1599,14 @@ function dropRightWhile(array,f) {
   function partition(arr,pre) {
     let p = f(pre)
     let k = Object.keys(arr)
+    let r = []
     let r2 = []
     for (let i of k) {
-      if(p(arr[i])) r.push(arr[i])
-      if(!p(arr[i])) r2.push(arr[i])
+      if(p(arr[i])) {
+        r.push(arr[i])
+      } else {
+        r2.push(arr[i])
+      }
     }
     return [r,r2]
   }

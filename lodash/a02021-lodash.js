@@ -2,6 +2,7 @@ var a02021 = function() {
 
 
 
+  //
   function f(p){
     if(typeof p == 'function') return p
     if(typeof p == 'string') return n => n[p]
@@ -15,9 +16,18 @@ var a02021 = function() {
         for(let key of kp) {
           if(n[key] !== p[key]) bol = false
         }
-        if(bol) return true
+        return bol
       }
     }
+  }
+
+  //检测数据类型
+  function getType(obj) {
+    var type = Object.prototype.toString.call(obj).match(/^\[object (.*)\]$/)[1].toLowerCase();
+    if(type === 'string' && typeof obj === 'object') return 'object'; // Let "new String('')" return 'object'
+    if (obj === null) return 'null'; // PhantomJS has type "DOMWindow" for null
+    if (obj === undefined) return 'undefined'; // PhantomJS has type "DOMWindow" for undefined
+    return type;
   }
 
   //The opposite of _.filter; this method returns the elements of collection that predicate does not return truthy for.
@@ -1660,7 +1670,7 @@ function dropRightWhile(array,f) {
 
   // Checks if value is array-like. A value is considered array-like if it's not a function and has a value.length that's an integer greater than or equal to 0 and less than or equal to Number.MAX_SAFE_INTEGER.
   function isArrayLike(val) {
-    if (typeof val !== 'Function') {
+    if (typeof val !== 'function') {
       if (val.length >=0 && val.length <= Number.MAX_SAFE_INTEGER) {
         return true
       }
@@ -1693,6 +1703,29 @@ function dropRightWhile(array,f) {
   function isElement(val) {
     return toString.call(val) === '[object HTMLBodyElement]'
   }
+
+  function isEmpty(val) {
+    if (val === null) {
+      return true
+    }
+    //arraylike length===0 
+    if (isArrayLike(val)) {
+      return !val.length
+    }
+    // map / set   size===0
+    if (getType(val) === 'map' || getType(val) === 'set') {
+      return !val.size
+    }
+    // obj 没有可枚举的自有属性
+    for (let k in val) {
+      if (val.hasOwnProperty(k)) {
+        return false
+      }
+    }
+    // 其他 都返回true
+    return true
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1803,6 +1836,7 @@ function dropRightWhile(array,f) {
     isBoolean:isBoolean,
     isDate:isDate,
     isElement:isElement,
+    isEmpty:isEmpty,
   }
 } ();
 

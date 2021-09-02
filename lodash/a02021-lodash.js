@@ -1598,32 +1598,13 @@ function dropRightWhile(array,f) {
   // Creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
   function partition(arr,pre) {
     let p = f(pre)
-    let k = Object.keys(arr).reverse()
-    let r = []
+    let k = Object.keys(arr)
     let r2 = []
     for (let i of k) {
       if(p(arr[i])) r.push(arr[i])
       if(!p(arr[i])) r2.push(arr[i])
     }
-  
     return [r,r2]
-      function f(p){
-      if(typeof p == 'function') return p
-      if(typeof p == 'string') return n => n[p]
-      if(Object.prototype.toString.call(p) == '[object Array]') {
-        return n => n[p[0]] == p[1]
-      }
-      if(Object.prototype.toString.call(p) == '[object Object]') {
-        return n => {
-          let kp = Object.keys(p)
-          let bol = true
-          for(let key of kp) {
-            if(n[key] !== p[key]) bol = false
-          }
-          if(bol) return true
-        }
-      }
-    }
   }
 
   //Checks if value is likely an arguments object.

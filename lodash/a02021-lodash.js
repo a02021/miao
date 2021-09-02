@@ -1689,6 +1689,10 @@ function dropRightWhile(array,f) {
     return toString.call(val) == '[object Date]'
   }
 
+  // Checks if value is likely a DOM element.
+  function isElement(val) {
+    return toString.call(val) === '[object HTMLBodyElement]'
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1798,6 +1802,7 @@ function dropRightWhile(array,f) {
     isArrayLikeObject:isArrayLikeObject,
     isBoolean:isBoolean,
     isDate:isDate,
+    isElement:isElement,
   }
 } ();
 

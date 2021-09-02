@@ -1666,13 +1666,18 @@ function dropRightWhile(array,f) {
 
   // This method is like _.isArrayLike except that it also checks if value is an object.
   function isArrayLikeObject(val) {
-    if (typeof val !== 'Function') {
+    if (typeof val !== 'function') {
       let k = Object.keys(val)
       if (k.length >=0 && k.length <= Number.MAX_SAFE_INTEGER) {
         return true
       }
     }
     return false
+  }
+
+  // Checks if value is classified as a boolean primitive or object.
+  function isBoolean(val) {
+    return toString.call(val) === '[object Boolean]'
   }
 
   return {
@@ -1782,6 +1787,7 @@ function dropRightWhile(array,f) {
     isArrayBuffer:isArrayBuffer,
     isArrayLike:isArrayLike,
     isArrayLikeObject:isArrayLikeObject,
+    isBoolean:isBoolean,
   }
 } ();
 

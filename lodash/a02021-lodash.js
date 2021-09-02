@@ -1642,6 +1642,12 @@ function dropRightWhile(array,f) {
   function gte(val, oth) {
     return val >= oth
   }
+
+  // Checks if value is classified as an Array object.
+  function isArray(val) {
+    return Array.isArray(val)
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1745,6 +1751,7 @@ function dropRightWhile(array,f) {
     eq:eq,
     gt:gt,
     gte:gte,
+    isArray:isArray,
   }
 } ();
 

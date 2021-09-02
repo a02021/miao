@@ -1679,6 +1679,11 @@ function dropRightWhile(array,f) {
   function isBoolean(val) {
     return toString.call(val) === '[object Boolean]'
   }
+  
+  // Checks if value is classified as a Date object.
+  function isDate(val) {
+    return toString.call(val) == '[object Date]'
+  }
 
   return {
     chunk:chunk,
@@ -1788,6 +1793,7 @@ function dropRightWhile(array,f) {
     isArrayLike:isArrayLike,
     isArrayLikeObject:isArrayLikeObject,
     isBoolean:isBoolean,
+    isDate:isDate,
   }
 } ();
 

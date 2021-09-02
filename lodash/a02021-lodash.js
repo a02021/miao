@@ -934,7 +934,7 @@ function dropRightWhile(array,f) {
   //Checks if value is a pristine native function.
   // 将函数名转化为string 调用原型hasOwnProperty()
   function isNative(val) {
-    if (arguments.length === 0) return false
+    // if (arguments.length === 0) return false
     if  (Function.prototype.toString(val).includes('native code')) {
       return true
     }

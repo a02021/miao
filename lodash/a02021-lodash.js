@@ -1611,6 +1611,37 @@ function dropRightWhile(array,f) {
   function isArguments(val) {
     return toString.call(val) == '[object Arguments]'
   }
+
+  //Casts value as an array if it's not one.
+  function castArray(val) {
+    if (arguments.length === 0) {
+      return []
+    }
+    if (!Array.isArray(val)) {
+      return [val]
+    } else {
+      return val
+    }
+  }
+
+  //Performs a SameValueZero comparison between two values to determine if they are equivalent.
+  function eq(val, oth) {
+    if (val !== oth && oth !== val) {
+      return true
+    } else {
+      return val === oth
+    }
+  }
+
+  // Checks if value is greater than other.
+  function gt(val, oth) {
+    return val > oth
+  }
+
+  // Checks if value is greater than or equal to other.
+  function gte(val, oth) {
+    return val >= oth
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1710,6 +1741,10 @@ function dropRightWhile(array,f) {
     partition:partition,
     reject:reject,
     isArguments:isArguments,
+    castArray:castArray,
+    eq:eq,
+    gt:gt,
+    gte:gte,
   }
 } ();
 

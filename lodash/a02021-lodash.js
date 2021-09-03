@@ -1760,6 +1760,14 @@ function dropRightWhile(array,f) {
     return Number.isInteger(val)
   }
 
+  //Checks if value is a valid array-like length.
+  function isLength(val) {
+    return typeof val === 'number' && val > -1 && val % 1 === 0 && val < Number.MAX_SAFE_INTEGER
+  }
+
+  function isMap(val) {
+    return getType(val) === 'map'
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1875,6 +1883,8 @@ function dropRightWhile(array,f) {
     isFinite:isFinite,
     isFunction:isFunction,
     isInteger:isInteger,
+    isLength:isLength,
+    isMap:isMap,
   }
 } ();
 

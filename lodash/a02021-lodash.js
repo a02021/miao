@@ -1748,6 +1748,18 @@ function dropRightWhile(array,f) {
     return typeof val === 'number' && val > -Infinity && val < Infinity
   }
 
+  function isFunction(val) {
+    return typeof val === 'function'
+  }
+
+  function isInteger(val) {
+    // return typeof val === 'number' && val % 1 === 0
+    // return Math.floor(val) === val
+    // return parseInt(val, 10) === val
+    // return (val | 0) === val 位运算 32位以内
+    return Number.isInteger(val)
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1861,6 +1873,8 @@ function dropRightWhile(array,f) {
     isElement:isElement,
     isEmpty:isEmpty,
     isFinite:isFinite,
+    isFunction:isFunction,
+    isInteger:isInteger,
   }
 } ();
 

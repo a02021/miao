@@ -688,6 +688,23 @@ function dropRightWhile(array,f) {
     return false
   }
 
+  //This method is like _.isEqual except that it accepts customizer which is invoked to compare values. If customizer returns undefined, comparisons are handled by the method instead. The customizer is invoked with up to six arguments: (objValue, othValue [, index|key, object, other, stack]).
+  function isEqualWith(a, b, f) {
+    // if (f === undefined) return isEqual
+    if (a === b) return f(a) === f(b)
+    if (typeof a == 'number' || typeof a == 'string') return false
+    if (Object.prototype.toString.call(a) == Object.prototype.toString.call(b)) {
+        let ka = Object.keys(a)
+        let kb = Object.keys(b)
+        if (ka.length !== kb.length) return false
+        for (let i of ka) {
+            if (!f(a[i], b[i]) && !isEqual(a[i], b[i])) return false
+        }
+        return true
+    }
+    return false
+  }
+
   function reverse(arr) {
     function swap(arr, a,b) {
       let c = arr[a]
@@ -1726,6 +1743,11 @@ function dropRightWhile(array,f) {
     return true
   }
 
+  // Checks if value is a finite primitive number.
+  function isFinite(val) {
+    return typeof val === 'number' && val > -Infinity && val < Infinity
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1763,6 +1785,7 @@ function dropRightWhile(array,f) {
     zipObjectDeep:zipObjectDeep,
     zipWith:zipWith,
     isEqual:isEqual,
+    isEqualWith:isEqualWith,
     reverse:reverse,
     countBy:countBy,
     keyBy:keyBy,
@@ -1837,6 +1860,7 @@ function dropRightWhile(array,f) {
     isDate:isDate,
     isElement:isElement,
     isEmpty:isEmpty,
+    isFinite:isFinite,
   }
 } ();
 

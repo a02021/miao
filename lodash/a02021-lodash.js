@@ -1808,6 +1808,11 @@ function dropRightWhile(array,f) {
     return val.__proto__ === Object.prototype || val.__proto___ === null
   }
 
+  //Checks if value is classified as a RegExp object.
+  function isRegExp(val) {
+    return getType(val) === 'regexp'
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1930,6 +1935,7 @@ function dropRightWhile(array,f) {
     isObject:isObject,
     isObjectLike:isObjectLike,
     isPlainObject:isPlainObject,
+    isRegExp:isRegExp,
   }
 } ();
 

@@ -1813,6 +1813,33 @@ function dropRightWhile(array,f) {
     return getType(val) === 'regexp'
   }
 
+  //Checks if value is a safe integer. An integer is safe if it's an IEEE-754 double precision number which isn't the result of a rounded unsafe integer.
+  function isSafeInteger(val) {
+    return isInteger(val) && Math.abs(val) <= Number.MAX_SAFE_INTEGER
+  }
+
+  //Checks if value is classified as a Set object.
+  function isSet(val) {
+    return getType(val) === 'set'
+  }
+
+  function isString(val) {
+    return getType(val) === 'string'
+  }
+
+  function isSymbol(val) {
+    return getType(val) === 'symbol'
+  }
+
+  function lt(val, oth) {
+    return val < oth
+  }
+
+  // Checks if value is less than or equal to other.
+  function lte(val, oth) {
+    return val <= oth
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1936,6 +1963,12 @@ function dropRightWhile(array,f) {
     isObjectLike:isObjectLike,
     isPlainObject:isPlainObject,
     isRegExp:isRegExp,
+    isSafeInteger:isSafeInteger,
+    isSet:isSet,
+    isString:isString,
+    isSymbol:isSymbol,
+    lt:lt,
+    lte:lte,
   }
 } ();
 

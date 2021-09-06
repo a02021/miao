@@ -1779,6 +1779,7 @@ function dropRightWhile(array,f) {
     return true
   }
 
+  //This method is like _.isMatch except that it accepts customizer which is invoked to compare values. If customizer returns undefined, comparisons are handled by the method instead. The customizer is invoked with five arguments: (objValue, srcValue, index|key, object, source).
   function isMatchWith(obj, sou, cus){
     if (cus === undefined) return isMatch(obj, sou)
     let kb = Object.keys(sou)
@@ -1792,7 +1793,21 @@ function dropRightWhile(array,f) {
     return true
   }
 
-  //This method is like _.isMatch except that it accepts customizer which is invoked to compare values. If customizer returns undefined, comparisons are handled by the method instead. The customizer is invoked with five arguments: (objValue, srcValue, index|key, object, source).
+  //Checks if value is the language type of Object. (e.g. arrays, functions, objects, regexes, new Number(0), and new String(''))
+  function isObject(val) {
+    return val !== null && (getType(val) === 'object' || getType === 'function')
+  }
+
+  //Checks if value is object-like. A value is object-like if it's not null and has a typeof result of "object".
+  function isObjectLike(val) {
+    return val !== null && getType(val) === 'object'
+  }
+
+  // Checks if value is a plain object, that is, an object created by the Object constructor or one with a [[Prototype]] of null.
+  function isPlainObject(val) {
+    return val.__proto__ === Object.prototype || val.__proto___ === null
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1912,6 +1927,9 @@ function dropRightWhile(array,f) {
     isMap:isMap,
     isMatch:isMatch,
     isMatchWith:isMatchWith,
+    isObject:isObject,
+    isObjectLike:isObjectLike,
+    isPlainObject:isPlainObject,
   }
 } ();
 

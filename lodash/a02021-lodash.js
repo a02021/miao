@@ -1599,7 +1599,7 @@ function dropRightWhile(array,f) {
 
   //Gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
   function size(p) {
-    return p.length === "undefined" ? Object.keys(p).length : p.length
+    return p.length === undefined ? Object.keys(p).length : p.length
   }
   
   //Checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
@@ -1768,6 +1768,17 @@ function dropRightWhile(array,f) {
   function isMap(val) {
     return getType(val) === 'map'
   }
+
+  //Performs a partial deep comparison between object and source to determine if object contains equivalent property values.
+  // Note: This method is equivalent to _.matches when source is partially applied.
+  function isMatch(obj, sou){
+    let kb = Object.keys(sou)
+    for (let i of kb) {
+      if (!isEqual(obj[i], sou[i])) return false
+    }
+    return true
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1885,6 +1896,7 @@ function dropRightWhile(array,f) {
     isInteger:isInteger,
     isLength:isLength,
     isMap:isMap,
+    isMatch:isMatch,
   }
 } ();
 

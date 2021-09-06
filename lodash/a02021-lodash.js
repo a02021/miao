@@ -1779,6 +1779,20 @@ function dropRightWhile(array,f) {
     return true
   }
 
+  function isMatchWith(obj, sou, cus){
+    if (cus === undefined) return isMatch(obj, sou)
+    let kb = Object.keys(sou)
+    for (let i of kb) {
+      if (cus(obj[i], sou[i]) === undefined) {
+        if (!isMatch(obj[i], sou[i])) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
+  //This method is like _.isMatch except that it accepts customizer which is invoked to compare values. If customizer returns undefined, comparisons are handled by the method instead. The customizer is invoked with five arguments: (objValue, srcValue, index|key, object, source).
   return {
     chunk:chunk,
     compact:compact,
@@ -1897,6 +1911,7 @@ function dropRightWhile(array,f) {
     isLength:isLength,
     isMap:isMap,
     isMatch:isMatch,
+    isMatchWith:isMatchWith,
   }
 } ();
 

@@ -1840,6 +1840,9 @@ function dropRightWhile(array,f) {
     return val <= oth
   }
 
+  function add(a,b) {
+    return a + b
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1969,6 +1972,7 @@ function dropRightWhile(array,f) {
     isSymbol:isSymbol,
     lt:lt,
     lte:lte,
+    add:add,
   }
 } ();
 

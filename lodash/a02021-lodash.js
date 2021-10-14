@@ -1856,6 +1856,13 @@ function dropRightWhile(array,f) {
       return isMatch(obj, src)
     }
   }
+  
+  // Creates a function that returns the value at path of a given object.
+  function property(path) {
+    return function(obj){
+      return get(obj, path)
+    }
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1988,6 +1995,7 @@ function dropRightWhile(array,f) {
     add:add,
     identity:identity,
     matches:matches,
+    property:property,
   }
 } ();
 

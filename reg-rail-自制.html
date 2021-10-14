@@ -27,6 +27,13 @@
   \B "non-word boundary"
   \0 "null"
 
+  转义符:
+
+
+  greedy:  // aaacabacaabaabbbb =>  /.*b/ == aaacabacaabaabbbb  /.*?b/ == aaacab
+  贪婪匹配 a*: 尽可能匹配多的字符a，   
+  非贪婪匹配 a*?: 尽叮能匹配少的字符a,
+  如果匹配的结果在字符结尾，.*?就有可能匹配不到任何结果了，因为他会尽可能匹配少的字符
 
   位置符号:
   ^abc => "Start of line"+"abc"
@@ -35,7 +42,7 @@
   单分支character:
   abc => char "abc"
   多分枝Branch:
-  (?<testname>fio) =>  capture group "testname" + ("abc")
+  (?< testname>fio) =>  capture group "testname" + ("abc")
   (abc) => capture group ("abc")
   [123] => charclass  "One of:"1/2/3 
   [^123] => charclass "none of:"1/2/3
@@ -55,6 +62,11 @@
   a{3,3} => down loop   "a" + "2times"
   a{3,} => down loop  "a" + "2+ times"
 
+  (): 捕获分组和断言
+  捕获分组: 
+    (foo) 匹配到foo 加入分组并编号
+    (?< xxs>sv) 匹配sv 分组 编号 名字=xxs
+  非捕获分组: (?:foo) 匹配到foo 不加入分组 (提高性能)
   断言: assertion
   正预测断言：
   (?=foo) 某位置的右边匹配foo   => "foo"+("positive lookahead")

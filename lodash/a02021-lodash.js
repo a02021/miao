@@ -1843,6 +1843,19 @@ function dropRightWhile(array,f) {
   function add(a,b) {
     return a + b
   }
+
+  // This method returns the first argument it receives.
+  function identity(val) {
+    return val
+  }
+
+  //Creates a function that performs a partial deep comparison between a given object and source, returning true if the given object has equivalent property values, else false.
+
+  function matches(src) {
+    return function(obj) {
+      return isMatch(obj, src)
+    }
+  }
   return {
     chunk:chunk,
     compact:compact,
@@ -1973,6 +1986,8 @@ function dropRightWhile(array,f) {
     lt:lt,
     lte:lte,
     add:add,
+    identity:identity,
+    matches:matches,
   }
 } ();
 

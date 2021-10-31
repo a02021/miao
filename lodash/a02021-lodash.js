@@ -1896,7 +1896,7 @@ function dropRightWhile(array,f) {
             }}
           if (t) {
             if (!key) res.push(arrs[i][idx])
-            if (key) res.push({key:n})
+            if (key) res.push({[key]:n})
           }
       })}
     return res

@@ -1863,6 +1863,45 @@ function dropRightWhile(array,f) {
       return get(obj, path)
     }
   }
+
+  // This method is like _.xor except that it accepts iteratee which is invoked for each element of each arrays to generate the criterion by which by which they're compared. The order of result values is determined by the order they occur in the arrays. The iteratee is invoked with one argument: (value).
+  function xorBy(...arrs) {
+    let ite = arrs.pop()
+    let r = []
+    let res = []
+    let key = null
+    if (typeof ite === 'function') ite = ite
+    if (typeof ite === 'string') {
+      key = ite
+      ite = (i) => i[key]
+    }
+    // console.log('ite',ite,arrs)
+      arrs.forEach((arr, idx) => {
+        // console.log(arr, idx)
+        r[idx] = []
+        arr.forEach( it => {
+          // console.log(it, ite(it))
+          r[idx].push(ite(it)) 
+        })
+      })
+      for (let i = 0 ; i < r.length; i++) {
+        let keys = Object.keys(r)
+        keys.splice(i,1) 
+        r[i].forEach((n,idx) => { 
+          let t = true
+          for (let k = 0; k < keys.length; k++) {
+            if (r[keys[k]].includes(n)) {
+              t = false
+              break
+            }}
+          if (t) {
+            if (!key) res.push(arrs[i][idx])
+            if (key) res.push({key:n})
+          }
+      })}
+    return res
+  }
+
   return {
     chunk:chunk,
     compact:compact,
@@ -1996,6 +2035,7 @@ function dropRightWhile(array,f) {
     identity:identity,
     matches:matches,
     property:property,
+    xorBy:xorBy,
   }
 } ();
 

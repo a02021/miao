@@ -1,197 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    body {
-      background-color:antiquewhite;
-      width: max-content;
-      height: max-content;
-    }
-    p {
-      color: rgb(245, 67, 67);
-    }
-    #grid {
-      /* 检测换行符 */
-      white-space:pre-line;
-      color:rgb(192, 157, 157);
-      background-color:rgb(243, 227, 133);
-      width: max-content;
-      height: max-content;
-    }
-    .opt,#rangeHint {
-      display:inline-block;
-      ;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @media (max-width: 856px) {
+        html {
+          font-size: calc(100vw / 750);
+        }
+        body {
+          font-size: 16rem;
+        }
+        #range {
+          width: 500rem;
+        }
+        .feature,
+        .game {
+          margin: 10rem auto;
+          width: max-content;
+          text-align: center;
+        }
+        .header {
+          font-size: 32rem;
+          width: 500rem;
+          height: 100rem;
+        }
+        .choosen {
+          display: flex;
+          justify-content: space-between;
+          vertical-align: middle;
+          line-height: 16rem;
+        }
+        .choosen span input {
+          display: inline-block;
+          width: 20rem;
+          height: 20rem;
+          vertical-align: middle;
+        }
+        #grid .mark::before {
+          width: 20rem;
+          height: 20rem;
+        }
+      }
+      @media (min-width: 857px) {
+        #range {
+          width: 500px;
+        }
+        .header {
+          font-size: 32px;
+          width: 500px;
+          height: 100px;
+        }
+        .feature,
+        .game {
+          margin: auto;
+          width: 1226px;
+        }
+        #grid .mark::before {
+          width: 20px;
+          height: 20px;
+        }
+      }
+      body {
+        margin: 0;
+        background-color: rgb(40, 46, 48);
+        color: rgb(255, 255, 255);
+      }
+      .header {
+        margin: 0 auto;
+        text-align: center;
+      }
+      p {
+        margin: 0;
+        vertical-align: middle;
+      }
+      button {
+        color: white;
+        border-radius: 1px;
+        border: 0px;
+        background-color: rgb(78, 121, 136);
+      }
+      #range {
+        border:5px solid;
+        border-radius: 0px;
+      }
+      #grid {
+        /* 检测换行符 */
+        white-space: pre-line;
+        color: rgb(255, 251, 251);
+        background-color: rgb(49, 49, 44);
+        border: 5px solid rgba(0, 0, 0, 0);
+        width: max-content;
+        height: max-content;
+      }
+      #grid input {
+        position: absolute;
+        clip: rect(0, 0, 0, 0);
+      }
+      #grid .mark::before {
+        content: "";
+        display: inline-block;
+        border: 1px solid silver;
+        margin: 2px;
+      }
+      #grid input[type="checkbox"]:checked + .mark::before {
+        background-color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <p>康威生命游戏</p>
+      <p>Conway's Game of Life</p>
+    </div>
+    <div class="feature">
+      <div>
+        <p>尺寸: <span id="rangeHint"></span></p>
+        <input type="range" id="range" min="5" max="100" value="20" />
+      </div>
+      <div class="choosen">
+        <button onclick="next()">Next generation</button>
+        <span><input type="checkbox" id="ifAuto" />自动进化</span>
+        <span><input type="checkbox" id="cancelB" />取消边境</span>
+        <button onclick="clearAll()">清空</button>
+        <button onclick="randomNew()">重新随机</button>
+      </div>
+    </div>
+    <div class="game">
+      <div id="hint"></div>
+      <div id="grid"></div>
+    </div>
 
-  </style>
-</head>
-<body>
-  <p>class版本</p>
-
-  <div>尺寸<input type="range" id="range" min='5' max='100' value='20'><p id="rangeHint"></p></div>
-  <button onclick="next()">Next generation</button>
-  <div class="opt"><input type="checkbox" id="ifAuto">自动进化!</div>
-  <div class="opt"><input type="checkbox" id="cancelB">取消边境!</div>
-  <button onclick="clearAll()">清空</button>
-  <button onclick="randomNew()">重新随机</button>
-  <div id="hint"></div>
-  <div id="grid"></div>
-  <script>
-    class Conway {
-      constructor(width, height, boundary = true) {
-        this.width = width
-        this.height = height
-        this.boundary = boundary
-        this.world = new Array(width).fill([]).map(i => i = new Array(height).fill(0))
-      }
-      get(row, col) {
-        if (row < 0) row = this.width -1
-        if (row > this.width) row = 0
-        if (col < 0) col = this.height -1
-        if (col > this.col) row = 0
-        return this.world[row][col]
-      }
-      set(row, col, val) {
-        this.world[row][col] = val
-      }
-      printWorld(callback) {
-        return callback(this.world)
-      }
-      randomFill(ratio = 0.5) {
-        this.world = this.world.map(it => it.map(n =>  Math.random() > ratio ? 0 : 1))
-      }
-      setBoundary(booleanTF) {
-        this.boundary = booleanTF
-      }
-      neighborsCount(row, col) {
-        let count = 0
-        if (this.boundary) { // 有边界
-          let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
-          let jLength = col + 1 > this.height - 1 ? this.height - 1: col + 1        
-          for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
-             for (let j = col - 1 < 0 ? 0 : col - 1; j <= jLength; j++) {
-              // console.log(i,j,this.world[i][j])
-             if (this.world[i][j] === 1) count++
+    <script>
+      class Conway {
+        constructor(width, height, boundary = true) {
+          this.width = width
+          this.height = height
+          this.boundary = boundary
+          this.world = new Array(width)
+            .fill([])
+            .map((i) => (i = new Array(height).fill(0)))
+        }
+        get(row, col) {
+          if (row < 0) row = this.width - 1
+          if (row > this.width) row = 0
+          if (col < 0) col = this.height - 1
+          if (col > this.col) row = 0
+          return this.world[row][col]
+        }
+        set(row, col, val) {
+          this.world[row][col] = val
+        }
+        printWorld(callback) {
+          return callback(this.world)
+        }
+        randomFill(ratio = 0.5) {
+          this.world = this.world.map((it) =>
+            it.map((n) => (Math.random() > ratio ? 0 : 1))
+          )
+        }
+        setBoundary(booleanTF) {
+          this.boundary = booleanTF
+        }
+        neighborsCount(row, col) {
+          let count = 0
+          if (this.boundary) {
+            // 有边界
+            let iLength = row + 1 > this.width - 1 ? this.width - 1 : row + 1
+            let jLength = col + 1 > this.height - 1 ? this.height - 1 : col + 1
+            for (let i = row - 1 < 0 ? 0 : row - 1; i <= iLength; i++) {
+              for (let j = col - 1 < 0 ? 0 : col - 1; j <= jLength; j++) {
+                // console.log(i,j,this.world[i][j])
+                if (this.world[i][j] === 1) count++
+              }
             }
           }
-        }
-        if (!this.boundary) { // 没有边界
-          // console.log(this.boundary)
-          let iLength = row + 1 
-          let jLength = col + 1 
-          for (let i = row - 1 ; i <= iLength; i++) {
-             for (let j = col - 1 ; j <= jLength; j++) {
-              let r = i 
-              let c = j
-              if (i == -1) r = this.width - 1
-              if (i == this.width ) r = 0
-              if (j == -1) c =  this.height - 1
-              if (j == this.height ) c = 0
-              if (this.world[r][c] === 1) count++
+          if (!this.boundary) {
+            // 没有边界
+            // console.log(this.boundary)
+            let iLength = row + 1
+            let jLength = col + 1
+            for (let i = row - 1; i <= iLength; i++) {
+              for (let j = col - 1; j <= jLength; j++) {
+                let r = i
+                let c = j
+                if (i == -1) r = this.width - 1
+                if (i == this.width) r = 0
+                if (j == -1) c = this.height - 1
+                if (j == this.height) c = 0
+                if (this.world[r][c] === 1) count++
+              }
             }
           }
-        }
-        //少于两个或多于三个的活着的邻居，都会死亡
-        // console.log('co',row,col,count)
-        if (this.world[row][col] === 1) {
-          count--
-          if (count < 2 || count > 3) {
-            return false
-          } else {
-            return true
-          }
-        } else {//死去的细胞，周围有三个活着的邻居，可以再次复活。
-          if (count === 3) {
-            return true
-          }
-        }
-        return false
-      }
-      next() { //计算新地图的每个值 再传给this.world
-        let newWorld = []
-        for (let row = 0; row < this.width; row++) {
-          newWorld[row] = []
-          for (let col =0; col < this.height; col++) {
-            if(this.neighborsCount(row, col)) {
-              newWorld[row][col] = 1
+          //少于两个或多于三个的活着的邻居，都会死亡
+          // console.log('co',row,col,count)
+          if (this.world[row][col] === 1) {
+            count--
+            if (count < 2 || count > 3) {
+              return false
             } else {
-              newWorld[row][col] = 0
+              return true
+            }
+          } else {
+            //死去的细胞，周围有三个活着的邻居，可以再次复活。
+            if (count === 3) {
+              return true
             }
           }
+          return false
         }
-        this.world = newWorld
-      }
-    }
-    let newGame, nGen, long, autoPlay
-    let grid = document.querySelector('#grid')
-    let range = document.querySelector('#range')
-    let rangeHint = document.querySelector('#rangeHint')
-    let ifAuto = document.querySelector('#ifAuto')
-    let ifBoundary = document.querySelector('#cancelB')
-    range.addEventListener('change', startNew)
-    ifAuto.addEventListener('change',autoNext)
-    ifBoundary.addEventListener('change',cancelB)
-    startNew()
-    function startNew() {
-      long = Number(range.value)
-      startWorld(long, long, 0.5)
-      rangeHint.innerHTML = long + '*' + long
-      autoNext()
-      cancelB()
-    }
-    function startWorld(width, height, ratio = 0.5) {
-      nGen = 0
-      newGame = new Conway(width, height)
-      newGame.randomFill(ratio)
-      newGame.printWorld(printHTML)
-    }
-    function autoNext() {
-      clearInterval(autoPlay)  //防止调整大小 没有清除
-      if (ifAuto.checked) {
-        autoPlay = setInterval(next, 300)
-      } else {
-        clearInterval(autoPlay)// console.log(autoPlay)
-      }
-    }
-    function cancelB() {
-      if (ifBoundary.checked) {
-        newGame.setBoundary(false)
-        grid.style.border = ''
-      } else {
-        newGame.setBoundary(true)
-        grid.style.border = '2px solid red'
-      }
-    }
-    grid.addEventListener('change', e => {
-      let row = e.target.dataset.row
-      let col = e.target.dataset.col
-      if (row && col){//防止点到空白处 无法获取值
-        newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
-      }
-    })
-    function next() {
-      newGame.next()
-      newGame.printWorld(printHTML)
-    }
-    function clearAll() {startWorld(long, long, 0)}
-    function randomNew() {startWorld(long, long, 0.5)}
-    function printHTML(m) { //性能优化 创建新字符串  再传给grid.innerHTMl 
-      let newHTML = ''
-      for (let row = 0; row < m.length; row++) {
-        for (let col = 0; col < m[row].length; col++) {
-          if (m[row][col] === 0) newHTML += `<input type="checkbox" data-row="${row}" data-col="${col}">`
-          if (m[row][col] === 1) newHTML += `<input type="checkbox" checked data-row="${row}" data-col="${col}">`
+        next() {
+          //计算新地图的每个值 再传给this.world
+          let newWorld = []
+          for (let row = 0; row < this.width; row++) {
+            newWorld[row] = []
+            for (let col = 0; col < this.height; col++) {
+              if (this.neighborsCount(row, col)) {
+                newWorld[row][col] = 1
+              } else {
+                newWorld[row][col] = 0
+              }
+            }
+          }
+          this.world = newWorld
         }
-        newHTML += '\n'
       }
-      grid.innerHTML = newHTML
-      document.querySelector('#hint').innerHTML = '第' + nGen++ + '代'
-    }
-
-  </script>
-</body>
+      let newGame, nGen, long, autoPlay
+      let grid = document.querySelector("#grid")
+      let range = document.querySelector("#range")
+      let rangeHint = document.querySelector("#rangeHint")
+      let ifAuto = document.querySelector("#ifAuto")
+      let ifBoundary = document.querySelector("#cancelB")
+      range.addEventListener("change", startNew)
+      ifAuto.addEventListener("change", autoNext)
+      ifBoundary.addEventListener("change", cancelB)
+      startNew()
+      function startNew() {
+        long = Number(range.value)
+        startWorld(long, long, 0.5)
+        rangeHint.innerHTML = long + "*" + long
+        autoNext()
+        cancelB()
+      }
+      function startWorld(width, height, ratio = 0.5) {
+        nGen = 0
+        newGame = new Conway(width, height)
+        newGame.randomFill(ratio)
+        newGame.printWorld(printHTML)
+      }
+      function autoNext() {
+        clearInterval(autoPlay) //防止调整大小 没有清除
+        if (ifAuto.checked) {
+          autoPlay = setInterval(next, 300)
+        } else {
+          clearInterval(autoPlay) // console.log(autoPlay)
+        }
+      }
+      function cancelB() {
+        if (ifBoundary.checked) {
+          newGame.setBoundary(false)
+          grid.style.borderColor = ""
+        } else {
+          newGame.setBoundary(true)
+          grid.style.borderColor = "white"
+        }
+      }
+      grid.addEventListener("change", (e) => {
+        let row = e.target.dataset.row
+        let col = e.target.dataset.col
+        if (row && col) {
+          //防止点到空白处 无法获取值
+          newGame.set(row, col, newGame.world[row][col] == 1 ? 0 : 1)
+        }
+      })
+      function next() {
+        newGame.next()
+        newGame.printWorld(printHTML)
+      }
+      function clearAll() {
+        startWorld(long, long, 0)
+      }
+      function randomNew() {
+        startWorld(long, long, 0.5)
+      }
+      function printHTML(m) {
+        //性能优化 创建新字符串  再传给grid.innerHTMl
+        let newHTML = ""
+        for (let row = 0; row < m.length; row++) {
+          for (let col = 0; col < m[row].length; col++) {
+            if (m[row][col] === 0)
+              newHTML += `<input type="checkbox" data-row="${row} data-col="${col}" id="s${row}${col}" ><label class="mark" for="s${row}${col}"></label>`
+            if (m[row][col] === 1)
+              newHTML += `<input type="checkbox" checked data-row="${row}" data-col="${col}" id="s${row}${col}" ><label class="mark" for="s${row}${col}"></label>`
+          }
+          newHTML += "\n"
+        }
+        grid.innerHTML = newHTML
+        document.querySelector("#hint").innerHTML = "第" + nGen++ + "代"
+      }
+    </script>
+  </body>
 </html>

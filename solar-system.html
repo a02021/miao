@@ -1,135 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    body {
-      background-color: black;
-      color: darksalmon;
-    }
-    #line1 {
-      color: cornsilk;
-    }
-    #blackhole {
-      position: absolute;
-    }
-    #ri {
-      width: 100px;
-      height: 100px;
-      position: absolute;   
-      /* margin: auto;    */
-    }   
-    #moon {
-      width: 20px;
-      height: 20px;
-      /* margin: auto; */
-    }
-    #earth {
-      /* left: 100px;
-      right: 100px; */
-      width: 50px;
-      height: 50px;
-      /* margin: auto; */
-    }
-    .earthLine {
-      text-align: center;
-      height: 2px; width: 2px;
-      color:cyan;
-      background-color: cyan;
-      border-radius: 4px;
-      position: absolute;
-      z-index: -10;
-    }
-  </style>
-</head>
-<body>
-  <p style="text-align: center">
-    Hua ji
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: black;
+        color: darksalmon;
+      }
+      p {
+        text-align: center;
+      }
+      #blackhole,
+      #ri,
+      #earth,
+      #moon {
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+      #ri img {
+        position: absolute;
+        left: -50px;
+        top: -50px;
+        width: 100px;
+        height: 100px;
+      }
+      #moon img {
+        position: absolute;
+        left: -10px;
+        top: -10px;
+        width: 20px;
+        height: 20px;
+      }
+      #earth img {
+        position: absolute;
+        left: -25px;
+        top: -25px;
+        width: 50px;
+        height: 50px;
+      }
+      .earthLine {
+        height: 0;
+        width: 0;
+        border: 1px solid cyan;
+        border-radius: 999px;
+        position: absolute;
+        z-index: -10;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hua ji</p>
+    <p>公转自传</p>
+
     <div id="blackhole"></div>
-    <img id="ri" src="img/ri.png" >
-    <img id="earth" src="img/earth.png" style="position: absolute">
-    <img id="moon" src="img/moon.png" style="position: absolute">
-    <div id="stars"></div>
-    <div id="line1">.</div> 
-  </p>
+    <div id="ri"><img src="img/ri.png" /></div>
+    <div id="earth"><img src="img/earth.png" /></div>
+    <div id="moon"><img src="img/moon.png" /></div>
 
-  <script>
-    let bh = document.querySelector("#blackhole")
-    let ri = document.querySelector("#ri")
-    let earth = document.querySelector("#earth")
-    let line1 = document.querySelector("#line1")
-    let moon = document.querySelector("#moon")
-    let stars = document.querySelector("#stars")
-    function posri() {
-    let Height=document.documentElement.clientHeight;//取得浏览器页面可视区域的宽度   
-    let Width=document.documentElement.clientWidth;//取得浏览器页面可视区域的宽度   
-    bh.style.top = (Height - bh.offsetHeight)/2 + 'px'
-    bh.style.left = (Width - bh.offsetWidth)/2 + 'px'
-    // console.log(Height,ri.offsetHeight,Width,ri.offsetWidth)
-    }
-    posri()
-    window.addEventListener('resize', function() {
+    <script>
+      let bh = document.querySelector("#blackhole")
+      let ri = document.querySelector("#ri")
+      let earth = document.querySelector("#earth")
+      let moon = document.querySelector("#moon")
+
       posri()
-      location.reload()
-    //   let dots = document.getElementsByClassName('earthLine')
-    //   let i = dots.length
-    //   while(dots.length > 0){
-    //     dots[i].remove();
-    //     console.log("safas")
-    //     i--
-    //  }
+      move(bh, ri, earth, moon)()
 
-    // console.log("posri==========");
-    })      
+      // 定位页面中心
+      function posri() {
+        let Height = document.documentElement.clientHeight //取得浏览器页面可视区域的宽度
+        let Width = document.documentElement.clientWidth //取得浏览器页面可视区域的宽度
+        bh.style.top = (Height - bh.offsetHeight) / 2 + "px"
+        bh.style.left = (Width - bh.offsetWidth) / 2 + "px"
+        // console.log(Height,ri.offsetHeight,Width,ri.offsetWidth)
+      }
+      window.addEventListener("resize", function () {
+        posri()
+        // 刷新当前页面
+        location.reload()
+      })
 
-    function move(bh,sun,obj,obj2) {
-      let angle = Math.PI / 2;
-      let rt = 0
-      return function animate(time, lastTime) {
-        if (lastTime != null) {
-          angle += (time - lastTime) * 0.001;
+      function move(bh, sun, obj, obj2) {
+        // pi 为180度,2pi 为一圈,sin 0 1 0 -1 0, cos 1 0 -1 0 1
+        // Math.sin(0) = 0
+        // Math.sin(Math.PI / 2) = 1
+        // Math.sin(Math.PI / 2 * 3) = -1
+        // Math.sin(2pi) = 0
+
+        //公转 - 弧度 -
+        // 弧度按 0.001秒 计算,因此 每6.28秒为一圈
+        // 每1秒 弧度 = 1000 * 0.001 = 1
+
+        // 自传 - 角度
+        // 2π弧度=360°角度
+        // 每1秒的角度 = 1 * 360 / (2π) = 57.29578度
+        //  地球 每一个大圈 365倍
+        // 月球 每一个大圈 12倍
+
+        // 弧度
+        let angle = Math.PI / 2
+        // 角度
+        let rt = 0
+        return function animate(time, lastTime) {
+          if (lastTime != null) {
+            // 减慢动画时间,每(6.28 * 10)秒一大圈
+            let t = ((time - lastTime) * 0.001) / 10
+            angle += t
+            rt += (t * 360) / (Math.PI * 2)
+          }
+          ri.style.transform = "rotate(" + rt + "deg)"
+          earth.style.transform = "rotate(" + rt * 365 + "deg)"
+          moon.style.transform = "rotate(" + rt * 12 + "deg)"
+          // 地球公转速度
+          let x = Math.sin(angle)
+          let y = Math.cos(angle)
+          // 月球公转速度(地球*12)
+          let mx = Math.sin(angle * 12)
+          let my = Math.cos(angle * 12)
+          // 改位置
+          pos(bh, sun, x * 20, y * 20)
+          pos(sun, obj, x * 200, y * 200)
+          pos(obj, obj2, mx * 80, my * 80)
+          // 自动计算下一个位置,用js动画过渡
+          // newTime为js动画自动传入给回调
+          requestAnimationFrame((newTime) => animate(newTime, time))
         }
-        let x = Math.sin(angle)
-        let y = Math.cos(angle)
-        ri.style.transform = "rotate("+rt+"deg)";
-        rt++
-        pos(bh,sun,speed(Math.sin,angle,50),speed(Math.cos,angle,50))
-        pos(sun,obj,speed(Math.sin,angle,300),speed(Math.cos,angle,300))
-        pos(obj,obj2,speed(Math.sin,angle*12,100),speed(Math.cos,angle*12,100))
-        // line(line1)
 
-        requestAnimationFrame(newTime => animate(newTime, time));
-      }
-        
-      function speed(f,n,l) {
-        return f(n)*l
-      }
-      function pos(obj,obj2,x,y) {
-        console.log(ri.offsetTop,ri.offsetLeft)
-        let objTop = Number(obj.offsetTop)
-        let objLeft = Number(obj.offsetLeft)
-        obj2.style.top = objTop+ x + "px";
-        obj2.style.left = objLeft + y  + "px";
+        function pos(obj, obj2, x, y) {
+          // console.log(ri.offsetTop,ri.offsetLeft)
+          let objTop = Number(obj.offsetTop)
+          let objLeft = Number(obj.offsetLeft)
+          obj2.style.top = objTop + x + "px"
+          obj2.style.left = objLeft + y + "px"
 
-        let dot = document.createElement("div")
-        dot.style.top = objTop+x + "px";
-        dot.style.left = objLeft +y + "px";
-        dot.className = "earthLine"
-        // dot.className = ""+obj2.tagName+"earthLine"
-        document.body.appendChild(dot);
-      }
-      // function line(l) {
-      //   let x = Math.sin(angle) * 20
-      //   let y = Math.cos(angle) * 20
+          let dot = document.createElement("div")
+          dot.style.top = objTop + x + "px"
+          dot.style.left = objLeft + y + "px"
+          dot.className = "earthLine"
+          // dot.className = ""+obj2.tagName+"earthLine"
+          document.body.appendChild(dot)
+        }
+        // function line(l) {
+        //   let x = Math.sin(angle) * 20
+        //   let y = Math.cos(angle) * 20
         // obj.style.left = (x) + "px";
-      // obj.style.top = (y) + "px";
-      // }
-    }
-
-    move(bh,ri,earth,moon)()
-  </script>
-</body>
+        // obj.style.top = (y) + "px";
+        // }
+      }
+    </script>
+  </body>
 </html>

@@ -1,166 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    body {
-      background-color: mistyrose;
-    }
-    div {
-      border-radius: 999px;
-      width: 100px;
-      height: 100px;
-      position: absolute;
-    }
-    #s1 {
-      background-color: rgb(245, 138, 159);
-      z-index:0;
-    }
-    #s2 {
-      background-color:teal;
-      top:80px;
-      z-index:1;
-
-    }
-    #s3 {
-      background-color:tomato;
-      top:150px;
-      z-index:2;
-    }
-    #s4 {
-      background-color:rgb(248, 248, 67);
-      z-index:3;
-      top:230px;
-    }
-    #s5 {
-      background-color:rgb(29, 130, 212);
-      top:300px;
-      z-index:4;
-
-    }
-    #s6 {
-      background-color:rgb(190, 88, 248);
-      top:380px;
-      z-index:5;
-    }
-    #s7 {
-      background-color:rgb(248, 68, 68);
-      top:0px;
-      left:200px;
-      z-index:6;
-      color:rgb(240, 195, 201);
-      font-size: 200px;
-      width: 200px;
-      height: 200px;
-    }
-    p {
-      color:rgb(240, 195, 201);
-      font-size: 200px;
-      position:fixed;
-      top:-200px;
-      z-index: -1;
-    }
-    span {
-      width: 1000px;
-      height: 1000px;
-      z-index: 0;
-      position: fixed;
-    }
-    #cl {
-      font: 2em sans-serif;
-      border-radius:0;
-      width: 100px;
-      height: 50px;
-      background-color: royalblue;
-      top:500px;
-    }
-    #dk {
-      font: 2em sans-serif;
-      border-radius:0;
-      width: 100px;
-      height: 50px;
-      background-color: rgb(241, 243, 248);
-      top:500px;
-      left: 100px;
-    }
-
-  </style>
-</head>
-<body>
-  <span></span>
-  <div id="s1"></div>
-  <div id="s2"></div>
-
-  <script>
-    let pp = document.querySelector('p')
-    let m = 0, z = 7
-    let ex,ey
-    let r, b, g
-    let sss = ['#s1','#s2','#s3','#s4','#s5','#s6','#s7']
-    let mo,st
-    sss.forEach(n => {
-      let m = document.querySelector(n)
-      m.addEventListener('mousedown', moved.bind(m))
-    })
-    function moved(e) {
-      // 检测是否点到当前元素
-      if (!e.target.id == this) return
-      this.style.zIndex = z
-      z++
-      m = 1
-      ex = e.clientX
-      ey = e.clientY 
-      r = 240, b = 195, g = 201
-      mo = move.bind(this)
-      st = stop.bind(this)
-      // 移动时绑定事件到窗口上,鼠标移出窗口依然生效
-      window.addEventListener('mousemove',mo)
-      window.addEventListener('mouseup', st )
-    }
-
-    function stop(e){
-      m = 0
-      r= r+Math.floor(Math.random()*100)
-      g= g+Math.floor(Math.random()*100)
-      b= b+Math.floor(Math.random()*100)
-      // console.log(r,g,b)
-      // console.log(this)
-      window.removeEventListener('mousemove',mo)
-      window.removeEventListener('mouseup',st)
-    }
-    function move(e) {
-      // 鼠标没有按下,停止监听
-      if (e.which === 0 || e.buttons ===0) stop(e)
-    // console.log(m)
-      if(m == 1) {
-      pp.setAttribute("style",'color:rgb('+r+','+b+','+g+')')
-      r = r<0 ? 100:r-9
-      g = g<0 ? 100:g-8
-      b = b<0 ? 100:b-10
-      // console.log('++++++++',this)
-      let poss = this.getBoundingClientRect()
-      let to = poss.top + e.clientY - ey 
-      let le = poss.left + e.clientX - ex 
-      if (to < 10) to = 0
-      if (to > window.innerHeight - this.offsetHeight -10) to = window.innerHeight - this.offsetHeight
-      if (le > window.innerWidth - this.offsetWidth - 10) le = window.innerWidth - this.offsetWidth
-      if (le < 10) le = 0
-      this.style.top = to + "px"
-      this.style.left = le + "px"
-      ex = e.clientX
-      ey = e.clientY 
-    }
-  }
-    function mousePos(n) {
-      let box = n.getBoundingClientRect()
-      return {
-        x: window.event.clientX - box.x,
-        y: window.event.clientY - box.y,
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: mistyrose;
       }
-    }
-  </script>
-</body>
+      #s1,
+      #s2,
+      #s3 {
+        border-radius: 999px;
+        width: 100px;
+        height: 100px;
+        position: absolute;
+      }
+      #s1 {
+        background-color: rgb(245, 138, 159);
+        z-index: 0;
+      }
+      #s2 {
+        background-color: teal;
+        top: 80px;
+        z-index: 1;
+      }
+      #s3 {
+        background-color: tomato;
+        top: 150px;
+        z-index: 2;
+      }
+      p {
+        pointer-events: none;
+        color: rgb(240, 195, 201);
+        font-size: 200px;
+        position: fixed;
+        top: -200px;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="s1"></div>
+    <div id="s2"></div>
+    <div id="s3"></div>
+    <p>拖动它们!~</p>
+    <script>
+      let pp = document.querySelector("p")
+      let m = 0,
+        z = 7
+      let ex, ey
+      let [r, b, g] = [240, 195, 201]
+      let sss = ["#s1", "#s2", "#s3"]
+      sss.forEach((n) => {
+        let cur = document.querySelector(n)
+        cur.addEventListener("mousedown", clicked.bind(cur))
+      })
+      function clicked(e) {
+        // 检测是否点到当前元素
+        if (!e.target.id == this) return
+        this.style.zIndex = z
+        z++
+        m = 1
+        ex = e.clientX
+        ey = e.clientY
+        mo = move.bind(this)
+        st = stop.bind(this)
+        // 防止点中元素本身而无法拖动
+        e.preventDefault()
+        // 移动时绑定事件到窗口上,鼠标移出窗口依然生效
+        window.addEventListener("mousemove", mo)
+        window.addEventListener("mouseup", (e) => {
+          m = 0
+          window.removeEventListener("mousemove", mo)
+          window.removeEventListener("mouseup", st)
+        })
+      }
+      // 原理:使用了 元素相对位置, 窗口尺寸, 鼠标相对位置来控制元素
+      // e.getBoundingClientRect() e.clientX window.innerHeight
+      function move(e) {
+        // 鼠标没有按下,停止监听
+        if (e.which === 0 || e.buttons === 0) {
+          stop(e)
+        }
+        if (m === 1) {
+          // 当前元素的相对窗口位置
+          let poss = this.getBoundingClientRect()
+
+          // e.clientY 当前事件的鼠标相对窗口位置
+          // ey 上一个e.clientY
+          // 鼠标移动距离即 e.clientY - ey
+          
+          // 设定了最小边距10px,移动出界时有反弹效果
+
+          // 不能为负,会移出左边和上边
+          let moveTop = e.clientY - ey + poss.y
+          moveTop = moveTop < 0 ? 10 : moveTop
+          let moveLeft = e.clientX - ex + poss.x
+          moveLeft = moveLeft < 0 ? 10 : moveLeft
+
+          // Window.innerHeight 窗口高度
+          // offsetHeight 元素高度
+
+          // 不能移出右边和下边
+          if (moveTop > window.innerHeight - this.offsetHeight) {
+            moveTop = window.innerHeight - this.offsetHeight - 10
+          }
+          if (moveLeft > window.innerWidth - this.offsetWidth) {
+            moveLeft = window.innerWidth - this.offsetWidth - 10
+          }
+          this.style.top = moveTop + "px"
+          this.style.left = moveLeft + "px"
+          // 记录鼠标位置
+          ex = e.clientX
+          ey = e.clientY
+        }
+        // 让字体变色
+        pp.setAttribute("style", "color:rgb(" + r + "," + b + "," + g + ")")
+        r = r < 0 ? 240 : r - 9
+        g = g < 0 ? 195 : g - 8
+        b = b < 0 ? 201 : b - 10
+      }
+
+      // 鼠标相对元素的定位
+      // function mousePos(n) {
+      //   let box = n.getBoundingClientRect()
+      //   return {
+      //     x: window.event.clientX - box.x,
+      //     y: window.event.clientY - box.y,
+      //   }
+      // }
+    </script>
+  </body>
 </html>

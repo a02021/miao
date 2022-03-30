@@ -1,0 +1,1830 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      j* {
+        background-color: rgba(0, 0, 0, 0.08);
+        box-shadow: inset 0 0 1px red;
+      }
+      html {
+        font-size: 1em;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        min-width: 1226px;
+      }
+      @media (min-width: 1226px) {
+        body {
+          width: 100vw;
+        }
+      }
+      .fix-width {
+        width: 1226px;
+        margin: auto;
+      }
+      .header {
+        z-index: 50;
+      }
+      .top {
+        background-color: #333333;
+        height: 40px;
+        margin-bottom: 0;
+        xwidth: 100%;
+        /* relative用于同级z-index比较 */
+        z-index: 30;
+        position: relative;
+      }
+
+      .top-content {
+        z-index: 30;
+        position: relative;
+        color: #b0b0b0;
+        font-size: 75%;
+        height: 40px;
+        line-height: 40px;
+      }
+      .toleft,
+      .toright {
+        display: inline-block;
+        position: absolute;
+      }
+      .toright {
+        right: 0px;
+      }
+      .toleft a,
+      .toright a {
+        display: inline-block;
+        color: #b0b0b0;
+        text-decoration: none;
+      }
+      .toleft a:hover,
+      .toright a:hover {
+        color: white;
+        text-decoration: none;
+      }
+      .separator {
+        color: #424242;
+        margin: 0 0.3em;
+      }
+      .top-qr {
+        position: relative;
+      }
+      .top-qr:hover + a {
+        height: 150px;
+      }
+      .top-qr-show {
+        overflow: hidden;
+        transition: 0.3s ease;
+        display: block;
+        position: absolute;
+        right: 65px;
+        top: 40px;
+        width: 125px;
+        height: 0px;
+        box-shadow: 0 0 10px #b0b0b0;
+        text-align: center;
+        background-color: white;
+        line-height: 0.7em;
+        color: #888585;
+      }
+      .top-qr-show img {
+        margin-top: 17.5px;
+        width: 90px;
+        height: 90px;
+      }
+      .top-qr-show p {
+        line-height: 17.5px;
+        color: #333333;
+      }
+      .shoppingcar {
+        width: 120px;
+        display: inline-block;
+        text-align: center;
+      }
+      .toright .shoppingcar:hover {
+        background-color: white;
+        color: red;
+      }
+      .nav {
+        z-index: 20;
+        background-color: white;
+        height: 100px;
+        margin-top: 0px;
+        position: relative;
+        xtop: 0px;
+      }
+      .nav-content {
+        margin-top: 0;
+        padding-left: calc(50% - 613px);
+        width: 1226px;
+        line-height: 100px;
+        height: 100px;
+        background-color: white;
+      }
+      .logo {
+        display: block;
+        float: left;
+        background: url(pic/logo-mi2.png) no-repeat;
+        background-size: 56px;
+        height: 56px;
+        width: 56px;
+        position: absolute;
+        top: 23px;
+      }
+      .nav-center {
+        cursor: pointer;
+        display: inline-block;
+        margin-left: 234px;
+        font-size: 1em;
+        height: 88px;
+        line-height: 88px;
+        vertical-align: bottom;
+      }
+      .nav-input {
+        display: block;
+        /* 包含块有padding时,用float到width的边缘,而不是定位 */
+        float: right;
+      }
+      .nav-center:hover .nav-a-show + span {
+        height: 229px;
+      }
+      .nav-a-show {
+        cursor: pointer;
+        height: 88px;
+        padding: 0 10px;
+        display: inline-block;
+        line-height: 78px;
+        vertical-align: bottom;
+      }
+      .nav-a-show:hover + span {
+        z-index: 100;
+      }
+      .nav-a-show-content:hover {
+        z-index: 100;
+      }
+      .nav-a-show-content {
+        border-top: 1px solid #e0e0e0;
+        border-bottom: 1px solid #e0e0e0;
+        z-index: -1;
+        overflow: hidden;
+        transition: 1s ease;
+        position: absolute;
+        width: 1226px;
+        height: 0;
+        display: flex;
+        left: 0;
+        right: 0;
+        padding-left: calc(50% - 613px);
+        padding-right: calc(50% - 613px);
+        background-color: white;
+      }
+      .nav-a-show-content a {
+        font-size: 12px;
+        display: block;
+        padding: 39px 0;
+        width: 203.5px;
+        height: 158px;
+        text-align: center;
+        line-height: 5px;
+      }
+      .nav-a-show-content a p:last-child {
+        color: #ff6700;
+      }
+      .nav-a-show-content a ~ span {
+        width: 1px;
+        height:86px;
+        margin-top:50px;
+        vertical-align: middle;
+        background-color: #b0b0b0;
+      }
+      .nav-a-show-content a img {
+        width: 160px;
+        height: 110px;
+      }
+      .homehero {
+        background-color: white;
+        height: 670px;
+      }
+      /* 给子元素menu定位 */
+      .homehero-content {
+        position: relative;
+      }
+      .homeswipper {
+        height: 460px;
+      }
+      .mini-swiper {
+        z-index: 9;
+        background-color: #333;
+        width: 1226px;
+        height: 460px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .mini-swiper input {
+        z-index: 100;
+        position: absolute;
+        right: 100px;
+        bottom: 20px;
+      }
+      .mini-swiper input:nth-child(2) {
+        right: 80px;
+      }
+      .mini-swiper input:nth-child(3) {
+        right: 60px;
+      }
+      .mini-swiper input:nth-child(4) {
+        right: 40px;
+      }
+      .mini-swiper
+        input:nth-child(1):checked
+        ~ .mini-swiper-a
+        .mini-swiper-a-span
+        span:nth-child(1),
+      .mini-swiper
+        input:nth-child(2):checked
+        ~ .mini-swiper-a
+        .mini-swiper-a-span
+        span:nth-child(2),
+      .mini-swiper
+        input:nth-child(3):checked
+        ~ .mini-swiper-a
+        .mini-swiper-a-span
+        span:nth-child(3),
+      .mini-swiper
+        input:nth-child(4):checked
+        ~ .mini-swiper-a
+        .mini-swiper-a-span
+        span:nth-child(4) {
+        margin-left: 0px;
+        z-index: 8;
+        transition: z-index 0s, margin-left 1s;
+      }
+
+      .mini-swiper-a {
+        width: 1226px;
+        height: 460px;
+        position: relative;
+      }
+      .mini-swiper-a-span {
+        overflow: hidden;
+        z-index: 5;
+        position: absolute;
+        width: 306.5px;
+        height: 460px;
+        left: 0;
+        top: 0;
+      }
+      .mini-swiper-a-span:nth-child(2) {
+        left: 306.5px;
+      }
+      .mini-swiper-a-span:nth-child(3) {
+        left: 613px;
+      }
+      .mini-swiper-a-span:nth-child(4) {
+        left: 919.5px;
+      }
+      .mini-swiper-a-span span {
+        transition: z-index 0s, margin-left 0s 1s;
+        z-index: 2;
+        display: block;
+        position: relative;
+        width: 306.5px;
+        height: 460px;
+        margin-left: -306.5px;
+        background-size: 1226px 460px;
+      }
+      .mini-swiper-a-span span a {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 306.5px;
+        height: 460px;
+        opacity: 0;
+      }
+      .mini-swiper-a-span:nth-child(2) span {
+        background-position: -306.5px 0;
+      }
+      .mini-swiper-a-span:nth-child(3) span {
+        background-position: -613px 0;
+      }
+      .mini-swiper-a-span:nth-child(4) span {
+        background-position: -919.5px 0;
+      }
+      .mini-swiper-a-span span:nth-child(1) {
+        background-image: url(pic/homeswipper1.jpg);
+      }
+      .mini-swiper-a-span span:nth-child(2) {
+        margin-top: -460px;
+        background-image: url(pic/homeswipper2.webp);
+      }
+      .mini-swiper-a-span span:nth-child(3) {
+        margin-top: -460px;
+        background-image: url(pic/homeswipper3.webp);
+      }
+      .mini-swiper-a-span span:nth-child(4) {
+        margin-top: -460px;
+        background-image: url(pic/homeswipper4.webp);
+      }
+      .home-menu {
+        z-index: 10;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 234px;
+        background-color: rgba(105, 101, 101, 0.6);
+        height: 460px;
+      }
+      .home-menu ul {
+        padding-top: 0px;
+        margin: 20px 0;
+        padding-left: 0;
+        font-size: 14px;
+        list-style: none;
+      }
+      .home-menu ul li {
+        height: 42px;
+        margin: 0;
+        padding-left: 30px;
+        line-height: 42px;
+      }
+      .home-menu ul li:hover {
+        background-color: #ff6700;
+        cursor: pointer;
+      }
+      .home-menu-li-hover {
+        display: none;
+        height: 458px;
+        width: auto;
+        background-color: white;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        border: 1px solid rgb(216, 216, 216);
+        box-shadow: 0px 0px 20px #b0b0b0;
+      }
+      .home-menu-li-hover span {
+        display: block;
+        height: 76.3px;
+        line-height: 76.3px;
+        width: 248px;
+        overflow: hidden;
+      }
+      .home-menu-li-hover span a img {
+        display: inline-block;
+        vertical-align: middle;
+        height: 40px;
+        width: 40px;
+        padding: 15px;
+      }
+      .home-menu-li-hover span:nth-child(n + 7) {
+        margin-left: 248px;
+      }
+      .home-menu-li-hover span:nth-child(7) {
+        margin-top: -458px;
+      }
+      .home-menu-li-hover span:nth-child(n + 13) {
+        margin-left: 496px;
+      }
+      .home-menu-li-hover span:nth-child(13) {
+        margin-top: -458px;
+      }
+      .home-menu-li-hover span:nth-child(n + 19) {
+        margin-left: 744px;
+      }
+      .home-menu-li-hover span:nth-child(19) {
+        margin-top: -458px;
+      }
+      .home-menu ul li:hover .home-menu-li-hover {
+        display: block;
+      }
+      .home-slim {
+        margin-top: 14px;
+        height: 170px;
+        position: relative;
+      }
+      .home-serve {
+        display: inline-block;
+        width: 234px;
+        height: 170px;
+        background-color: #5f5750;
+        font-size: 0;
+      }
+      .home-serve span {
+        display: inline-block;
+        width: 76px;
+        height: 82px;
+        margin: 0;
+        padding: 0;
+        xline-height: 85px;
+        font-size: 12px;
+        text-align: center;
+        border: 1px solid hsl(28, 8%, 37%, 1);
+        vertical-align: top;
+      }
+      .home-serve span a {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        color: #b0b0b0;
+        text-decoration: none;
+      }
+      .home-serve span a:hover {
+        color: white;
+        text-decoration: none;
+      }
+      .home-serve span a img {
+        width: 24px;
+        height: 24px;
+        margin-top: 21px;
+      }
+      .home-serve span a p {
+        line-height: 0;
+      }
+      .home-list {
+        margin-left: 14px;
+        margin-top: 0;
+        padding: 0;
+        height: 170px;
+        list-style: none;
+        position: absolute;
+        top: 0;
+        left: 234px;
+      }
+      /* 给列表加float水平布局 */
+      .home-list li {
+        float: left;
+      }
+      .home-list li:nth-child(n + 2) {
+        margin-left: 15px;
+      }
+      .home-list-img {
+        height: 170px;
+        width: 316px;
+      }
+      .mainplace {
+        background-color: #f5f5f5;
+        padding-left: calc(50% - 613px);
+        padding-right: calc(50% - 613px);
+        padding-top: 22px;
+        width: 1226px;
+        xheight: 7000px;
+        position: relative;
+      }
+      .main-block-flex {
+        display: flex;
+        width: 1226px;
+        height: 614px;
+        flex-flow: column wrap;
+        justify-content: space-between;
+        align-content: space-between;
+      }
+      .main-block-flex a {
+        display: inline-block;
+        width: 234px;
+        transition: 1s;
+      }
+      .main-block-flex a:hover {
+        box-shadow: 0px 10px 15px rgb(179, 176, 176);
+        transform: translateY(-2px);
+      }
+      .main-block-flex a:first-child {
+        height: 614px;
+        background-color: white;
+      }
+      .main-block-flex a:nth-child(n + 2) {
+        text-align: center;
+        line-height: 0.7em;
+        height: 300px;
+        background-color: white;
+        color: black;
+        text-decoration: none;
+      }
+      .main-block-flex a:first-child img {
+        width: 234px;
+        height: 614px;
+      }
+      .main-block-flex a:nth-child(n + 2) img {
+        width: 160px;
+        height: 160px;
+        margin-top: 20px;
+      }
+      .main-block-flex a:nth-child(n + 2) h3 {
+        font-size: 14px;
+        font-weight: 400;
+        color: #333;
+      }
+      .main-block-flex a:nth-child(n + 2) p {
+        font-size: 12px;
+        color: #b0b0b0;
+      }
+      .main-block-flex a:nth-child(n + 2) .price {
+        font-size: 12px;
+        line-height: 2em;
+        color: #ff6700;
+      }
+      .main-block-flex a:nth-child(n + 2) .price .origin-price {
+        text-decoration: line-through;
+        color: #b0b0b0;
+      }
+      .main-block-title {
+        height: 68px;
+        line-height: 68px;
+      }
+      .main-block-title div {
+        display: inline-block;
+        font-size: 22px;
+        color: #333333;
+      }
+      .main-block-title span {
+        float: right;
+      }
+      .main-block-title span a {
+        color: black;
+        text-decoration: none;
+      }
+      .main-block-title a:hover {
+        color: #ff6700;
+      }
+      .main-block-others .main-block-flex a:nth-child(n + 9) {
+        height: 143px;
+      }
+
+      .footer-service ul li{
+        display: inline-block;
+        color: #333;
+      }
+     .footer-service ul li a,.footer-links dl dd a {
+      color:black;
+      text-decoration: none;
+      }
+      .footer-links {
+        display: flex;
+        height: 172.5px;
+        text-align: center;
+        vertical-align:text-bottom;
+        padding: 20px 0;
+        font-size: 0;
+      }
+      .footer-links dl {
+        font-size: 12px;
+        line-height: 20px;
+        text-align: left;
+        display: inline-block;
+        width:162px;
+        height: 172.5px;
+        padding: 0;
+      }
+      .footer-links dt {
+        line-height: 40px;
+      }
+      .footer-links dl dd {
+        padding: 0;
+        margin:0;
+      }
+
+      .col-contact {
+        font-size: 12px;
+        display: inline-block;
+        width:252px;
+        height:111px;
+      }
+      .footer-service dl dd {
+        padding: 0;
+        margin: 0;
+      }
+      .site-info {
+        background-color: #fafafa;
+        width: 1226px;
+        padding-left: calc(50% - 613px);
+        color: black;
+      }
+      .site-info a {
+        color: black;
+        text-decoration: none;
+        font-size: 12px;
+        text-align: center;
+      }
+      .site-info-flex {
+        display: flex;
+        padding-top: 20px;
+        margin-bottom: 20px;
+      }
+      .info-links a img {
+        height: 28px;
+      }
+      .bottom-logo {
+        width: 56px;
+        height: 56px;
+        background-image: url(pic/logo-mi2.png);
+        background-size: 56px 56px;
+        /* 把文字缩进到无法显示和点击 */
+        text-indent: -9999em;
+        margin-right: 20px;
+      }
+      .bottom-logo-right {
+        line-height: 12px;
+        font-size: 12px;
+      }
+      .bottom-slogan {
+        position: relative;
+        width: 368px;
+        left: 429px;
+        margin: 30px 0;
+        background-image: url(pic/slogan2020.png);
+        background-repeat: no-repeat;
+        /* 把文字缩进到无法显示和点击 */
+        text-indent: -9999em;
+      }
+      .home-tool-bar {
+        z-index: 99999;
+        width: 84px;
+        height: 561px;
+        xbackground-color: #888585;
+        position: fixed;
+        bottom: 70px;
+        right: 0;
+        padding: 1px;
+      }
+      .home-tool-bar a {
+        display: inline-block;
+        width: 82px;
+        height: 90px;
+        text-align: center;
+        color: #333333;
+        background-color: white;
+        text-decoration: none;
+      }
+      .home-tool-bar a:last-child {
+        margin-top: 14px;
+      }
+
+      /* .home-tool-bar-sticky {
+            height:0px;
+            width:0px;
+      margin-top:120vh;
+            float:left;
+              position:sticky;
+            top:calc(100vh - 150px);
+            left:calc(100% - 84px);
+          }
+          .home-tool-bar-sticky a {
+            xposition: absolute;
+            display: block;
+            width:82px;
+            height:90px;
+            background-color: #ff6700;
+            xmargin-top: 14px;
+          } */
+    </style>
+  </head>
+  <body>
+    <div class="app" tabindex="1">
+      <!-- 头部 -->
+      <div class="header">
+        <div class="top">
+          <div class="top-content fix-width">
+            <div class="toleft">
+              <a href="https://www.mi.com/index.html">小米商城</a>
+              <span class="separator">|</span>
+              <a href="https://www.miui.com/">MIUI</a>
+              <span class="separator">|</span>
+              <a href="https://iot.mi.com/">loT</a>
+              <span class="separator">|</span>
+              <a href="https://i.mi.com/">云服务</a>
+              <span class="separator">|</span>
+              <a href="https://airstar.com/home">天星数科</a>
+              <span class="separator">|</span>
+              <a href="https://youpin.mi.com/">有品</a>
+              <span class="separator">|</span>
+              <a href="https://xiaoai.mi.com/">小爱开放平台</a>
+              <span class="separator">|</span>
+              <a href="https://qiye.mi.com/">企业团购</a>
+              <span class="separator">|</span>
+              <a href="https://www.mi.com/aptitude/list/?id=88">资质证照</a>
+              <span class="separator">|</span>
+              <a href="https://www.mi.com/aptitude/list/">协议规则</a>
+              <span class="separator">|</span>
+              <a class="top-qr" href="https://www.mi.com/appdownload/"
+                >下载app
+                <a class="top-qr-show" href="#"
+                  ><img src="pic/download.png" />
+                  <p>小米商城app</p></a
+                >
+              </a>
+              <span class="separator">|</span>
+              <a href="javascript:;">Select Location</a>
+            </div>
+            <div class="toright">
+              <a>登录</a>
+              <span class="separator">|</span>
+              <a>注册</a>
+              <span class="separator">|</span>
+              <a>消息通知</a>
+              <a class="shoppingcar">购物车 (0)</a>
+            </div>
+          </div>
+        </div>
+        <div class="nav">
+          <div class="nav-content">
+            <a class="logo"></a>
+            <div class="nav-center">
+              <a class="nav-a-show">Xiaomi手机</a
+              ><span class="nav-a-show-content"> <p>sf</p> </span
+              ><a class="nav-a-show">Redmi 红米</a
+              ><span class="nav-a-show-content"> <p>bnnbn</p> </span
+              ><a class="nav-a-show">电视</a
+              ><span class="nav-a-show-content"> <p>nnmnmm</p> </span
+              ><a class="nav-a-show">笔记本</a
+              ><span class="nav-a-show-content">
+                <a>
+                  <img src="pic/nav-book-1.webp" />
+                  <p>RedmiBook Pro 14 增强版</p>
+                  <p>4999元起</p>
+                </a>
+                <span></span>
+                <a>
+                  <img src="pic/nav-book-2.webp" />
+                  <p>小米笔记本 Pro 14 锐龙版</p>
+                  <p>5499元起</p></a
+                ><span></span>
+                <a>
+                  <img src="pic/nav-book-3.webp" />
+                  <p>RedmiBook Pro 15 增强版</p>
+                  <p>5299元起</p></a
+                ><span></span>
+                <a
+                  ><img src="pic/nav-book-4.webp" />
+                  <p>小米笔记本Pro X 14</p>
+                  <p>7499元</p></a
+                ><span></span>
+                <a>
+                  <img src="pic/nav-book-5.webp" />
+                  <p>Redmi G 2021 Intel版</p>
+                  <p>5499元</p></a
+                ><span></span>
+                <a><img src="pic/nav-book-6.webp" />
+                  <p>Redmi G 2021 AMD版</p>
+                  <p>6999元</p></a
+                > </span
+              ><a class="nav-a-show">平板</a
+              ><span class="nav-a-show-content"> <p>mmmmmmmmmmmmm</p> </span
+              ><a class="nav-a-show">家电</a
+              ><span class="nav-a-show-content"> <p>hhhhhhhhh</p> </span
+              ><a class="nav-a-show">路由器</a
+              ><span class="nav-a-show-content"> <p>hhhhhhhhhhhhhhhh</p> </span>
+            </div>
+            <a class="nav-a-show">服务</a><a class="nav-a-show">社区</a>
+
+            <div class="nav-input">
+              <input value="洗衣机" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 核心展示区 -->
+      <div class="homehero">
+        <div class="homehero-content fix-width">
+          <!-- 轮播图 -->
+          <div class="homeswipper">
+            <section class="mini-swiper">
+              <input type="radio" name="a" checked />
+              <input type="radio" name="a" />
+              <input type="radio" name="a" />
+              <input type="radio" name="a" />
+              <div class="mini-swiper-a">
+                <div class="mini-swiper-a-span">
+                  <span><a href="#1"></a></span>
+                  <span><a href="#2"></a></span>
+                  <span><a href="#3"></a></span>
+                  <span><a href="#4"></a></span>
+                </div>
+                <div class="mini-swiper-a-span">
+                  <span><a href="#1"></a></span>
+                  <span><a href="#2"></a></span>
+                  <span><a href="#3"></a></span>
+                  <span><a href="#4"></a></span>
+                </div>
+                <div class="mini-swiper-a-span">
+                  <span><a href="#1"></a></span>
+                  <span><a href="#2"></a></span>
+                  <span><a href="#3"></a></span>
+                  <span><a href="#4"></a></span>
+                </div>
+                <div class="mini-swiper-a-span">
+                  <span><a href="#1"></a></span>
+                  <span><a href="#2"></a></span>
+                  <span><a href="#3"></a></span>
+                  <span><a href="#4"></a></span>
+                </div>
+              </div>
+            </section>
+          </div>
+          <!-- 左侧垂直列表菜单 -->
+          <section class="home-menu">
+            <ul>
+              <li>
+                手机
+                <div class="home-menu-li-hover">
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-1.webp" />Redmi K50 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-2.webp" />Redmi K50</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-3.webp" />Redmi K40S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-4.webp" />Redmi K50 电竞版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-5.webp" />Xiaomi 12 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-6.webp" />Xiaomi 12</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-7.webp" />Xiaomi 12X</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-8.webp" />Xiaomi 11
+                      青春活力版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-9.webp" />Note 11 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-10.webp" />Note 11 4G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-11.webp" />Note 11 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-12.webp" />Redmi K40</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-13.webp" />Xiaomi Civi</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-14.webp" />Xiaomi MIX 4</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-15.webp" />Xiaomi MIX FOLD</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-16.webp" />Xiaomi 11 Ultra</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-17.webp" />Xiaomi 11 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-18.webp" />Xiaomi 11</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-19.webp" />Xiaomi 10S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-20.webp" />K40 游戏增强版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-21.webp" />K40 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-22.webp" />Note 10 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-23.webp" />Note 10 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-24.webp" />Redmi 9A</a
+                    ></span
+                  >
+                </div>
+              </li>
+              <li>
+                电视
+                <div class="home-menu-li-hover"></div>
+              </li>
+              <li>
+                笔记本 平板
+                <div class="home-menu-li-hover">
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-1.webp" />Redmi K50 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-2.webp" />Redmi K50</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-3.webp" />Redmi K40S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-4.webp" />Redmi K50 电竞版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-5.webp" />Xiaomi 12 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-6.webp" />Xiaomi 12</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-7.webp" />Xiaomi 12X</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-8.webp" />Xiaomi 11
+                      青春活力版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-9.webp" />Note 11 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-10.webp" />Note 11 4G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-11.webp" />Note 11 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-12.webp" />Redmi K40</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-13.webp" />Xiaomi Civi</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-14.webp" />Xiaomi MIX 4</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-15.webp" />Xiaomi MIX FOLD</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-16.webp" />Xiaomi 11 Ultra</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-17.webp" />Xiaomi 11 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-18.webp" />Xiaomi 11</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-19.webp" />Xiaomi 10S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-20.webp" />K40 游戏增强版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-21.webp" />K40 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-22.webp" />Note 10 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-23.webp" />Note 10 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-24.webp" />Redmi 9A</a
+                    ></span
+                  >
+                </div>
+              </li>
+              <li>家电</li>
+              <li>
+                出行 穿戴
+                <div class="home-menu-li-hover">
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-1.webp" />Redmi K50 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-2.webp" />Redmi K50</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-3.webp" />Redmi K40S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-4.webp" />Redmi K50 电竞版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-5.webp" />Xiaomi 12 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-6.webp" />Xiaomi 12</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-7.webp" />Xiaomi 12X</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-8.webp" />Xiaomi 11
+                      青春活力版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-9.webp" />Note 11 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-10.webp" />Note 11 4G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-11.webp" />Note 11 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-12.webp" />Redmi K40</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-13.webp" />Xiaomi Civi</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-14.webp" />Xiaomi MIX 4</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-15.webp" />Xiaomi MIX FOLD</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-16.webp" />Xiaomi 11 Ultra</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-17.webp" />Xiaomi 11 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-18.webp" />Xiaomi 11</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-19.webp" />Xiaomi 10S</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-20.webp" />K40 游戏增强版</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-21.webp" />K40 Pro 系列</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-22.webp" />Note 10 5G</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-23.webp" />Note 10 Pro</a
+                    ></span
+                  >
+                  <span
+                    ><a hrf="#"
+                      ><img src="pic/home-li-phone-24.webp" />Redmi 9A</a
+                    ></span
+                  >
+                </div>
+              </li>
+              <li>智能 路由器</li>
+              <li>电源 配件</li>
+              <li>健康 儿童</li>
+              <li>耳机 音箱</li>
+              <li>生活 箱包</li>
+            </ul>
+          </section>
+          <!-- 展示区下方内容 -->
+          <div class="home-slim">
+            <div class="home-serve">
+              <span
+                ><a
+                  href="https://api.jr.mi.com/activity/scene/scenePCsearch.html?from=search"
+                  ><img src="pic/home-serve1.png" />
+                  <p>保障服务</p></a
+                ></span
+              >
+              <span
+                ><a href="#"
+                  ><img src="pic/home-serve2.png" />
+                  <p>企业团购</p></a
+                ></span
+              >
+              <span
+                ><a href="#"
+                  ><img src="pic/home-serve3.png" />
+                  <p>F码通道</p></a
+                ></span
+              >
+              <span
+                ><a href="#"
+                  ><img src="pic/home-serve4.png" />
+                  <p>米粉卡</p></a
+                ></span
+              >
+              <span
+                ><a href="#"
+                  ><img src="pic/home-serve5.png" />
+                  <p>以旧换新</p></a
+                ></span
+              >
+              <span
+                ><a href="#"
+                  ><img src="pic/home-serve6.png" />
+                  <p>话费充值</p></a
+                ></span
+              >
+            </div>
+            <ul class="home-list">
+              <li><img class="home-list-img" src="pic/home-list2.jpg" /></li>
+              <li><img class="home-list-img" src="pic/home-list1.jpg" /></li>
+              <li><img class="home-list-img" src="pic/home-list3.jpg" /></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- 主要内容 -->
+      <div class="mainplace">
+        <div class="main-topshow">
+          <a href="https://www.mi.com/redmik40s">
+            <img src="pic/main-topshow.webp" />
+          </a>
+          <section class="main-block">
+            <section class="main-block-title">
+              <div>手机</div>
+              <span><a>更多</a></span>
+            </section>
+            <section class="main-block-flex">
+              <a href="#"><img src="pic/main-block-1-1.webp" /></a>
+              <a href="#"
+                ><img src="pic/main-block-1-2.webp" />
+                <h3>Redmi K50 Pro</h3>
+                <p>2k直屏的狠旗舰</p>
+                <p class="price">2999元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-3.webp" />
+                <h3>Xiaomi 12 pro</h3>
+                <p>全新骁龙8 | 2K AMOLED屏幕</p>
+                <p class="price">4699元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-4.webp" />
+                <h3>Redmi K50</h3>
+                <p>2k直屏的狠旗舰</p>
+                <p class="price">2399元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-5.webp" />
+                <h3>Xiaomi 12</h3>
+                <p>全新骁龙8 | 5000万主摄</p>
+                <p class="price">3699元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-6.webp" />
+                <h3>Redmi K40S</h3>
+                <p>口碑真旗舰</p>
+                <p class="price">1799元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-7.webp" />
+                <h3>Xiaomi 12X</h3>
+                <p>骁龙870 | 5000万主摄</p>
+                <p class="price">2999元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-8.webp" />
+                <h3>Redmi K50电竞版</h3>
+                <p>全线拉满的冷血旗舰</p>
+                <p class="price">3299元起</p></a
+              >
+              <a href="#"
+                ><img src="pic/main-block-1-9.webp" />
+                <h3>Xiaomi 11 青春活力版</h3>
+                <p>轻薄5G, 内外皆出彩</p>
+                <p class="price">
+                  1899元起 <span class="origin-price">1999元</span>
+                </p></a
+              >
+            </section>
+          </section>
+          <section class="main-block-others">
+            <section class="main-block-title">
+              <div>智能穿戴</div>
+              <span><a>热门</a> <a>穿戴</a></span>
+            </section>
+            <section class="main-block-flex">
+              <a>1</a> <a>1</a> <a>1</a> <a>1</a> <a>1</a> <a>1</a><a>1</a>
+              <a>1</a> <a>1</a> <a>1</a>
+            </section>
+          </section>
+        </div>
+      </div>
+      <!-- 页脚 -->
+      <div class="footer">
+        <div class="site-footer fix-width">
+          <div class="container">
+            <div class="footer-service">
+              <ul class="list-service clearfix">
+                <li>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/quick-repair"
+                    target="_blank"
+                    ><em class="iconfont-tool"></em>预约维修服务</a
+                  >
+                </li>
+                <li>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/exchange#back"
+                    target="_blank"
+                    ><em class="iconfont-circle-7"></em>7天无理由退货</a
+                  >
+                </li>
+                <li>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/exchange#back"
+                    target="_blank"
+                    ><em class="iconfont-circle-15"></em>15天免费换货</a
+                  >
+                </li>
+                <li>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/buy/Postal%20policy"
+                    target="_blank"
+                    ><em class="iconfont-gift"></em
+                    ><span id="J_footerPrice">满69包邮</span></a
+                  >
+                </li>
+                <li>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/sitelist"
+                    target="_blank"
+                    ><em class="iconfont-location"></em>520余家售后网点</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="footer-links clearfix">
+              <dl class="col-links col-links-first">
+                <dt>帮助中心</dt>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/account/Account%20registration/"
+                    target="_blank"
+                    >账户管理</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/buy/SalesTime/"
+                    target="_blank"
+                    >购物指南</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/order/sendprogress/"
+                    target="_blank"
+                    >订单操作</a
+                  >
+                </dd>
+              </dl>
+              <dl class="col-links">
+                <dt>服务支持</dt>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/exchange"
+                    target="_blank"
+                    >售后政策</a
+                  >
+                </dd>
+                <dd>
+                  <a rel="nofollow" href="//www.mi.com/service/" target="_blank"
+                    >自助服务</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/download/"
+                    target="_blank"
+                    >相关下载</a
+                  >
+                </dd>
+              </dl>
+              <dl class="col-links">
+                <dt>线下门店</dt>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/mihome/list"
+                    target="_blank"
+                    >小米之家</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/sitelist"
+                    target="_blank"
+                    >服务网点</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/family-location"
+                    target="_blank"
+                    >授权体验店/专区</a
+                  >
+                </dd>
+              </dl>
+              <dl class="col-links">
+                <dt>关于小米</dt>
+                <dd>
+                  <a rel="nofollow" href="//www.mi.com/about/" target="_blank"
+                    >了解小米</a
+                  >
+                </dd>
+                <dd>
+                  <a rel="nofollow" href="//hr.xiaomi.com/" target="_blank"
+                    >加入小米</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//company.mi.com/zh-cn/ir/indexContent/index.html"
+                    target="_blank"
+                    >投资者关系</a
+                  >
+                </dd>
+                <dd>
+                  <a rel="nofollow" href="//www.mi.com/csr/" target="_blank"
+                    >企业社会责任</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/integrity"
+                    target="_blank"
+                    >廉洁举报</a
+                  >
+                </dd>
+              </dl>
+              <dl class="col-links">
+                <dt>关注我们</dt>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//weibo.com/xiaomishangcheng"
+                    target="_blank"
+                    >新浪微博</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="javascript:void(0);"
+                    id="J_siteWeixinCode"
+                    >官方微信</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/about/contact/"
+                    target="_blank"
+                    >联系我们</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/foundation/index"
+                    target="_blank"
+                    >公益基金会</a
+                  >
+                </dd>
+              </dl>
+              <dl class="col-links">
+                <dt>特色服务</dt>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/order/fcode"
+                    target="_blank"
+                    >F 码通道</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/order/giftcode"
+                    target="_blank"
+                    >礼物码</a
+                  >
+                </dd>
+                <dd>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/service/imei"
+                    target="_blank"
+                    >防伪查询</a
+                  >
+                </dd>
+              </dl>
+              <div class="col-contact">
+                <p class="phone">400-100-5678</p>
+                <p>8:00-18:00（仅收市话费）</p>
+                <a
+                  rel="nofollow"
+                  class="btn btn-line-primary btn-small J_contactBtn"
+                  ><em class="iconfont-message2"></em> 人工客服
+                </a>
+                <div class="follow">
+                  关注小米：<a
+                    href="https://weibo.com/xiaomishangcheng"
+                    target="_blank"
+                    class="wb"
+                  ></a
+                  ><a href="javascript:void(0);" id="J_followWx" class="wx"></a>
+                  <img
+                    src="//cdn.cnbj1.fds.api.mi-img.com/staticsfile/global/wx-img.png"
+                    id="J_followWxImg"
+                    style="display: none"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="site-info">
+          <div class="site-info-flex">
+            <div class="bottom-logo">小米官网</div>
+            <div class="bottom-logo-right">
+              <div class="info-text">
+                <p class="sites">
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/index.html"
+                    target="_blank"
+                    >小米商城</a
+                  >
+                  <span class="sep">|</span>
+                  <a rel="nofollow" href="//www.miui.com/" target="_blank"
+                    >MIUI</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//home.mi.com/index.html"
+                    target="_blank"
+                    >米家</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="http://www.miliao.com/"
+                    target="_blank"
+                    >米聊</a
+                  >
+                  <span class="sep">|</span>
+                  <a rel="nofollow" href="//www.duokan.com/" target="_blank"
+                    >多看</a
+                  >
+                  <span class="sep">|</span>
+                  <a rel="nofollow" href="//game.xiaomi.com/" target="_blank"
+                    >游戏</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//b.mi.com/?client_id=180100031058&amp;masid=17409.0358"
+                    target="_blank"
+                    >政企服务</a
+                  >
+                  <span class="sep">|</span>
+                  <a rel="nofollow" href="//xiaomi.tmall.com/" target="_blank"
+                    >小米天猫店</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//privacy.mi.com/all/zh_CN/"
+                    target="_blank"
+                    >小米集团隐私政策</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/f516fe9e2c01.html"
+                    target="_blank"
+                    >小米公司儿童信息保护规则</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//m.mi.com/support/module?id=63&amp;headless=1"
+                    target="_blank"
+                    >小米商城隐私政策</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//www.mi.com/aptitude/list?id=62"
+                    target="_blank"
+                    >小米商城用户协议</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="//static.mi.com/feedback/"
+                    target="_blank"
+                    >问题反馈</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="javascript:void(0);"
+                    class="J_siteGlobalRegion"
+                    >Select Location</a
+                  >
+                </p>
+                <p class="sites">
+                  <a
+                    rel="nofollow"
+                    href="http://www.mi.com/beihu"
+                    target="_blank"
+                    >北京互联网法院法律服务工作站</a
+                  >
+                  <span class="sep">|</span>
+                  <a
+                    rel="nofollow"
+                    href="http://www.cca.org.cn/"
+                    target="_blank"
+                    >中国消费者协会</a
+                  >
+                  <span class="sep">|</span>
+                  <a rel="nofollow" href="http://www.bj315.org/" target="_blank"
+                    >北京市消费者协会</a
+                  >
+                </p>
+                <p>
+                  ©
+                  <a href="javascript:;" target="_blank" title="mi.com"
+                    >mi.com</a
+                  >
+                  京ICP证110507号
+                  <a
+                    href="http://beian.miit.gov.cn/"
+                    target="_blank"
+                    rel="nofollow"
+                    >京ICP备10046444号</a
+                  >
+                  <a
+                    rel="nofollow"
+                    href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802020134"
+                    target="_blank"
+                    >京公网安备11010802020134号</a
+                  >
+                  <a href="//www.mi.com/culture-license/" target="_blank"
+                    >京网文[2020]0276-042号</a
+                  >
+                  <br />
+                  <a href="//www.mi.com/medical/record/" target="_blank"
+                    >（京）网械平台备字（2018）第00005号</a
+                  >
+                  <a href="//www.mi.com/medical/qualification/" target="_blank"
+                    >互联网药品信息服务资格证 (京)-非经营性-2014-0090</a
+                  >
+                  <a href="//www.mi.com/business-license/" target="_blank"
+                    >营业执照</a
+                  >
+                  <a href="//www.mi.com/medical/list/" target="_blank"
+                    >医疗器械质量公告</a
+                  >
+                  <br />
+                  <a
+                    href="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/e0c7d4cf3b7cd88de10196e30c92e020.png"
+                    target="_blank"
+                    >增值电信业务许可证</a
+                  >&nbsp;网络食品经营备案 京食药网食备202010048 &nbsp;
+                  <a
+                    href="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c6859168166651511897f54fa1047fe3.png"
+                    target="_blank"
+                    >食品经营许可证</a
+                  >
+                  <br />
+                  违法和不良信息举报电话：171-5104-4404&nbsp;<a
+                    href="https://www.mi.com/intellectual"
+                    target="_blank"
+                    >知识产权侵权投诉</a
+                  >&nbsp;本网站所列数据，除特殊说明，所有数据均出自我司实验室测试
+                </p>
+              </div>
+              <div class="info-links">
+                <a
+                  rel="nofollow"
+                  href="//privacy.truste.com/privacy-seal/validation?rid=4fc28a8c-6822-4980-9c4b-9fdc69b94eb8&amp;lang=zh-cn"
+                  target="_blank"
+                  ><img
+                    rel="nofollow"
+                    src="//i1.mifile.cn/f/i/17/site/truste.png"
+                    alt="TRUSTe Privacy Certification"
+                /></a>
+                <a
+                  rel="nofollow"
+                  href="//search.szfw.org/cert/l/CX20120926001783002010"
+                  target="_blank"
+                  ><img
+                    rel="nofollow"
+                    src="//s01.mifile.cn/i/v-logo-2.png"
+                    alt="诚信网站"
+                /></a>
+                <a
+                  id="_xinchacharenzheng_cert_vip_kexinweb"
+                  rel="nofollow"
+                  href="//xyt.xinchacha.com/pcinfo?sn=523009637759455232&amp;certType=6"
+                  target="_blank"
+                  ><img
+                    rel="nofollow"
+                    src="//xyt.xinchacha.com/img/icon/icon3.png"
+                    alt="可信网站"
+                /></a>
+                <a
+                  rel="nofollow"
+                  href="//www.mi.com/service/buy/commitment/"
+                  target="_blank"
+                  ><img
+                    rel="nofollow"
+                    src="//i8.mifile.cn/b2c-mimall-media/ba10428a4f9495ac310fd0b5e0cf8370.png"
+                    alt="诚信经营 放心消费" /></a
+                ><a
+                  rel="nofollow"
+                  href="https://webcert.cnmstl.net/cert/grade?sn=3af21034e35011eab3ea00163e068ceb"
+                  class="safe-auth J_safeAuth active"
+                  ><img
+                    rel="nofollow"
+                    src="https://cnbj1.fds.api.xiaomi.com/b2c-misite-activity/f1ee261b96ae71e845efba398efeca02.png"
+                    class="img1" /><img
+                    rel="nofollow"
+                    src="https://cnbj1.fds.api.xiaomi.com/b2c-misite-activity/88542014523eb4a6ec12df18df787c7c.png"
+                    class="img2"
+                /></a>
+              </div>
+            </div>
+          </div>
+          <div class="bottom-slogan">探索黑科技，小米为发烧而生</div>
+        </div>
+      </div>
+      <!-- 侧面固定工具栏 -->
+      <div class="home-tool-bar">
+        <a href="#">手机APP</a>
+        <a href="#">个人中心</a>
+        <a href="#">售后服务</a>
+        <a href="#">人工客服</a>
+        <a href="#">购物车</a>
+        <a href="#">回到顶部</a>
+      </div>
+      <!-- <div class="home-tool-bar-sticky">
+        <a href="#">回到顶部</a>
+      </div> -->
+    </div>
+  </body>
+</html>

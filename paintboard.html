@@ -194,6 +194,8 @@
         if (e.target.classList[0] == "resize") {
           curTool = tool
           tool = "resize"
+        } else {
+          curTool = tool
         }
         if (tool == "line") {
           // 方法1:将每笔放进g元素里面,方便删除

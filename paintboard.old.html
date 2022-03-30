@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      background-color: slateblue;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 666px;
+      border-color: rgb(248, 239, 237);
+      color: magenta;
+      background-color: rgb(247, 164, 191);
+      position: absolute;
+    }
+    svg {
+      background-color: aliceblue;
+      color: crimson;
+    }
+
+    
+    p {
+      display: inline;
+      color:antiquewhite;
+    }
+    input {
+      display: inline;
+      width: 180px;
+    }
+  </style>
+</head>
+<body>
+  <!-- <p class="dot">点</p> -->
+  <br><br>
+  <p>Color</p>
+  <input type="color" value="#FF5599" id="colorInput">
+  <p>Line</p>
+  <input type="range" min="1" max="10" value="3" id="widthInput">
+  <span class="line-width-value"></span>
+  <br> 
+
+  <p>tools </p>
+  <button onclick=" tool='line' ">Z</button>
+  <button onclick=" tool='circle' ">O</button>
+  <br><br>
+
+  <svg width="500" height="500" viewbox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://wwww.w3.org/1999/xlink"></svg>
+  <br>
+  <p>ctrl + z 撤销笔画</p>
+  <button onclick="save()"> 保存(⊙o⊙)？ </button>
+
+  <script>
+    //SVG文档!!!
+    //https://developer.mozilla.org/zh-CN/docs/Web/SVG
+    let svg = document.querySelector('svg')
+    let lastpos = null
+    let count = 0
+    //svg元素
+    let g,polyline,ellipse,points,startPos
+    let tool = 'line'
+    document.addEventListener('mousedown',function(e) { 
+      tools()
+      document.addEventListener('mousemove',drawDotSvg)
+      document.addEventListener('mouseup',once)
+    })
+    function once() {
+        //重置坐标 防止下次连线
+        lastpos = null
+        document.removeEventListener('mousemove',drawDotSvg)
+        document.removeEventListener('mouseup',once)
+    }
+
+    function tools() {
+      if (tool == 'line') {
+      // 方法1:将每笔放进g元素里面,方便删除
+      // g = document.createElementNS("http://www.w3.org/2000/svg", 'g')
+      // svg.append(g)
+        // 方法2:将笔画放进polyline 减少空间占用
+        polyline = document.createElementNS("http://www.w3.org/2000/svg",'polyline')
+        polyline.setAttribute('fill','none')
+        polyline.setAttribute('stroke', colorInput.value)
+        polyline.setAttribute('stroke-width', widthInput.value)
+        polyline.setAttribute('stroke-linecap', 'round')
+        polyline.setAttribute('stroke-linejoin', 'round')
+        svg.append(polyline)
+        let pos = mousePos(svg)
+        points = `${pos.x} ${pos.y} `
+        polyline.setAttribute('points', points)
+      }
+      if (tool == 'circle') {
+        ellipse = document.createElementNS("http://www.w3.org/2000/svg",'ellipse')
+        ellipse.setAttribute('stroke', colorInput.value)
+        ellipse.setAttribute('stroke-width',widthInput.value)
+        ellipse.setAttribute('fill', 'none')
+        svg.append(ellipse)
+        startPos = mousePos(svg)
+      }
+    }
+    let colorInput = document.querySelector('#colorInput')
+    let widthInput = document.querySelector('#widthInput') 
+    let widthSpan = document.querySelector('.line-width-value')
+    //change必须松开鼠标后触发
+    //input 随时触发
+    widthInput.addEventListener('input', e => {
+      widthSpan.textContent =widthInput.value
+    })
+    // ctrl + z 撤销笔画
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key == 'z') {
+        svg.removeChild(svg.lastElementChild)
+      }
+    })
+
+  function drawDotSvg(e) {
+    if (tool == 'line') {
+      let pos = mousePos(svg)
+      points += `${pos.x} ${pos.y} `
+      polyline.setAttribute('points', points)
+    }
+    if (tool == 'circle') {
+      let currPos = mousePos(svg)
+          let cx = (startPos.x + currPos.x) /2
+          let cy = (startPos.y + currPos.y) /2
+          ellipse.setAttribute('cx', cx)
+          ellipse.setAttribute('cy', cy)
+          let rx = Math.abs(startPos.x - currPos.x) /2
+          let ry = Math.abs(startPos.y - currPos.y) /2
+          ellipse.setAttribute('rx', rx)
+          ellipse.setAttribute('ry', ry)
+    }
+  }
+  function mousePos(node) {
+    // svg 函数
+    let box = node.getBoundingClientRect()
+    return {
+      x: window.event.clientX - box.x,
+      y: window.event.clientY - box.y,
+    }
+  }
+  function save() {
+    let svgSource = svg.outerHTML
+    let blob = new Blob([svgSource], {type: 'image/xml+svg'})
+    let url = URL.createObjectURL(blob)
+    let anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = 'xxxx.svg'
+    anchor.click()
+    // el.focus() el.blur()
+  }
+
+  function drawDot(e) {
+    let dot = document.createElement('span')
+        dot.classList.add('dot')
+        dot.style.left = e.pageX -8+ 'px'
+        dot.style.top = e.pageY -8+ 'px'
+        document.body.appendChild(dot)
+  }
+  // function drawDotSvg(e) {
+    // let line = document.createElementNS("http://www.w3.org/2000/svg",'line')
+    // if (lastpos == null) {
+    //   console.log('pos',pos,pos.x,pos.y)
+    //   line.setAttribute('x1', pos.x)
+    //   line.setAttribute('y1', pos.y)
+    // } else {
+    //   line.setAttribute('x1', lastpos.x)
+    //   line.setAttribute('y1', lastpos.y)
+    // }
+    // 每笔标记(计数)
+    // line.setAttribute('data-count', count)
+    // line.setAttribute('x2', pos.x)
+    // line.setAttribute('y2', pos.y)
+    // line.setAttribute('stroke', colorInput.value)
+    // line.setAttribute('stroke-width', widthInput.value)
+    // line.setAttribute('stroke-linecap', 'round')
+    // line.setAttribute('stroke-linejoin', 'round')
+    // lastpos = pos
+    // g.append(line)
+    // }
+
+        // document.addEventListener('keydown', function(e) {
+    //   if (e.ctrlKey && e.key == 'z') {
+    //     if (svg.lastElementChild) {
+    //       let count = svg.lastElementChild.dataset.count
+    //       while (svg.lastElementChild && 
+    //              svg.lastElementChild.dataset.count == count) {
+    //         svg.removeChild(svg.lastElementChild)
+    //       }
+    //     }
+    //   }
+    // })
+  </script>
+</body>
+</html>

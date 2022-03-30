@@ -50,7 +50,7 @@
       let pp = document.querySelector("p")
       let m = 0,
         z = 7
-      let ex, ey
+      let ex, ey, mo, st
       let [r, b, g] = [240, 195, 201]
       let sss = ["#s1", "#s2", "#s3"]
       sss.forEach((n) => {
@@ -71,11 +71,12 @@
         e.preventDefault()
         // 移动时绑定事件到窗口上,鼠标移出窗口依然生效
         window.addEventListener("mousemove", mo)
-        window.addEventListener("mouseup", (e) => {
-          m = 0
-          window.removeEventListener("mousemove", mo)
-          window.removeEventListener("mouseup", st)
-        })
+        window.addEventListener("mouseup", st)
+      }
+      function stop(e) {
+        m = 0
+        window.removeEventListener("mousemove", mo)
+        window.removeEventListener("mouseup", st)
       }
       // 原理:使用了 元素相对位置, 窗口尺寸, 鼠标相对位置来控制元素
       // e.getBoundingClientRect() e.clientX window.innerHeight
@@ -91,7 +92,7 @@
           // e.clientY 当前事件的鼠标相对窗口位置
           // ey 上一个e.clientY
           // 鼠标移动距离即 e.clientY - ey
-          
+
           // 设定了最小边距10px,移动出界时有反弹效果
 
           // 不能为负,会移出左边和上边

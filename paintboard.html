@@ -17,7 +17,7 @@
         height: 100px;
         display: flex;
         text-align: center;
-        min-width: 755px;
+        min-width: 785px;
         xline-height: 16px;
         xvertical-align: text-bottom;
       }
@@ -86,8 +86,7 @@
         width: 30px;
       }
       .save button {
-        background-color: ;
-        width:30px;
+        width: 30px;
       }
       .resize {
         padding: 0;
@@ -100,13 +99,13 @@
         position: absolute;
       }
       #colorInput {
-        height:50px;
-        width:50px;
+        height: 50px;
+        width: 50px;
         vertical-align: top;
       }
       .prev-color {
         display: inline-block;
-        width:280px;
+        width: 280px;
       }
       .hidden-color {
         position: absolute;
@@ -117,12 +116,15 @@
         display: inline-block;
         border: 1px solid silver;
         border-radius: 99px;
-        width:20px;
-        height:20px;
+        width: 20px;
+        height: 20px;
         margin: 2px;
       }
       .color input[type="checkbox"]:checked + .mark::before {
         background-color: #ffffff;
+      }
+      .undo {
+        width: 30px;
       }
     </style>
   </head>
@@ -152,8 +154,11 @@
       <div class="option color">
         <input type="color" value="#FF5599" id="colorInput" />
         <div class="prev-color">
-        <input type="radio" class="hidden-color" id="radio-color-1" onclick=" colorInput.value = '#666666'" "><label class="mark" for="radio-color-1"></label>
-
+          <input type="radio" class="hidden-color" id="radio-color-1" onclick="
+          colorInput.value = '#666666'" "><label
+            class="mark"
+            for="radio-color-1"
+          ></label>
         </div>
         <p>颜色</p>
       </div>
@@ -173,7 +178,7 @@
         <div class="resize"></div>
       </div>
     </div>
-    <div class="footer"><p>ctrl + z 撤销笔画</p></div>
+    <div class="footer"><p>Ctrl + Z 撤销 Ctrl + Y 恢复</p></div>
 
     <script>
       //SVG文档
@@ -191,27 +196,60 @@
       let widthdiv = document.querySelector(".line-width-value")
       let resize = document.querySelector(".resize")
       let curTool = "line"
+
       // 预设自定义颜色
-      let preColor = ['#000000','#7f7f7f','#880015','#ed1c24','#ff7f27','#fff200','#22b14c','#00a2e8','#3f48cc','#a349a4','#ffffff','#c3c3c3','#b97a57','#ffaec9','#ffc90e','#efe4b0','#b5e61d','#99d9ea','#7092be','#c8bfe7']
-      let preColorDiv = document.querySelector('.prev-color')
-      let newHTML = ''
-      preColor.forEach((color,idx) => {
+      let preColor = [
+        "#000000",
+        "#7f7f7f",
+        "#880015",
+        "#ed1c24",
+        "#ff7f27",
+        "#fff200",
+        "#22b14c",
+        "#00a2e8",
+        "#3f48cc",
+        "#a349a4",
+        "#ffffff",
+        "#c3c3c3",
+        "#b97a57",
+        "#ffaec9",
+        "#ffc90e",
+        "#efe4b0",
+        "#b5e61d",
+        "#99d9ea",
+        "#7092be",
+        "#c8bfe7",
+      ]
+      let preColorDiv = document.querySelector(".prev-color")
+      let newHTML = ""
+      preColor.forEach((color, idx) => {
         newHTML += `<input type="radio" class="hidden-color" id="radio-color-${idx}" onclick=" colorInput.value = '${color}'" "><label class="mark" for="radio-color-${idx}" style="background-color: ${color}"></label>`
       })
       preColorDiv.innerHTML = newHTML
+
       //input 事件随时触发 显示画笔大小数值
       widthInput.addEventListener("input", (e) => {
         widthdiv.textContent = widthInput.value
       })
       // ctrl + z 撤销笔画
+      // ctrl + y 恢复笔画
+      let undoList = []
+
       document.addEventListener("keydown", (e) => {
-        if (e.ctrlKey && e.key == "z") {
+        if (e.ctrlKey && e.key == "z" && svg.childElementCount > 0) {
+          undoList.push(svg.lastElementChild)
           svg.removeChild(svg.lastElementChild)
         }
       })
+      document.addEventListener("keydown", (e) => {
+        if (e.ctrlKey && e.key == "y" && undoList.length > 0) {
+          svg.append(undoList.pop())
+        }
+      })
+
+      // 监听点击
       document.addEventListener("mousedown", (e) => {
         tools(e)
-
         document.addEventListener("mousemove", drawDotSvg)
         document.addEventListener("mouseup", once)
       })
@@ -221,7 +259,7 @@
         //重置tool
         tool = curTool
         //改变选中button的样式
-        if (e.target.tagName === "BUTTON") {
+        if (e.target.classList[0] === "toolFocus") {
           allTool.forEach((it) => {
             if (it.id === e.target.id) {
               it.classList.add("nowFocus")
@@ -229,6 +267,10 @@
               it.classList.remove("nowFocus")
             }
           })
+        }
+        if (e.target.classList[0] === "undo") {
+          undoList.push(svg.lastElementChild)
+          svg.removeChild(svg.lastElementChild)
         }
         document.removeEventListener("mousemove", drawDotSvg)
         document.removeEventListener("mouseup", once)

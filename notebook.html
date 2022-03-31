@@ -1,94 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    body {
-      background-color: pink;
-    }
-    button {
-      position: absolute;
-      top:10px;
-      left: 50px;
-      width: 150px;
-      height: 30px;
-    }
-    select {
-      position: absolute;
-      top: 50px;
-      left:50px;
-      width: 150px;
-    }
-    textarea {
-      top: 50px;
-      left: 210px;
-      position: absolute;
-      width: 600px;
-      height: 400px;
-    }
-  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: rgb(228, 252, 231);
+        color:#575757;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+        border-radius: 10px;
 
-</head>
-<body>
-  <button onclick="addNote()">new</button><br>
-  <select id="list" size="25"></select>
-  <textarea id="currentnote" ></textarea>
+      }
+      ::-webkit-scrollbar-thumb {
+        width:5px;
+        border-radius: 10px;
+        background-color:#ff9b9b;
+      }
+      body {
+        margin: 0;
 
-<script>
-  let list = document.querySelector("#list");
-  function addToList(name) {
-    let option = document.createElement("option");
-    option.textContent = name;
-    list.appendChild(option);
-  }
+        position: relative;
+      }
+      .notebook {
+        box-shadow: 0 0 5px #f0f0f0;
+        background-color: #fdee91;
+        left: 100px;
+        top: 20px;
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 5px;
+      }
+      button {
+        color: burlywood;
+        border-radius: 555px;
+        cursor: pointer;
+        position: absolute;
+        top:55px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        border: 0px;
+        font-size: 20px;
+        background-color: white;
+      }
+      select {
+        border-radius: 5px;
+        position: absolute;
+        top: 100px;
+        left: 10px;
+        width: 150px;
+        height: 485px;
+        min-height: min-content;
+        overflow: auto;
+        border: 0px;
+        background-color:#fdee91 ;
+        outline: none;
+      }
+      textarea {
+        outline:none;
+        resize:none;
+        box-shadow: 0 0 2px #adadad;
+        border-radius: 5px;
+        top: 100px;
+        left: 170px;
+        position: absolute;
+        width: 400px;
+        height: 475px;
+        border: 0px;
+        font-size: 20px;
+        padding:5px;
+        color:#575757;
+        background-color: white;
+      }
+      p {
+        pointer-events: none;
+        position: absolute;
+        left: 20px;
+        top: 0;
+        font-size: 30px;
+        line-height: 0;
+      }
+      #list option {
+        color:#575757;
+        border-radius: 5px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 20px;
+        margin: 10px;
+        padding: 5px;
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notebook">
+      <p>日记</p>
+      <button onclick="addNote()">+</button>
+      <select id="list" size="25"></select>
+      <textarea id="currentnote"></textarea>
+    </div>
 
-  // 初始化 notes为对象 只需要第一次绑定
-  let notes = JSON.parse(localStorage.getItem("notes")) ||
-              {"shopping list": "fgfdsgdsf"};
-              console.log(notes)
-  for (let name in notes) {
-    if (notes.hasOwnProperty(name)){
-      addToList(name);
-    }
-  }
-  function saveToStorage() {
-    localStorage.setItem("notes", JSON.stringify(notes));
-  }
+    <script>
+      let notebook = document.querySelector(".notebook")
+      let lastPos = null
+      notebook.addEventListener("mousedown", (e) => {
+        lastPos = { x: e.clientX, y: e.clientY }
+        notebook.addEventListener("mousemove", move)
+        notebook.addEventListener("mouseup", stop)
+      })
+      function move(e) {
+        if (e.target.classList[0] == "notebook") {
+          let pos = notebook.getBoundingClientRect()
+          let posx = e.clientX
+          let posy = e.clientY
+          let movex = posx - lastPos.x + pos.x
+          let movey = posy - lastPos.y + pos.y
+          notebook.style.left = movex + "px"
+          notebook.style.top = movey + "px"
+          lastPos = { x: e.clientX, y: e.clientY }
+          console.log(pos.x, posx, movex)
+        }
+      }
+      function stop() {
+        lastPos = null
+        notebook.removeEventListener("mousemove", move)
+        notebook.removeEventListener("mouseup", stop)
+      }
 
+      let list = document.querySelector("#list")
+      function addToList(name) {
+        let option = document.createElement("option")
+        option.textContent = name
+        list.appendChild(option)
+      }
 
-  let current = document.querySelector("#currentnote");
+      // 初始化 notes为对象 只需要第一次绑定
+      let notes = JSON.parse(localStorage.getItem("notes")) || {
+        "shopping list": "fgfdsgdsf",
+      }
+      console.log(notes)
+      for (let name in notes) {
+        if (notes.hasOwnProperty(name)) {
+          addToList(name)
+        }
+      }
+      function saveToStorage() {
+        localStorage.setItem("notes", JSON.stringify(notes))
+      }
 
-  current.value = notes[list.value];
+      let current = document.querySelector("#currentnote")
 
-  // select自带value 自动保存上次点击的选项 
-  list.addEventListener("change", function() {
-    console.log(list.value)
-    current.value = notes[list.value];
-  });
-  current.addEventListener("change", function() {
-    notes[list.value] = current.value;
-    saveToStorage();
-  });
+      current.value = notes[list.value]
 
-  function addNote() {
-    let name = prompt("Note name", "")
-    if (!name) {
-      alert('未添加标签')
-      return
-    }
-    if (!notes.hasOwnProperty(name)) {
-      notes[name] = "";
-      addToList(name);
-      saveToStorage();
-    } else {
-      alert('已存在同名标签!')
-    }
-    list.value = name;
-    current.value = notes[name];
-  }
-</script>
-</body>
+      // select自带value 自动保存上次点击的选项
+      list.addEventListener("change", function () {
+        console.log(list.value)
+        current.value = notes[list.value]
+      })
+      current.addEventListener("change", function () {
+        notes[list.value] = current.value
+        saveToStorage()
+      })
+
+      function addNote() {
+        let name = prompt("Note name", "")
+        if (!name) {
+          alert("未添加标签")
+          return
+        }
+        if (!notes.hasOwnProperty(name)) {
+          notes[name] = ""
+          addToList(name)
+          saveToStorage()
+        } else {
+          alert("已存在同名标签!")
+        }
+        list.value = name
+        current.value = notes[name]
+      }
+    </script>
+  </body>
 </html>

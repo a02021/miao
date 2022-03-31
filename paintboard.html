@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
     <style>
       body {
         margin: 0;
@@ -22,17 +22,26 @@
         xvertical-align: text-bottom;
       }
       .footer {
-        height: 25px;
+        pointer-events: none;
+        height: 40px;
+        border-top: solid 1px rgb(221, 221, 221);
+      }
+      .footer span {
+        pointer-events: none;
+        display: inline-block;
+        padding-right: 20px;
+        line-height: 20px;
       }
       .option {
         padding: 10px;
         xheight: 100px;
-        box-shadow: inset 0 0 1px grey;
+        border-left: solid 1px #ececec;
         position: relative;
         vertical-align: middle;
       }
       .option p {
         margin-top: 40px;
+        margin-bottom: 0;
       }
       .color p {
         margin-top: 10px;
@@ -72,12 +81,16 @@
         height: calc(100vh - 200px);
         margin: 10px;
         padding: 20px;
-        border: 1px solid grey;
+        border: .5px solid #5f5f5f;
         overflow: auto;
       }
       .board-container {
         position: relative;
         width: min-content;
+      }
+      .board-container svg {
+        background-color: white;
+        box-shadow: 0 0 3px #d8d8d8;
       }
       .dot {
         width: 10px;
@@ -88,10 +101,7 @@
         background-color: rgb(247, 164, 191);
         position: absolute;
       }
-      svg {
-        background-color: white;
-        color: crimson;
-      }
+
       .save {
         width: 30px;
       }
@@ -155,6 +165,7 @@
   <body>
     <div class="toolbar">
       <div class="option tool">
+        <div>
         <button class="toolFocus nowFocus" id="line" onclick=" tool='line' ">
           铅笔<svg
             width="20"
@@ -172,10 +183,11 @@
               points="5 14 5 14 5 14 6 14 6 14 7 14 7 14 8 14 9 14 9 12 11 12 12 11 12 10 12 10 12 9 11 9 11 8 11 7 11 6 11 6 12 5 12 5 13 5 14 5 14 5 15 5 15 5 16 4 16 4 17 3 17 2 627 -58 "
             ></polyline>
           </svg>
-        </button>
+        </button></div>
         <p>工具</p>
       </div>
       <div class="option pattern">
+        <div>
         <button class="toolFocus" id="circle" onclick=" tool='circle' ">
           <svg
             width="20"
@@ -235,6 +247,7 @@
             ></rect>
           </svg>
         </button>
+        </div>
         <p>形状</p>
       </div>
       <div class="option">
@@ -250,6 +263,7 @@
         <p>大小</p>
       </div>
       <div class="option color">
+        <div>
         <input type="color" value="#FF5599" id="colorInput" />
         <div class="prev-color">
           <input type="radio" class="hidden-color" id="radio-color-1" onclick="
@@ -257,6 +271,7 @@
             class="mark"
             for="radio-color-1"
           ></label>
+        </div>
         </div>
         <p>颜色</p>
       </div>
@@ -279,7 +294,9 @@
         <div class="resize"></div>
       </div>
     </div>
-    <div class="footer"><p>Ctrl + Z 撤销 Ctrl + Y 恢复</p></div>
+    <div class="footer">
+      <span>Ctrl + Z 撤销 Ctrl + Y 恢复</span><span class="hint"></span>
+    </div>
 
     <script>
       //SVG文档
@@ -300,6 +317,10 @@
       let curTool = "line"
       let askSave = false
       let openfile = document.querySelector("#openfile")
+      let hint = document.querySelector(".hint")
+      hint.textContent = `${svg.getAttribute("width")} x ${svg.getAttribute(
+        "height"
+      )}`
       // 预设自定义颜色
       let preColor = [
         "#000000",
@@ -445,11 +466,13 @@
       function drawDotSvg(e) {
         // 避免svg被替换后无法选中
         svg = boardContainer.querySelector("svg")
+
         if (tool == "resize") {
           let pos = mousePos(svg)
           svg.setAttribute("viewBox", `0 0 ${pos.x} ${pos.y}`)
           svg.setAttribute("width", pos.x)
           svg.setAttribute("height", pos.y)
+          hint.textContent = `${pos.x} x ${pos.y}`
         }
         if (tool == "line") {
           let pos = mousePos(svg)
@@ -536,7 +559,11 @@
           // 1. svg.innerHTML = svgfile 这样会把标签引入
           // 2. 这样需要重新给svg绑定事件,或者在事件里重新查找svg
           boardContainer.innerHTML = svgfile + '<div class="resize"></div>'
-          window.svg = document.querySelector("svg")
+          svg = boardContainer.querySelector("svg")
+          console.log("hint", svg.getAttribute("width"))
+          hint.textContent = `${svg.getAttribute("width")} x ${svg.getAttribute(
+            "height"
+          )}`
         })
         fr.readAsText(newfile)
       })

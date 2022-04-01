@@ -27,16 +27,23 @@
           width: 500rem;
           height: 100rem;
         }
+        button {
+          margin-right:1rem;
+          font-size: 25rem;
+          padding:5rem 8rem;
+        }
         .choosen {
           display: flex;
+          margin:10rem auto;
           justify-content: space-between;
           vertical-align: middle;
-          line-height: 16rem;
+          line-height: 45rem;
+          font-size: 25rem;
         }
-        .choosen span input {
+        .choosen label span input {
           display: inline-block;
-          width: 20rem;
-          height: 20rem;
+          width: 25rem;
+          height: 25rem;
           vertical-align: middle;
         }
         #grid .mark::before {
@@ -53,9 +60,10 @@
           width: 500px;
           height: 100px;
         }
+        .choosen,
         .feature,
         .game {
-          margin: auto;
+          margin: 10px auto;
           width: max-content;
         }
         #grid .mark::before {
@@ -117,15 +125,16 @@
     </div>
     <div class="feature">
       <div>
-        <p>尺寸 <span id="rangeHint"></span></p>
+        <p><span id="rangeHint"></span></p>
         <input type="range" id="range" min="5" max="100" value="20" />
       </div>
       <div class="choosen">
-        <button onclick="next()">点击进化</button>
-        <span><input type="checkbox" id="ifAuto" />自动进化</span>
-        <span><input type="checkbox" id="cancelB" />取消边境</span>
+        <button onclick="next()">进化</button>
+        <button onclick="randomNew()">随机</button>
         <button onclick="clearAll()">清空</button>
-        <button onclick="randomNew()">重新随机</button>
+        <label><span><input type="checkbox" id="ifAuto" />自动播放</span></label>
+        <label><span><input type="checkbox" id="cancelB" />取消围栏</span></label>
+
       </div>
       <div id="hint"></div>
     </div>
@@ -242,7 +251,7 @@
       function startNew() {
         long = Number(range.value)
         startWorld(long, long, 0.5)
-        rangeHint.innerHTML = long + " - " + long
+        rangeHint.innerHTML = long + " x " + long
         autoNext()
         cancelB()
       }
@@ -300,7 +309,7 @@
           newHTML += "\n"
         }
         grid.innerHTML = newHTML
-        hint.innerHTML = "第" + nGen++ + "代"
+        hint.innerHTML = "进化计数: " + nGen++ + " "
       }
     </script>
   </body>

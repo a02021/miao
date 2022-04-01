@@ -9,7 +9,8 @@
       body {
         margin: 0;
         position: relative;
-        height: 1000px;
+        min-Height: 1080px;
+        min-width: 320px;
         xbackground-color: rgb(228, 252, 231);
         background-image: conic-gradient(
           red,
@@ -47,32 +48,33 @@
       }
       .main {
         height: 100%;
-        width:430px;
+        width: 430px;
         border-radius: 0 5px 5px 0;
-        background-color: white;
+        background-color: rgb(241, 241, 241);
       }
       .title {
-        color:#575757;
-        height:80px;
+        box-shadow: 0 0 2px #c2c2c2;
+        border-radius: 0 5px 0 0;
+        color: #575757;
+        height: 80px;
         width: 410px;
         font-size: 20px;
         padding: 10px;
         text-align: center;
         line-height: 80px;
-        ;
       }
       button {
         display: block;
         box-shadow: 0 0 2px #c2c2c2;
-        color: burlywood;
+        color: white;
         border-radius: 555px;
         cursor: pointer;
-        margin-left: 10px;
+        margin-left: 20px;
         width: 40px;
         height: 40px;
         border: 0px;
         font-size: 20px;
-        background-color: white;
+        background-color: rgb(209, 176, 114);
       }
       select {
         border-radius: 5px;
@@ -94,17 +96,18 @@
         height: 445px;
         border: 0px;
         font-size: 20px;
-        margin:20px 10px;
+        margin: 20px 10px;
         padding: 10px;
         color: #575757;
         background-color: white;
       }
-      p {
+      .name {
         pointer-events: none;
-        width: 60px;
+        width: 100px;
         height: 50px;
-        margin: 10px 0 0 10px;
+        margin: 10px 0 0 20px;
         font-size: 30px;
+        color: #444444;
       }
       #list option {
         box-shadow: 0 0 2px #f1ef57;
@@ -122,36 +125,40 @@
   <body>
     <div class="notebook">
       <div class="notebook-el side">
-        <p>日记</p>
+        <p class="name">备忘录</p>
         <button onclick="addNote()">+</button>
         <select id="list" size="25"></select>
       </div>
       <div class="notebook-el main">
         <div class="notebook-el title"></div>
-        <textarea id="currentnote"></textarea></div>
+        <textarea id="currentnote"></textarea>
+      </div>
     </div>
 
     <script>
       // 可拖动
       let notebook = document.querySelector(".notebook")
       let lastPos = null
-      notebook.addEventListener("mousedown", (e) => {
-        lastPos = { x: e.clientX, y: e.clientY }
-        notebook.addEventListener("mousemove", move)
-        notebook.addEventListener("mouseup", stop)
+      window.addEventListener("mousedown", (e) => {
+        if (
+          e.target.classList[0] == "notebook" ||
+          e.target.classList[0] == "notebook-el"
+        ) {
+          lastPos = { x: e.clientX, y: e.clientY }
+          window.addEventListener("mousemove", move)
+          window.addEventListener("mouseup", stop)
+        }
       })
       function move(e) {
-        if (e.target.classList[0] == "notebook" || e.target.classList[0] == "notebook-el") {
-          let pos = notebook.getBoundingClientRect()
-          let posx = e.clientX
-          let posy = e.clientY
-          let movex = posx - lastPos.x + pos.x
-          let movey = posy - lastPos.y + pos.y
-          notebook.style.left = movex + "px"
-          notebook.style.top = movey + "px"
-          lastPos = { x: e.clientX, y: e.clientY }
-          console.log(pos.x, posx, movex)
-        }
+        let pos = notebook.getBoundingClientRect()
+        let posx = e.clientX
+        let posy = e.clientY
+        let movex = posx - lastPos.x + pos.x
+        let movey = posy - lastPos.y + pos.y
+        notebook.style.left = movex + "px"
+        notebook.style.top = movey + "px"
+        lastPos = { x: e.clientX, y: e.clientY }
+        console.log(pos.x, posx, movex)
       }
       function stop() {
         lastPos = null
@@ -169,7 +176,9 @@
 
       // 初始化 notes为对象 只需要第一次绑定
       let notes = JSON.parse(localStorage.getItem("notes")) || {
-        "shopping list": "fgfdsgdsf",
+        "filter":
+          "filter CSS属性将模糊或颜色偏移等图形效果应用于元素。滤镜通常用于调整图像，背景和边框的渲染",
+        "backdrop-filter":"backdrop-filter CSS 属性可以让你为一个元素后面区域添加图形效果（如模糊或颜色偏移）。 因为它适用于元素背后的所有元素，为了看到效果，必须使元素或其背景至少部分透明",
       }
       console.log(notes)
       for (let name in notes) {
@@ -183,7 +192,7 @@
       }
 
       let current = document.querySelector("#currentnote")
-      let title = document.querySelector('.title')
+      let title = document.querySelector(".title")
       // let option = document.querySelector('option')
       // console.log(option)
       // option.click()
